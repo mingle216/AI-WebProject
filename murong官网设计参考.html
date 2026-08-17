@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberty One (Asia) - 数字化船舶交互中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --navy: #003366; --red: #E60012; }
+        
+        /* 呼吸红点：高科技雷达感 */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(230, 0, 18, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(230, 0, 18, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(230, 0, 18, 0); }
+        }
+        .hotspot { 
+            animation: pulse-ring 2s infinite; 
+            background-color: var(--red); 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+        .hotspot:hover { 
+            transform: scale(1.3) !important; 
+            background-color: #ff0000; 
+            z-index: 50;
+        }
+
+        /* 玻璃质感抽屉 */
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800 font-sans">
+
+    <!-- 1. 广告语 Banner 区域 -->
+    <section class="bg-[#003366] text-white py-16 px-6 relative overflow-hidden">
+        <!-- 背景装饰 -->
+        <div class="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
+            <svg width="400" height="400" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="white" stroke-width="2" fill="none"/></svg>
+        </div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center">
+            <h4 class="text-blue-400 font-bold tracking-[0.2em] uppercase mb-4 text-sm">The Shipping Solution</h4>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                One-Stop Shopping Portfolio <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">For Clients & Investors</span>
+            </h1>
+            <p class="text-slate-300 max-w-2xl mx-auto text-lg">
+                结合传统航运智慧与尖端科技，提供全产业链的资产管理、技术监督与精密维修服务。
+            </p>
+        </div>
+    </section>
+
+    <!-- 2. 船舶交互中心 (核心区域) -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6 text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-black text-[#003366] mb-4">业务范围交互中心</h2>
+            <div class="w-16 h-1.5 bg-[#E60012] mx-auto mb-6 rounded-full"></div>
+            <p class="text-gray-500">点击数字化船体的发光锚点，查看对应的技术维修与服务清单</p>
+        </div>
+
+        <div class="max-w-6xl mx-auto relative px-4">
+            <!-- 船舶容器 -->
+            <div class="relative bg-gradient-to-b from-blue-50 to-white rounded-[2rem] shadow-2xl p-4 md:p-12 border border-blue-100">
+                
+                <div class="relative w-full aspect-[2.5/1]">
+                    
+                    <!-- 纯代码生成的超清船舶底图 (SVG 框架) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" class="w-full h-full drop-shadow-2xl">
+                        <defs>
+                            <!-- 船体渐变 -->
+                            <linearGradient id="hullDark" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#334155" />
+                                <stop offset="100%" stop-color="#0f172a" />
+                            </linearGradient>
+                            <linearGradient id="hullRed" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#b91c1c" />
+                                <stop offset="100%" stop-color="#7f1d1d" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- 水面阴影 -->
+                        <ellipse cx="500" cy="330" rx="420" ry="15" fill="rgba(0,51,102,0.1)" />
+
+                        <!-- 船底 (红色区域) -->
+                        <path d="M 900,280 L 150,280 Q 80,280 60,320 L 880,320 Q 900,320 900,280 Z" fill="url(#hullRed)"/>
+                        <!-- 船身 (深灰色区域) -->
+                        <path d="M 920,180 L 120,180 Q 70,180 50,230 L 60,280 L 900,280 Q 920,280 920,180 Z" fill="url(#hullDark)"/>
+                        <!-- 吃水线 (白线) -->
+                        <line x1="60" y1="280" x2="900" y2="280" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+
+                        <!-- 驾驶台 / 生活区 (右侧船尾) -->
+                        <rect x="750" y="140" width="130" height="40" fill="#cbd5e1" rx="2"/>
+                        <rect x="770" y="60" width="90" height="80" fill="#f8fafc" rx="4"/>
+                        <rect x="760" y="70" width="110" height="15" fill="#94a3b8" rx="2"/> <!-- 驾驶台侧翼 -->
+                        <!-- 窗户 -->
+                        <rect x="780" y="73" width="70" height="8" fill="#1e3a8a" />
+                        
+                        <!-- 烟囱 -->
+                        <path d="M 880,140 L 860,50 L 885,50 L 895,140 Z" fill="#0284c7" />
+                        <rect x="862" y="50" width="22" height="15" fill="#1e293b" />
+                        
+                        <!-- 雷达天线 -->
+                        <line x1="815" y1="60" x2="815" y2="10" stroke="#64748b" stroke-width="3" />
+                        <line x1="800" y1="25" x2="830" y2="25" stroke="#94a3b8" stroke-width="2" />
+
+                        <!-- 集装箱区域 (中间模块化方块) -->
+                        <!-- 第一堆 -->
+                        <rect x="180" y="100" width="100" height="80" fill="#0284c7" rx="2" stroke="#ffffff" stroke-width="1"/>
+                        <rect x="180" y="140" width="100" height="40" fill="#0369a1" rx="2" stroke="#ffffff" stroke-width="1"/>
+                        <!-- 第二堆 -->
+                        <rect x="290" y="80" width="110" height="100" fill="#64748b" rx="2" stroke="#ffffff" stroke-width="1"/>
+                        <rect x="290" y="130" width="110" height="50" fill="#475569" rx="2" stroke="#ffffff" stroke-width="1"/>
+                        <!-- 第三堆 -->
+                        <rect x="410" y="90" width="110" height="90" fill="#e2e8f0" rx="2" stroke="#94a3b8" stroke-width="1"/>
+                        <!-- 第四堆 -->
+                        <rect x="530" y="70" width="100" height="110" fill="#0284c7" rx="2" stroke="#ffffff" stroke-width="1"/>
+                        <rect x="530" y="120" width="100" height="60" fill="#0369a1" rx="2" stroke="#ffffff" stroke-width="1"/>
+                        <!-- 第五堆 -->
+                        <rect x="640" y="100" width="90" height="80" fill="#94a3b8" rx="2" stroke="#ffffff" stroke-width="1"/>
+
+                        <!-- 装饰线条 -->
+                        <text x="830" y="260" fill="white" font-size="14" font-weight="bold" font-family="sans-serif" opacity="0.8">LIBERTY ONE</text>
+                    </svg>
+
+                    <!-- 交互点 1：船尾/机舱底层区域 -->
+                    <div onclick="openDrawer('engine')" class="hotspot absolute w-5 h-5 md:w-8 md:h-8 rounded-full border-2 border-white" style="top: 70%; left: 88%;"></div>
+                    
+                    <!-- 交互点 2：驾驶台/通导区域 -->
+                    <div onclick="openDrawer('nav')" class="hotspot absolute w-5 h-5 md:w-8 md:h-8 rounded-full border-2 border-white" style="top: 22%; left: 81%;"></div>
+                    
+                    <!-- 交互点 3：甲板机械区域 (中间集装箱区) -->
+                    <div onclick="openDrawer('deck')" class="hotspot absolute w-5 h-5 md:w-8 md:h-8 rounded-full border-2 border-white" style="top: 35%; left: 45%;"></div>
+                    
+                    <!-- 交互点 4：安全消防区域 (船头区) -->
+                    <div onclick="openDrawer('safety')" class="hotspot absolute w-5 h-5 md:w-8 md:h-8 rounded-full border-2 border-white" style="top: 50%; left: 15%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. iPad 风格动态抽屉弹窗 -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-[#003366]/40 backdrop-blur-sm hidden z-[100] items-end md:items-center justify-center p-4 md:p-8 opacity-0 transition-opacity duration-300" onclick="closeDrawer()">
+        
+        <div id="drawerBody" class="glass-panel w-full max-w-3xl rounded-[2rem] shadow-2xl overflow-hidden transform translate-y-20 scale-95 opacity-0 transition-all duration-400 ease-out" onclick="event.stopPropagation()">
+            
+            <!-- 弹窗头部 -->
+            <div class="bg-gradient-to-r from-[#003366] to-blue-800 p-8 flex justify-between items-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <p id="dEn" class="text-blue-300 font-bold tracking-widest text-xs uppercase mb-1">---</p>
+                    <h3 id="dCn" class="text-3xl font-black text-white">---</h3>
+                </div>
+                <button onclick="closeDrawer()" class="relative z-10 bg-white/20 hover:bg-white/40 p-2 rounded-full text-white transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- 弹窗列表 -->
+            <div class="p-8">
+                <div id="dList" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                    <!-- JS 动态注入内容 -->
+                </div>
+                
+                <!-- 底部行动呼吁 -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex justify-between items-center">
+                    <div class="flex items-center text-sm text-gray-500 font-medium">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        通过 ISO 9001 认证团队
+                    </div>
+                    <button class="bg-[#E60012] text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:bg-red-700 transition">
+                        联系技术专家
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 你提供的专业业务数据
+        const services = {
+            engine: { 
+                cn: "机舱自控与辅机系统", 
+                en: "Engine Room Automation", 
+                list: ["电站自控系统", "燃油黏度控制系统", "分油机系统", "自清洗滤器系统", "15PPM及油水分离器", "生活污水系统", "锅炉控制系统", "空调冰机控制系统"] 
+            },
+            nav: { 
+                cn: "驾控与通导设备", 
+                en: "Navigation & Bridge Control", 
+                list: ["主机遥控系统", "舵机系统", "车钟维修保养", "航行灯/信号灯系统", "对讲/广播系统", "自动/声力电话系统", "雨刮器/玻璃加热系统"] 
+            },
+            deck: { 
+                cn: "甲板机械系统", 
+                en: "Deck Machinery Systems", 
+                list: ["克令吊系统", "食品吊系统", "锚机/绞车系统", "舱口盖液压系统", "机舱吊机", "救助艇抛落艇系统"] 
+            },
+            safety: { 
+                cn: "安全监测与消防", 
+                en: "Safety & Monitoring", 
+                list: ["火警系统", "大仓烟雾系统", "二氧化碳系统", "水雾喷淋系统", "液位遥测系统", "曲轴箱油雾浓度检测", "阴极保护/防海生物系统"] 
+            }
+        };
+
+        function openDrawer(key) {
+            const data = services[key];
+            document.getElementById('dCn').innerText = data.cn;
+            document.getElementById('dEn').innerText = data.en;
+            
+            // 生成带对勾图标的高级列表
+            document.getElementById('dList').innerHTML = data.list.map(item => `
+                <div class="flex items-start p-3 hover:bg-slate-50 rounded-lg transition border border-transparent hover:border-slate-100 group">
+                    <div class="mt-1 mr-3 w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-[#E60012] transition">
+                        <svg class="w-3 h-3 text-[#003366] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <span class="font-semibold text-slate-700">${item}</span>
+                </div>
+            `).join('');
+
+            const overlay = document.getElementById('drawerOverlay');
+            const body = document.getElementById('drawerBody');
+            
+            // 显示遮罩层
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            
+            // 延迟一点触发动画，实现丝滑弹出
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0');
+                body.classList.remove('translate-y-20', 'scale-95', 'opacity-0');
+            });
+        }
+
+        function closeDrawer() {
+            const overlay = document.getElementById('drawerOverlay');
+            const body = document.getElementById('drawerBody');
+            
+            // 触发收回动画
+            overlay.classList.add('opacity-0');
+            body.classList.add('translate-y-20', 'scale-95', 'opacity-0');
+            
+            // 等动画播完再隐藏 DOM
+            setTimeout(() => { 
+                overlay.classList.add('hidden'); 
+                overlay.classList.remove('flex');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
