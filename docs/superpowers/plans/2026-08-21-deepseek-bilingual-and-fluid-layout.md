@@ -28,7 +28,7 @@
 - Test: `src/lib/translation/state.test.ts`
 
 - [ ] Write failing tests for `QUEUED`, `PROCESSING`, `AI_DRAFT`, `FAILED`, `CONFIRMED` and `STALE` transitions.
-- [ ] Add `TranslationTask`, `TranslationGlossary`, source revision snapshot ID, chunk totals, attempts, locked time, provider/model/prompt/glossary metadata and a partial unique index on `(content_type, content_id, source_revision)` for queued/processing tasks.
+- [ ] Add `TranslationTask`, `TranslationGlossary`, source revision snapshot ID, chunk totals, attempts, `lockedAt`, `lastProgressAt`, provider/model/prompt/glossary metadata and a partial unique index on `(content_type, content_id, source_revision)` for queued/processing tasks.
 - [ ] Run `npx prisma migrate dev --name add_translation_tasks` and `npm test -- src/lib/translation/state.test.ts`.
 - [ ] Commit with `git commit -m "feat: persist translation task state"`.
 
@@ -40,8 +40,8 @@
 - Create: `src/lib/translation/maritime-prompt.ts`
 - Test: `src/lib/translation/deepseek.test.ts`
 
-- [ ] Test that paragraph blocks retain inline mark placeholders, paths and non-text structure after translation; code blocks, numbers, IMO identifiers and dates must be skipped.
-- [ ] Extract frozen rich-text JSON by array path, translate paragraph-sized blocks, inject only matching path results, and reject missing/extra paths or placeholder tokens.
+- [ ] Test that paragraph blocks retain inline mark placeholders, paths and non-text structure after translation; code blocks, numbers, IMO identifiers, dates and editor “do not translate” marks must be skipped.
+- [ ] Extract frozen rich-text JSON by array path, translate paragraph-sized blocks, inject only matching path results, and reject missing/extra paths or placeholder tokens; protect IMO/email/URL/MV/MT regex matches and glossary protection entries before dispatch.
 - [ ] Match at most 50 active glossary records present in the source text; validate expected English glossary terms in the returned translation.
 - [ ] Send JSON Output to `https://api.deepseek.com/chat/completions` with `deepseek-v4-flash`, bounded chunks and a prompt demanding International Maritime English, British spelling and exact path preservation.
 - [ ] Retry an empty response, HTTP 429, 500 or 503 once per chunk; preserve the old English version on final failure.
@@ -55,8 +55,9 @@
 - Create: `src/app/api/admin/translation-tasks/[id]/route.ts`
 - Test: `src/workers/translation-worker.test.ts`
 
-- [ ] Test concurrent claims, duplicate source-version enqueue prevention, failed-task retry and 10-minute processing-timeout recovery.
-- [ ] Claim work in a short transaction using `FOR UPDATE SKIP LOCKED`, commit before calling DeepSeek, then open a new short transaction to update progress/result.
+- [ ] Test concurrent claims, duplicate source-version enqueue prevention, failed-task retry, failed-chunk retry and 10-minute no-progress recovery.
+- [ ] Claim work in a short transaction using `FOR UPDATE SKIP LOCKED`, commit before calling DeepSeek, then open a new short transaction to persist each chunk and refresh `lastProgressAt`; only mark jobs failed after 10 minutes without progress.
+- [ ] Handle `SIGTERM` by completing and persisting the current chunk before worker exit; resume manually retried jobs from their failed chunk rather than retranslating successful chunks.
 - [ ] Start the same image with a separate `worker` command, limit translation concurrency to one and set a small memory limit; it is not an external queue service.
 - [ ] Return only task ID, status, attempts, `doneChunks`, `totalChunks` and retry capability from the authenticated polling endpoint.
 - [ ] Run `npm test -- src/workers/translation-worker.test.ts` and commit with `git commit -m "feat: process translation jobs asynchronously"`.
@@ -86,6 +87,7 @@
 
 - [ ] Use `clamp()`, `minmax()`, `auto-fit`, flex wrapping, `min-inline-size: 0`, `overflow-wrap: anywhere`, `text-wrap: balance`, `aspect-ratio` and responsive media constraints.
 - [ ] Apply `lang` to each public document, `hyphens: auto` to English prose, `translate="no"` to ship names/model identifiers and local `lang="en"` component adjustments without shrinking body copy below readability.
+- [ ] Use `/[locale]/cases` for page 1 and `/[locale]/cases/page/[page]` thereafter; avoid server `searchParams` pagination, return empty `generateStaticParams` for runtime ISR, and use `revalidatePath` after publication without a production database connection during CI builds.
 - [ ] Emit reciprocal canonical/hreflang pairs plus `x-default` only for published counterparts; include only published localized URLs in the Sitemap and use locale-specific `lastmod`.
 - [ ] Sweep 320, 360, 390, 412, 480, 600, 768, 820, 960, 1024, 1280, 1440, 1920 and 2560px, including English navigation and 200% zoom.
 - [ ] Run `npm test && npx playwright test && npm run build`, then commit with `git commit -m "test: cover fluid bilingual publishing"`.
