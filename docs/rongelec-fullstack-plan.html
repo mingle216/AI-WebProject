@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Rongelec 企业官网与内容后台完整方案</title>
+    <style>
+      :root {
+        --navy: #0c2f5a;
+        --blue: #1c3a82;
+        --blue-2: #2358a7;
+        --red: #e60012;
+        --ink: #172033;
+        --muted: #667085;
+        --line: #d9e1ea;
+        --soft: #f3f7fb;
+        --soft-blue: #eaf2fb;
+        --ok: #16794b;
+        --warn: #9a6111;
+        --white: #fff;
+        --radius: 16px;
+        --shadow: 0 16px 40px rgba(12, 47, 90, 0.09);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #eef3f8;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", Arial, sans-serif;
+        line-height: 1.65;
+      }
+      a { color: inherit; }
+      button, input, select { font: inherit; }
+      .skip-link {
+        position: fixed; left: 16px; top: -60px; z-index: 100;
+        padding: 10px 14px; background: var(--white); border-radius: 8px;
+      }
+      .skip-link:focus { top: 16px; }
+
+      .shell { min-height: 100vh; }
+      .topbar {
+        position: sticky; top: 0; z-index: 40;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        min-height: 68px; padding: 10px 24px;
+        color: var(--white); background: rgba(12, 47, 90, 0.97);
+        border-bottom: 3px solid var(--red);
+      }
+      .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+      .mark {
+        display: grid; place-items: center; flex: 0 0 auto;
+        width: 40px; height: 40px; border: 2px solid rgba(255,255,255,.65);
+        border-radius: 11px; font-weight: 800; letter-spacing: .05em;
+      }
+      .brand strong { display: block; font-size: 15px; }
+      .brand small { display: block; color: #c8d9ed; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .top-actions { display: flex; gap: 8px; }
+      .action {
+        min-height: 40px; padding: 8px 14px; color: var(--white);
+        background: transparent; border: 1px solid rgba(255,255,255,.4);
+        border-radius: 9px; cursor: pointer;
+      }
+      .action:hover, .action:focus-visible { background: rgba(255,255,255,.12); }
+      .menu-button { display: none; }
+
+      .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); max-width: 1540px; margin: 0 auto; }
+      .side {
+        position: sticky; top: 71px; align-self: start; height: calc(100vh - 71px);
+        padding: 24px 16px 40px; overflow: auto; background: #f8fafc;
+        border-right: 1px solid var(--line);
+      }
+      .side-title { margin: 0 10px 10px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+      .side a {
+        display: block; margin: 3px 0; padding: 9px 11px; color: #42526a;
+        text-decoration: none; border-left: 3px solid transparent; border-radius: 0 8px 8px 0;
+      }
+      .side a:hover, .side a.active { color: var(--blue); background: var(--soft-blue); border-left-color: var(--red); font-weight: 700; }
+
+      main { min-width: 0; padding: 36px clamp(18px, 4vw, 64px) 80px; background: var(--white); }
+      section { scroll-margin-top: 92px; margin: 0 auto 56px; max-width: 1160px; }
+      .hero {
+        position: relative; overflow: hidden; padding: clamp(28px, 5vw, 64px);
+        color: var(--white); background: var(--navy); border-radius: 22px;
+      }
+      .hero::after {
+        content: ""; position: absolute; inset: 0 0 0 auto; width: 42%;
+        background-image: linear-gradient(135deg, transparent 45%, rgba(255,255,255,.07) 45%, rgba(255,255,255,.07) 48%, transparent 48%);
+        background-size: 24px 24px; pointer-events: none;
+      }
+      .eyebrow { margin: 0 0 8px; color: #f9a4aa; font-size: 12px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+      h1 { position: relative; z-index: 1; max-width: 860px; margin: 0; font-size: clamp(30px, 5vw, 58px); line-height: 1.16; }
+      .hero p { position: relative; z-index: 1; max-width: 760px; margin: 18px 0 0; color: #d6e4f4; font-size: clamp(15px, 2vw, 19px); }
+      .status-line { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+      .pill { display: inline-flex; align-items: center; min-height: 30px; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.12); font-size: 13px; }
+
+      h2 { margin: 0 0 10px; color: var(--navy); font-size: clamp(24px, 3vw, 34px); line-height: 1.25; }
+      h3 { margin: 0 0 8px; color: var(--navy); font-size: 18px; }
+      .lead { max-width: 820px; margin: 0 0 22px; color: var(--muted); font-size: 16px; }
+      .rule { width: 52px; height: 4px; margin: 0 0 14px; background: var(--red); border-radius: 4px; }
+
+      .stats, .grid-2, .grid-3, .grid-4 { display: grid; gap: 16px; }
+      .stats { grid-template-columns: repeat(4, 1fr); margin-top: 22px; }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .stat, .card {
+        background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+      }
+      .stat { padding: 18px; }
+      .stat strong { display: block; color: var(--blue); font-size: 28px; line-height: 1.1; }
+      .stat span { color: var(--muted); font-size: 13px; }
+      .card { padding: 20px; }
+      .card.soft { background: var(--soft); }
+      .card.accent { border-top: 4px solid var(--red); }
+      .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+      ul, ol { padding-left: 1.25rem; }
+      li + li { margin-top: 6px; }
+      .checklist { list-style: none; padding: 0; }
+      .checklist li { position: relative; padding-left: 26px; }
+      .checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 800; }
+      .not-list li::before { content: "—"; color: var(--red); }
+
+      .arch {
+        display: grid; grid-template-columns: 1fr 56px 1.35fr 56px 1fr;
+        align-items: center; gap: 10px; padding: 24px; background: var(--soft);
+        border: 1px solid var(--line); border-radius: 18px;
+      }
+      .arch-col { display: grid; gap: 10px; }
+      .node { padding: 14px; text-align: center; background: var(--white); border: 1px solid var(--line); border-radius: 11px; }
+      .node.primary { color: var(--white); background: var(--blue); border-color: var(--blue); }
+      .arrow { color: var(--blue-2); text-align: center; font-size: 28px; }
+
+      .route { padding: 10px 12px; margin: 8px 0; color: #244568; background: #edf5fe; border-left: 3px solid var(--blue-2); border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+      .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+      .flow-step { flex: 1 1 145px; padding: 14px; background: var(--soft); border: 1px solid var(--line); border-radius: 11px; }
+      .flow-step b { display: block; color: var(--blue); }
+
+      .editor {
+        overflow: hidden; background: #fff; border: 1px solid #cdd7e3; border-radius: 14px; box-shadow: var(--shadow);
+      }
+      .editor-head { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #f5f7fa; border-bottom: 1px solid var(--line); }
+      .tabs { display: flex; gap: 6px; }
+      .tab { padding: 6px 10px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
+      .tab.active { color: #fff; background: var(--blue); border-color: var(--blue); }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; background: #fbfcfd; border-bottom: 1px solid var(--line); }
+      .tool, .tool-input { min-height: 34px; padding: 5px 9px; background: #fff; border: 1px solid #cfd8e3; border-radius: 6px; color: #344054; }
+      .tool-input { min-width: 92px; }
+      .editor-body { display: grid; grid-template-columns: minmax(0, 1fr) 240px; min-height: 260px; }
+      .paper { padding: 24px; }
+      .paper h4 { margin: 0 0 10px; color: var(--blue); font-size: 26px; }
+      .paper .sample { color: #9d241f; font-size: 18px; font-family: Georgia, "Noto Serif SC", serif; }
+      .preview { padding: 18px; background: #f3f6f9; border-left: 1px solid var(--line); }
+      .device { width: 132px; min-height: 208px; margin: 10px auto 0; padding: 10px; background: #fff; border: 6px solid #344054; border-radius: 18px; font-size: 8px; }
+      .device div { height: 36px; margin: 6px 0; background: #dfe8f2; border-radius: 4px; }
+
+      .resource { margin-top: 12px; }
+      .resource-bar { display: flex; overflow: hidden; height: 44px; border-radius: 10px; border: 1px solid var(--line); }
+      .seg { display: grid; place-items: center; min-width: 80px; padding: 0 8px; color: #fff; font-size: 12px; text-align: center; }
+      .seg.os { width: 23%; background: #5f6b7a; }
+      .seg.next { width: 19%; background: var(--blue); }
+      .seg.db { width: 19%; background: #246c87; }
+      .seg.reserve { width: 39%; background: var(--ok); }
+      .note { padding: 14px 16px; color: #5b451c; background: #fff7df; border-left: 4px solid #d99a25; border-radius: 8px; }
+      .good { color: #155f3e; background: #eaf8f1; border-left-color: var(--ok); }
+
+      .phase { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+      .phase:last-child { border-bottom: 0; }
+      .num { display: grid; place-items: center; width: 42px; height: 42px; color: #fff; background: var(--blue); border-radius: 50%; font-weight: 800; }
+      .phase h3 { margin-top: 2px; }
+      .sources a { color: var(--blue-2); }
+
+      footer { max-width: 1160px; margin: 0 auto; padding-top: 22px; color: var(--muted); border-top: 1px solid var(--line); font-size: 13px; }
+
+      @media (max-width: 1000px) {
+        .stats, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .arch { grid-template-columns: 1fr; }
+        .arrow { transform: rotate(90deg); }
+        .editor-body { grid-template-columns: 1fr; }
+        .preview { border-left: 0; border-top: 1px solid var(--line); }
+      }
+      @media (max-width: 780px) {
+        .topbar { padding-inline: 14px; }
+        .menu-button { display: inline-block; }
+        .print-button { display: none; }
+        .layout { display: block; }
+        .side {
+          position: fixed; top: 68px; left: 0; z-index: 35; width: min(82vw, 300px);
+          height: calc(100vh - 68px); transform: translateX(-104%); transition: transform .22s ease;
+          box-shadow: 20px 0 40px rgba(0,0,0,.15);
+        }
+        .side.open { transform: translateX(0); }
+        main { padding: 24px 16px 60px; }
+        section { margin-bottom: 44px; }
+        .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 520px) {
+        .brand small { display: none; }
+        .hero { border-radius: 14px; }
+        .stats, .grid-4 { grid-template-columns: 1fr; }
+        .resource-bar { height: auto; flex-direction: column; }
+        .seg { width: 100% !important; min-height: 36px; }
+      }
+      @media print {
+        body { background: #fff; }
+        .topbar, .side, .top-actions { display: none !important; }
+        .layout { display: block; max-width: none; }
+        main { padding: 0; }
+        section { break-inside: avoid; max-width: none; margin-bottom: 30px; }
+        .hero { color: #000; background: #fff; border: 2px solid #000; }
+        .hero p, .eyebrow { color: #333; }
+        .card, .editor, .arch { box-shadow: none; }
+        a { text-decoration: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="mark">MR</div>
+          <div><strong>Rongelec 全栈官网方案</strong><small>南通睦融电气设备有限公司 · 2026-08-21</small></div>
+        </div>
+        <div class="top-actions">
+          <button class="action menu-button" type="button" id="menuButton" aria-expanded="false" aria-controls="sideNav">目录</button>
+          <button class="action print-button" type="button" onclick="window.print()">打印 / 保存 PDF</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <nav class="side" id="sideNav" aria-label="方案目录">
+          <p class="side-title">方案目录</p>
+          <a href="#summary">执行摘要</a>
+          <a href="#decisions">确认决策</a>
+          <a href="#architecture">系统架构</a>
+          <a href="#public">公开官网</a>
+          <a href="#admin">管理后台</a>
+          <a href="#editor">富文本编辑器</a>
+          <a href="#content">内容与案例</a>
+          <a href="#responsive">响应式设计</a>
+          <a href="#media">图片与视频</a>
+          <a href="#mail">联系表单</a>
+          <a href="#server">2C4G 部署</a>
+          <a href="#security">安全与运维</a>
+          <a href="#testing">测试验收</a>
+          <a href="#roadmap">实施顺序</a>
+        </nav>
+
+        <main id="main">
+          <section id="summary">
+            <div class="hero">
+              <p class="eyebrow">Full-stack website &amp; CMS architecture</p>
+              <h1>企业官网 + 单管理员内容后台完整设计方案</h1>
+              <p>基于现有睦融官网视觉和内容，重构为 Next.js 中英双语公开站、富文本内容后台、PostgreSQL 数据层与阿里云 OSS/CDN 媒体体系。</p>
+              <div class="status-line">
+                <span class="pill">方案 1 已确认</span><span class="pill">2 核 4GB 阿里云 Linux</span>
+                <span class="pill">中英双语</span><span class="pill">有声首页视频</span><span class="pill">手机 / iPad / 电脑</span>
+              </div>
+            </div>
+            <div class="stats">
+              <div class="stat"><strong>1</strong><span>Next.js 全栈应用</span></div>
+              <div class="stat"><strong>1</strong><span>单管理员账号</span></div>
+              <div class="stat"><strong>100+</strong><span>案例容量目标，不是首期录入量</span></div>
+              <div class="stat"><strong>2C4G</strong><span>现有 ECS 运行规格</span></div>
+            </div>
+          </section>
+
+          <section id="decisions">
+            <div class="rule"></div><h2>已经确认的设计决策</h2>
+            <p class="lead">这些决策构成第一期范围，不在实施中重新扩大。</p>
+            <div class="grid-2">
+              <div class="card accent"><h3>第一期包含</h3><ul class="checklist">
+                <li>首页、服务、案例、关于、联系及中英文路由</li><li>单管理员内容后台</li>
+                <li>服务案例列表、分页和独立详情页</li><li>字体、字号、颜色可控的富文本编辑</li>
+                <li>OSS/CDN 媒体、联系表单接口投递到 QQ 邮箱、SEO 与隐私页面</li>
+              </ul></div>
+              <div class="card soft"><h3>第一期不包含</h3><ul class="checklist not-list">
+                <li>新闻动态</li><li>多管理员、角色与审批流</li><li>CRM、客户门户、报价、工单与库存</li>
+                <li>Excel/CSV 案例批量导入</li><li>后台客户线索列表</li>
+              </ul></div>
+            </div>
+          </section>
+
+          <section id="architecture">
+            <div class="rule"></div><h2>系统架构</h2>
+            <p class="lead">公开站、后台和 API 位于同一个应用，但在路由、权限和模块上保持清晰边界。媒体不经过服务器转发。</p>
+            <div class="arch" role="img" aria-label="系统架构图">
+              <div class="arch-col"><div class="node">访客<br><small>rongelec.com/zh · /en</small></div><div class="node">管理员<br><small>/admin</small></div></div>
+              <div class="arrow">→</div>
+              <div class="arch-col"><div class="node">Nginx · HTTPS · 限流</div><div class="node primary">Next.js 全栈应用<br><small>公开站 + 后台 + API + 缓存刷新</small></div></div>
+              <div class="arrow">→</div>
+              <div class="arch-col"><div class="node">PostgreSQL</div><div class="node">OSS + CDN</div><div class="node">SSL SMTP → QQ 邮箱</div></div>
+            </div>
+            <div class="grid-3" style="margin-top:16px">
+              <div class="card"><h3>前端</h3><p>Next.js App Router、React、TypeScript、Tailwind CSS。正式构建 CSS，不使用浏览器 Tailwind CDN。</p></div>
+              <div class="card"><h3>后台/API</h3><p>服务端会话、权限校验、内容 CRUD、发布、缓存失效、OSS 签名上传和联系表单。</p></div>
+              <div class="card"><h3>数据</h3><p>Prisma + PostgreSQL。数据库只保存结构化内容和 OSS 对象键，不保存媒体二进制。</p></div>
+            </div>
+          </section>
+
+          <section id="public">
+            <div class="rule"></div><h2>公开官网结构与页面跳转</h2>
+            <div class="grid-2">
+              <div class="card"><h3>中文路由</h3><div class="route">/zh</div><div class="route">/zh/services/[slug]</div><div class="route">/zh/cases?page=1</div><div class="route">/zh/cases/[slug]</div><div class="route">/zh/about · /zh/contact</div></div>
+              <div class="card"><h3>英文路由</h3><div class="route">/en</div><div class="route">/en/services/[slug]</div><div class="route">/en/cases?page=1</div><div class="route">/en/cases/[slug]</div><div class="route">/en/about · /en/contact</div></div>
+            </div>
+            <div class="note good" style="margin-top:16px"><strong>100 条案例不会压垮服务器：</strong>公开列表每页只取 12 条摘要和缩略图；详情按需读取。PostgreSQL 对 100 条甚至更多内容都很轻，性能重点仍然是媒体体积和缓存。</div>
+          </section>
+
+          <section id="admin">
+            <div class="rule"></div><h2>单管理员后台</h2>
+            <div class="grid-3">
+              <div class="card"><h3>页面内容</h3><p>首页、服务、关于、联系、页脚、隐私政策和服务条款的文本，都通过中英文富文本编辑框维护；联系页预留地图地点展示区域。</p></div>
+              <div class="card"><h3>案例管理</h3><p>逐条新建、编辑、预览、发布、下架、排序和分类；不做批量导入。</p></div>
+              <div class="card"><h3>媒体库</h3><p>OSS 图片、相册、视频版本和封面；上传使用短期签名。</p></div>
+              <div class="card"><h3>双语校验</h3><p>中文与英文必填内容、封面、slug 和 SEO 完整后才能发布。</p></div>
+              <div class="card"><h3>版本与跳转</h3><p>保留有限编辑历史；发布后的 slug 默认锁定，修改时自动生成 301。</p></div>
+              <div class="card"><h3>账号安全</h3><p>强密码、安全 Cookie、登录限流、TOTP、会话撤销与登录通知。</p></div>
+            </div>
+          </section>
+
+          <section id="editor">
+            <div class="rule"></div><h2>富文本编辑器设计</h2>
+            <p class="lead">这是管理员编辑页面文本信息时使用的标准富文本编辑框。首页、服务、关于、联系、页脚、隐私政策、服务条款和案例正文都使用它；内容保存后由公开网站安全渲染。</p>
+            <div class="editor" aria-label="后台富文本编辑器示意">
+              <div class="editor-head"><strong>页面文本编辑（示意：首页 / 关于 / 服务 / 案例等）</strong><div class="tabs"><span class="tab active">中文</span><span class="tab">English</span></div></div>
+              <div class="toolbar">
+                <button class="tool" type="button"><b>B</b></button><button class="tool" type="button"><i>I</i></button><button class="tool" type="button"><u>U</u></button>
+                <select class="tool-input" aria-label="字体"><option>默认字体</option><option>思源黑体</option><option>宋体风格</option></select>
+                <label class="tool">字号 <input aria-label="字号" value="18" size="2" /> px</label>
+                <label class="tool">颜色 <input aria-label="字体颜色" value="#9D241F" size="7" /></label>
+                <button class="tool" type="button">左对齐</button><button class="tool" type="button">列表</button><button class="tool" type="button">链接</button><button class="tool" type="button">图片</button><button class="tool" type="button">表格</button>
+              </div>
+              <div class="editor-body">
+                <div class="paper"><h4>船舶岸电系统改造案例</h4><p class="sample">编辑页面文本时，可以直接设置字体、字号和颜色来突出关键结论。</p><p>正文支持段落、H1–H4、列表、引用、链接、OSS 图片、图片说明及表格。粘贴 Word 内容后，系统会自动整理不兼容的格式。</p></div>
+                <div class="preview"><strong>移动端预览</strong><div class="device"><b>案例标题</b><div></div><p>字号在小屏幕自动限制，图片和表格不会撑破页面。</p></div></div>
+              </div>
+            </div>
+            <div class="grid-2" style="margin-top:16px">
+              <div class="card"><h3>编辑功能</h3><p>字号 12–48px；颜色选择器和十六进制输入；可选中英文字体；对齐、列表、引用、链接、图片和表格。</p></div>
+              <div class="card"><h3>自动安全处理</h3><p>系统在后台过滤脚本、危险属性、外链 iframe 和破坏页面宽度的固定尺寸；管理员无需额外操作。</p></div>
+            </div>
+          </section>
+
+          <section id="content">
+            <div class="rule"></div><h2>内容模型与发布流程</h2>
+            <div class="flow">
+              <div class="flow-step"><b>1. 草稿</b>填写基础信息与稳定 slug</div><div class="flow-step"><b>2. 双语正文</b>分别编辑中文和英文富文本</div>
+              <div class="flow-step"><b>3. 媒体</b>选择封面、相册和替代文本</div><div class="flow-step"><b>4. 校验</b>检查双语、SEO、响应式预览</div>
+              <div class="flow-step"><b>5. 发布</b>写入发布时间并刷新缓存</div>
+            </div>
+            <div class="grid-3" style="margin-top:16px">
+              <div class="card"><h3>CaseStudy</h3><p>slug、状态、时间、推荐、服务分类、船型、封面和排序。</p></div>
+              <div class="card"><h3>CaseTranslation</h3><p>locale、标题、摘要、正文 JSON、SEO 标题和描述。</p></div>
+              <div class="card"><h3>MediaAsset</h3><p>OSS 对象键、类型、宽高、时长、中英文替代文本。</p></div>
+            </div>
+          </section>
+
+          <section id="responsive">
+            <div class="rule"></div><h2>手机、iPad 与电脑自适应</h2>
+            <div class="grid-4">
+              <div class="card"><h3>360–639px</h3><p>单列案例、折叠菜单、紧凑首屏、44px 触控区域。</p></div>
+              <div class="card"><h3>640–767px</h3><p>大屏手机，控制文字行长与媒体高度。</p></div>
+              <div class="card"><h3>768–1023px</h3><p>iPad 双列案例，适配横竖屏和紧凑导航。</p></div>
+              <div class="card"><h3>1024px+</h3><p>三列案例、完整导航，正文最大宽度 1280px。</p></div>
+            </div>
+            <p class="note" style="margin-top:16px">重点测试宽度：360、390、430、768、820、1024、1280、1440、1920px。页面不使用整页缩放，富文本超大字号会在小屏幕受限。</p>
+          </section>
+
+          <section id="media">
+            <div class="rule"></div><h2>图片与有声首页视频</h2>
+            <div class="grid-2">
+              <div class="card"><h3>首屏视频</h3><ul><li>原始有声母版保存在 OSS</li><li>桌面 1080p、手机 720p，均保留 AAC 音轨</li><li>先显示 ≤150KB 封面，再延迟加载视频</li><li>默认静音自动播放，点击按钮开启声音</li><li>省流量、慢网或减少动态效果时仅显示封面</li></ul></div>
+              <div class="card"><h3>图片</h3><ul><li>OSS 原图 + CDN 响应式尺寸</li><li>AVIF/WebP，JPEG/PNG 回退</li><li>首屏优先，其余懒加载</li><li>保存宽高，避免页面跳动</li><li>案例列表只加载缩略图</li></ul></div>
+            </div>
+            <div class="note good" style="margin-top:16px"><strong>CDN 必做：</strong>MP4 正确 Content-Type、版本化对象键、HTTPS、长期缓存、Range 回源，并通过 206 Partial Content 验证。</div>
+          </section>
+
+          <section id="mail">
+            <div class="rule"></div><h2>联系表单接口 → QQ 邮箱</h2>
+            <div class="flow">
+              <div class="flow-step"><b>浏览器表单</b>姓名、公司、联系方式、船舶/故障描述</div><div class="flow-step"><b>后端接口</b>接收数据、字段校验、蜜罐、IP 限流</div>
+              <div class="flow-step"><b>连接 QQ 邮箱</b>通过 QQ SSL SMTP 接口投递邮件</div><div class="flow-step"><b>QQ 收件箱</b>指定 QQ 邮箱收到联系方式</div>
+            </div>
+            <p class="note" style="margin-top:16px">只实现“联系表单 API → QQ 邮箱”的投递接口，不建设独立发信域名，也不在数据库保存留言正文。发送失败时提示重试，并展示 hmm@rongelec.com 与公开电话作为备用联系方式。</p>
+          </section>
+
+          <section id="server">
+            <div class="rule"></div><h2>阿里云 Linux · 2 核 4GB 部署</h2>
+            <p class="lead">运行容量足够。生产镜像在本地或 CI 构建，ECS 只拉取并运行，避免构建阶段与 PostgreSQL 抢占内存。</p>
+            <div class="resource">
+              <div class="resource-bar" aria-label="4GB 内存建议分配示意"><div class="seg os">系统/Nginx<br>约 0.9GB</div><div class="seg next">Next.js<br>约 0.75GB</div><div class="seg db">PostgreSQL<br>约 0.75GB</div><div class="seg reserve">缓存与峰值余量<br>约 1.6GB</div></div>
+              <p style="color:var(--muted);font-size:13px">这是运行期预算示意，不是强制固定配额；以监控数据调整。</p>
+            </div>
+            <div class="grid-3">
+              <div class="card"><h3>Nginx</h3><p>80/443、HTTPS、压缩、限流、请求体限制、安全头和 Next.js 反向代理。</p></div>
+              <div class="card"><h3>Next.js</h3><p>单应用容器、健康检查、自动重启、运行内存上限和持久缓存目录。</p></div>
+              <div class="card"><h3>PostgreSQL</h3><p>独立容器与持久卷，仅 Docker 内网访问，每日备份到独立 OSS 路径。</p></div>
+            </div>
+          </section>
+
+          <section id="security">
+            <div class="rule"></div><h2>安全、上线与运维</h2>
+            <div class="grid-2">
+              <div class="card"><h3>服务器基线</h3><ul class="checklist"><li>公网只开放 80/443</li><li>SSH 限制管理来源，数据库不暴露</li><li>非 root 部署与密钥登录</li><li>Compose restart、healthcheck、日志轮转</li><li>CPU、内存、磁盘、证书和容器告警</li></ul></div>
+              <div class="card"><h3>应用基线</h3><ul class="checklist"><li>密码强哈希、安全 Cookie、CSRF 与登录限流</li><li>富文本服务端安全过滤</li><li>OSS 短期签名与文件校验</li><li>后台与预览页面禁止搜索引擎收录</li><li>敏感配置只放服务器环境变量</li></ul></div>
+              <div class="card"><h3>公网 Git 密钥保护</h3><ul class="checklist"><li>.gitignore 屏蔽 .env、密钥文件、备份和本地部署配置</li><li>.env.example 只有变量名和假占位符</li><li>QQ 授权码、百度网盘 API、OSS、数据库和会话密钥只放服务器</li><li>首次公网推送前扫描已跟踪文件和完整 Git 历史</li><li>推送前与 CI 持续扫描，命中即阻止</li><li>泄露后先撤销轮换，再清理 Git 历史</li></ul></div>
+              <div class="card"><h3>禁止进入仓库</h3><p>真实 QQ 邮箱或管理员私人账号、授权码、API Key/Secret、AccessKey、密码、私钥、带凭据的连接串、生产数据库备份，以及日志中打印出的配置值。</p></div>
+            </div>
+            <div class="note good" style="margin-top:16px"><strong>上线顺序：</strong>数据库备份 → 向后兼容迁移 → 启动新镜像 → 健康检查 → 页面/登录/发布/邮件/Range 烟雾测试 → 切换流量。失败则回切旧镜像；涉及数据结构时按迁移说明恢复。</div>
+          </section>
+
+          <section id="testing">
+            <div class="rule"></div><h2>测试与验收标准</h2>
+            <div class="grid-3">
+              <div class="card"><h3>功能</h3><p>双语页面、案例 CRUD、发布与下架、slug 跳转、QQ 邮件、隐私条款和管理员认证。</p></div>
+              <div class="card"><h3>富文本</h3><p>字体、12–48px 字号、颜色、图片和表格保存正确；危险 HTML 被拒绝；手机布局不溢出。</p></div>
+              <div class="card"><h3>容量</h3><p>用 100 条测试数据验证分页和查询，不提供批量导入入口。</p></div>
+              <div class="card"><h3>响应式</h3><p>iPhone、Android、iPad 横竖屏、Safari、Chrome 和 Edge。</p></div>
+              <div class="card"><h3>性能</h3><p>移动端 LCP ≤2.5s、CLS ≤0.1、INP ≤200ms；手机不请求桌面视频。</p></div>
+              <div class="card"><h3>恢复</h3><p>数据库备份可恢复；旧站可回切；缓存发布与 CDN 版本更新可验证。</p></div>
+              <div class="card"><h3>Git 安全</h3><p>用测试密钥验证提交和 CI 扫描能够拦截；前端代码、构建产物与日志均不含服务端凭据。</p></div>
+            </div>
+          </section>
+
+          <section id="roadmap">
+            <div class="rule"></div><h2>实施顺序</h2>
+            <div class="phase"><div class="num">1</div><div><h3>基础与数据</h3><p>Next.js、PostgreSQL、认证、测试、Docker 和现有站点备份。</p></div></div>
+            <div class="phase"><div class="num">2</div><div><h3>公开站迁移</h3><p>拆分现有首页、服务、关于、联系、法律页面和双语内容。</p></div></div>
+            <div class="phase"><div class="num">3</div><div><h3>内容后台与富文本</h3><p>页面内容、服务、案例、媒体、字体/字号/颜色工具栏和多设备预览。</p></div></div>
+            <div class="phase"><div class="num">4</div><div><h3>案例、缓存与 SEO</h3><p>分页、详情、slug/301、预渲染、发布失效、Sitemap 与 hreflang。</p></div></div>
+            <div class="phase"><div class="num">5</div><div><h3>OSS/CDN 与有声视频</h3><p>响应式图片、两档视频、封面先行、声音按钮、Range 和缓存策略。</p></div></div>
+            <div class="phase"><div class="num">6</div><div><h3>QQ 邮件与安全</h3><p>联系表单、SSL SMTP、限流、隐私告知、TOTP 和安全头；联系页只预留地图地点展示。</p></div></div>
+            <div class="phase"><div class="num">7</div><div><h3>阿里云部署</h3><p>预发布验证、备份恢复、真实设备测试、上线与旧站回滚入口。</p></div></div>
+          </section>
+
+          <section class="sources">
+            <div class="rule"></div><h2>方案依据</h2>
+            <ul><li><a href="https://nextjs.org/docs/app/guides/self-hosting">Next.js Self-Hosting</a></li><li><a href="https://help.aliyun.com/zh/ecs/user-guide/install-and-use-docker">阿里云 ECS Docker 与 Compose</a></li><li><a href="https://help.aliyun.com/en/oss/user-guide/cdn-acceleration">阿里云 OSS/CDN 媒体加速</a></li></ul>
+          </section>
+
+          <footer>Rongelec 企业官网与内容后台完整方案 · 与 <code>docs/superpowers/specs/2026-08-19-rongelec-fullstack-website-design.md</code> 保持一致。</footer>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      const nav = document.getElementById('sideNav');
+      const menuButton = document.getElementById('menuButton');
+      const links = Array.from(nav.querySelectorAll('a'));
+      menuButton.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+      links.forEach((link) => link.addEventListener('click', () => {
+        nav.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }));
+      const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${visible.target.id}`));
+      }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] });
+      sections.forEach((section) => observer.observe(section));
+    </script>
+  </body>
+</html>

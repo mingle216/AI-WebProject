@@ -1,3 +1,35 @@
 .DS_Store
 .superpowers/
 
+# 私密环境变量：公网仓库只允许提交无真实值的 .env.example
+.env
+.env.*
+!.env.example
+
+# 私钥、证书私钥与第三方服务凭据
+*.pem
+*.key
+*.p12
+*.pfx
+*.secret
+*.credentials
+credentials*.json
+secret*.json
+secrets/
+
+# 本地部署配置与数据库备份
+docker-compose.override.yml
+*.sql
+*.dump
+*.bak
+backups/
+
+# 本地日志可能包含接口或配置错误信息
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 测试缓存
+__pycache__/
+*.py[cod]
