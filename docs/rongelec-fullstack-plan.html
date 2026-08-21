@@ -24,7 +24,7 @@
       }
 
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
+      html { scroll-behavior: smooth; overflow-x: clip; }
       body {
         margin: 0;
         color: var(--ink);
@@ -102,10 +102,10 @@
       .rule { width: 52px; height: 4px; margin: 0 0 14px; background: var(--red); border-radius: 4px; }
 
       .stats, .grid-2, .grid-3, .grid-4 { display: grid; gap: 16px; }
-      .stats { grid-template-columns: repeat(4, 1fr); margin-top: 22px; }
-      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .stats { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); margin-top: 22px; }
+      .grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+      .grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr)); }
+      .grid-4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
       .stat, .card {
         background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
       }
@@ -113,6 +113,7 @@
       .stat strong { display: block; color: var(--blue); font-size: 28px; line-height: 1.1; }
       .stat span { color: var(--muted); font-size: 13px; }
       .card { padding: 20px; }
+      .stat, .card, .flow-step { min-inline-size: 0; overflow-wrap: anywhere; }
       .card.soft { background: var(--soft); }
       .card.accent { border-top: 4px solid var(--red); }
       .card p:last-child, .card ul:last-child { margin-bottom: 0; }
@@ -141,8 +142,8 @@
       .editor {
         overflow: hidden; background: #fff; border: 1px solid #cdd7e3; border-radius: 14px; box-shadow: var(--shadow);
       }
-      .editor-head { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #f5f7fa; border-bottom: 1px solid var(--line); }
-      .tabs { display: flex; gap: 6px; }
+      .editor-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #f5f7fa; border-bottom: 1px solid var(--line); }
+      .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
       .tab { padding: 6px 10px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
       .tab.active { color: #fff; background: var(--blue); border-color: var(--blue); }
       .toolbar { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; background: #fbfcfd; border-bottom: 1px solid var(--line); }
@@ -150,7 +151,7 @@
       .tool-input { min-width: 92px; }
       .editor-body { display: grid; grid-template-columns: minmax(0, 1fr) 240px; min-height: 260px; }
       .paper { padding: 24px; }
-      .paper h4 { margin: 0 0 10px; color: var(--blue); font-size: 26px; }
+      .paper h4 { margin: 0 0 10px; color: var(--blue); font-size: clamp(22px, 3vw, 26px); overflow-wrap: anywhere; text-wrap: balance; }
       .paper .sample { color: #9d241f; font-size: 18px; font-family: Georgia, "Noto Serif SC", serif; }
       .preview { padding: 18px; background: #f3f6f9; border-left: 1px solid var(--line); }
       .device { width: 132px; min-height: 208px; margin: 10px auto 0; padding: 10px; background: #fff; border: 6px solid #344054; border-radius: 18px; font-size: 8px; }
@@ -171,11 +172,11 @@
       .num { display: grid; place-items: center; width: 42px; height: 42px; color: #fff; background: var(--blue); border-radius: 50%; font-weight: 800; }
       .phase h3 { margin-top: 2px; }
       .sources a { color: var(--blue-2); }
+      .lang-en { hyphens: auto; overflow-wrap: anywhere; }
 
       footer { max-width: 1160px; margin: 0 auto; padding-top: 22px; color: var(--muted); border-top: 1px solid var(--line); font-size: 13px; }
 
       @media (max-width: 1000px) {
-        .stats, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .arch { grid-template-columns: 1fr; }
         .arrow { transform: rotate(90deg); }
         .editor-body { grid-template-columns: 1fr; }
@@ -194,12 +195,10 @@
         .side.open { transform: translateX(0); }
         main { padding: 24px 16px 60px; }
         section { margin-bottom: 44px; }
-        .grid-2, .grid-3 { grid-template-columns: 1fr; }
       }
       @media (max-width: 520px) {
         .brand small { display: none; }
         .hero { border-radius: 14px; }
-        .stats, .grid-4 { grid-template-columns: 1fr; }
         .resource-bar { height: auto; flex-direction: column; }
         .seg { width: 100% !important; min-height: 36px; }
       }
@@ -239,6 +238,7 @@
           <a href="#public">公开官网</a>
           <a href="#admin">管理后台</a>
           <a href="#editor">富文本编辑器</a>
+          <a href="#translation">AI 英文翻译</a>
           <a href="#content">内容与案例</a>
           <a href="#responsive">响应式设计</a>
           <a href="#media">图片与视频</a>
@@ -275,7 +275,7 @@
               <div class="card accent"><h3>第一期包含</h3><ul class="checklist">
                 <li>首页、服务、案例、关于、联系及中英文路由</li><li>单管理员内容后台</li>
                 <li>服务案例列表、分页和独立详情页</li><li>字体、字号、颜色可控的富文本编辑</li>
-                <li>OSS/CDN 媒体、联系表单接口投递到 QQ 邮箱、SEO 与隐私页面</li>
+                <li>DeepSeek 海事英语初稿、OSS/CDN 媒体、QQ 邮箱、SEO 与隐私页面</li>
               </ul></div>
               <div class="card soft"><h3>第一期不包含</h3><ul class="checklist not-list">
                 <li>新闻动态</li><li>多管理员、角色与审批流</li><li>CRM、客户门户、报价、工单与库存</li>
@@ -292,11 +292,11 @@
               <div class="arrow">→</div>
               <div class="arch-col"><div class="node">Nginx · HTTPS · 限流</div><div class="node primary">Next.js 全栈应用<br><small>公开站 + 后台 + API + 缓存刷新</small></div></div>
               <div class="arrow">→</div>
-              <div class="arch-col"><div class="node">PostgreSQL</div><div class="node">OSS + CDN</div><div class="node">SSL SMTP → QQ 邮箱</div></div>
+              <div class="arch-col"><div class="node">PostgreSQL<br><small>内容、术语库、翻译任务</small></div><div class="node">翻译 Worker<br><small>同镜像 · 并发 1</small></div><div class="node">DeepSeek-V4-Flash</div><div class="node">OSS + CDN</div><div class="node">SSL SMTP → QQ 邮箱</div></div>
             </div>
             <div class="grid-3" style="margin-top:16px">
               <div class="card"><h3>前端</h3><p>Next.js App Router、React、TypeScript、Tailwind CSS。正式构建 CSS，不使用浏览器 Tailwind CDN。</p></div>
-              <div class="card"><h3>后台/API</h3><p>服务端会话、权限校验、内容 CRUD、发布、缓存失效、OSS 签名上传和联系表单。</p></div>
+              <div class="card"><h3>后台/API</h3><p>服务端会话、权限校验、内容 CRUD、发布、缓存失效、OSS 签名上传、翻译任务和联系表单。</p></div>
               <div class="card"><h3>数据</h3><p>Prisma + PostgreSQL。数据库只保存结构化内容和 OSS 对象键，不保存媒体二进制。</p></div>
             </div>
           </section>
@@ -316,7 +316,7 @@
               <div class="card"><h3>页面内容</h3><p>首页、服务、关于、联系、页脚、隐私政策和服务条款的文本，都通过中英文富文本编辑框维护；联系页预留地图地点展示区域。</p></div>
               <div class="card"><h3>案例管理</h3><p>逐条新建、编辑、预览、发布、下架、排序和分类；不做批量导入。</p></div>
               <div class="card"><h3>媒体库</h3><p>OSS 图片、相册、视频版本和封面；上传使用短期签名。</p></div>
-              <div class="card"><h3>双语校验</h3><p>中文与英文必填内容、封面、slug 和 SEO 完整后才能发布。</p></div>
+              <div class="card"><h3>双语校验</h3><p>首次发布需确认中英文；后续中文更新会提示英文待复核，英文旧版继续公开。</p></div>
               <div class="card"><h3>版本与跳转</h3><p>保留有限编辑历史；发布后的 slug 默认锁定，修改时自动生成 301。</p></div>
               <div class="card"><h3>账号安全</h3><p>强密码、安全 Cookie、登录限流、TOTP、会话撤销与登录通知。</p></div>
             </div>
@@ -345,29 +345,51 @@
             </div>
           </section>
 
+          <section id="translation">
+            <div class="rule"></div><h2>DeepSeek 海事英语翻译工作流</h2>
+            <p class="lead">中文页签可保存、生成英文初稿或创建空白英文版。英文始终是独立草稿，必须由管理员修改、确认后才影响 <span class="lang-en">/en</span> 页面。</p>
+            <div class="flow">
+              <div class="flow-step"><b>1. 冻结中文快照</b>保存当前中文版本，翻译期间后续中文编辑不会影响本次结果。</div>
+              <div class="flow-step"><b>2. 创建 PG 任务</b>同一内容和版本只允许一个排队/处理中任务，避免重复点击。</div>
+              <div class="flow-step"><b>3. Worker 领取</b>短事务 <span class="lang-en">SKIP LOCKED</span>；领取后立即提交，不在事务中等待 AI。</div>
+              <div class="flow-step"><b>4. 保护富文本</b>按段落提取文字，行内格式用占位符保留；图片、表格、链接、字号不交给 AI。</div>
+              <div class="flow-step"><b>5. 匹配术语</b>后台术语库只注入命中的最多 50 条海事术语。</div>
+              <div class="flow-step"><b>6. DeepSeek 初稿</b>V4-Flash 输出国际海事英语、英式拼写的 JSON。</div>
+              <div class="flow-step"><b>7. 校验与写回</b>检查路径、占位符、术语和分块数量，生成英文草稿。</div>
+              <div class="flow-step"><b>8. 人工发布</b>英文页签调整并确认；失败可重试，已发布英文不会被覆盖。</div>
+            </div>
+            <div class="grid-3" style="margin-top:16px">
+              <div class="card"><h3>英文状态</h3><p>未创建、AI 初稿、手动编辑、已确认、中文已更新待复核；后台显示英文落后中文的版本数。</p></div>
+              <div class="card"><h3>任务可靠性</h3><p>单块只重试一次；429、500、503 或空响应可重试。处理中超过 10 分钟自动标记失败。</p></div>
+              <div class="card"><h3>术语库 CRUD</h3><p>中文术语、固定英文、备注、启用状态和版本号。翻译记录提示词、模型、术语版本和 token 用量。</p></div>
+            </div>
+            <div class="note good" style="margin-top:16px"><strong>公开展示：</strong>中文发布 V2 而英文待复核时，英文访客继续看到最后一个确认版本 V1。英文从未发布时，语言切换显示不可用按钮，英文 URL 返回 404。</div>
+          </section>
+
           <section id="content">
             <div class="rule"></div><h2>内容模型与发布流程</h2>
             <div class="flow">
-              <div class="flow-step"><b>1. 草稿</b>填写基础信息与稳定 slug</div><div class="flow-step"><b>2. 双语正文</b>分别编辑中文和英文富文本</div>
-              <div class="flow-step"><b>3. 媒体</b>选择封面、相册和替代文本</div><div class="flow-step"><b>4. 校验</b>检查双语、SEO、响应式预览</div>
-              <div class="flow-step"><b>5. 发布</b>写入发布时间并刷新缓存</div>
+              <div class="flow-step"><b>1. 草稿</b>填写基础信息与稳定 slug</div><div class="flow-step"><b>2. 中文快照</b>保存可追溯的中文富文本版本</div>
+              <div class="flow-step"><b>3. 英文草稿</b>AI 初稿或从空白手动编辑</div><div class="flow-step"><b>4. 媒体与 SEO</b>选择封面、相册、替代文本和双语 SEO</div>
+              <div class="flow-step"><b>5. 确认发布</b>首次双语确认；后续语言独立更新并刷新缓存</div>
             </div>
             <div class="grid-3" style="margin-top:16px">
               <div class="card"><h3>CaseStudy</h3><p>slug、状态、时间、推荐、服务分类、船型、封面和排序。</p></div>
-              <div class="card"><h3>CaseTranslation</h3><p>locale、标题、摘要、正文 JSON、SEO 标题和描述。</p></div>
+              <div class="card"><h3>CaseTranslation</h3><p>locale、标题、摘要、正文 JSON、SEO、草稿/已发布版本和英文状态。</p></div>
               <div class="card"><h3>MediaAsset</h3><p>OSS 对象键、类型、宽高、时长、中英文替代文本。</p></div>
+              <div class="card"><h3>TranslationTask</h3><p>冻结中文版本、排队/处理/失败状态、分块进度、重试、锁定时间与结果草稿。</p></div>
             </div>
           </section>
 
           <section id="responsive">
-            <div class="rule"></div><h2>手机、iPad 与电脑自适应</h2>
+            <div class="rule"></div><h2>任意合理屏幕尺寸的连续自适应</h2>
             <div class="grid-4">
-              <div class="card"><h3>360–639px</h3><p>单列案例、折叠菜单、紧凑首屏、44px 触控区域。</p></div>
-              <div class="card"><h3>640–767px</h3><p>大屏手机，控制文字行长与媒体高度。</p></div>
-              <div class="card"><h3>768–1023px</h3><p>iPad 双列案例，适配横竖屏和紧凑导航。</p></div>
-              <div class="card"><h3>1024px+</h3><p>三列案例、完整导航，正文最大宽度 1280px。</p></div>
+              <div class="card"><h3>流动容器</h3><p><span class="lang-en">clamp()</span> 控制字号、间距和留白；最大内容宽度限制阅读行长。</p></div>
+              <div class="card"><h3>自动网格</h3><p><span class="lang-en">auto-fit + minmax()</span> 让卡片按可用空间自然从多列变单列。</p></div>
+              <div class="card"><h3>文本安全</h3><p>按钮自动换行；英文长词可断行；标题平衡换行；正文保留可读字号。</p></div>
+              <div class="card"><h3>媒体安全</h3><p>图片、视频最大宽度 100%；表格只在自身区域滚动，页面本身不横向滚动。</p></div>
             </div>
-            <p class="note" style="margin-top:16px">重点测试宽度：360、390、430、768、820、1024、1280、1440、1920px。页面不使用整页缩放，富文本超大字号会在小屏幕受限。</p>
+            <p class="note" style="margin-top:16px">不按设备型号做三套页面，断点只在内容无法容纳时触发。自动验证 320–2560px 的连续宽度抽样、横竖屏、英文文本膨胀和 200% 缩放；页面不使用整页缩放。</p>
           </section>
 
           <section id="media">
@@ -392,12 +414,12 @@
             <div class="rule"></div><h2>阿里云 Linux · 2 核 4GB 部署</h2>
             <p class="lead">运行容量足够。生产镜像在本地或 CI 构建，ECS 只拉取并运行，避免构建阶段与 PostgreSQL 抢占内存。</p>
             <div class="resource">
-              <div class="resource-bar" aria-label="4GB 内存建议分配示意"><div class="seg os">系统/Nginx<br>约 0.9GB</div><div class="seg next">Next.js<br>约 0.75GB</div><div class="seg db">PostgreSQL<br>约 0.75GB</div><div class="seg reserve">缓存与峰值余量<br>约 1.6GB</div></div>
+              <div class="resource-bar" aria-label="4GB 内存建议分配示意"><div class="seg os">系统/Nginx<br>约 0.9GB</div><div class="seg next">Next.js + Worker<br>约 0.9GB</div><div class="seg db">PostgreSQL<br>约 0.75GB</div><div class="seg reserve">缓存与峰值余量<br>约 1.45GB</div></div>
               <p style="color:var(--muted);font-size:13px">这是运行期预算示意，不是强制固定配额；以监控数据调整。</p>
             </div>
             <div class="grid-3">
               <div class="card"><h3>Nginx</h3><p>80/443、HTTPS、压缩、限流、请求体限制、安全头和 Next.js 反向代理。</p></div>
-              <div class="card"><h3>Next.js</h3><p>单应用容器、健康检查、自动重启、运行内存上限和持久缓存目录。</p></div>
+              <div class="card"><h3>Next.js + Worker</h3><p>同一镜像分别启动 Web 与单翻译 Worker；健康检查、自动重启、并发 1 和内存上限。</p></div>
               <div class="card"><h3>PostgreSQL</h3><p>独立容器与持久卷，仅 Docker 内网访问，每日备份到独立 OSS 路径。</p></div>
             </div>
           </section>
@@ -406,7 +428,7 @@
             <div class="rule"></div><h2>安全、上线与运维</h2>
             <div class="grid-2">
               <div class="card"><h3>服务器基线</h3><ul class="checklist"><li>公网只开放 80/443</li><li>SSH 限制管理来源，数据库不暴露</li><li>非 root 部署与密钥登录</li><li>Compose restart、healthcheck、日志轮转</li><li>CPU、内存、磁盘、证书和容器告警</li></ul></div>
-              <div class="card"><h3>应用基线</h3><ul class="checklist"><li>密码强哈希、安全 Cookie、CSRF 与登录限流</li><li>富文本服务端安全过滤</li><li>OSS 短期签名与文件校验</li><li>后台与预览页面禁止搜索引擎收录</li><li>敏感配置只放服务器环境变量</li></ul></div>
+              <div class="card"><h3>应用基线</h3><ul class="checklist"><li>密码强哈希、安全 Cookie、CSRF 与登录限流</li><li>富文本服务端安全过滤和 AST 路径校验</li><li>DeepSeek 仅由 Worker 调用，密钥只放服务器</li><li>OSS 短期签名与文件校验</li><li>后台与预览页面禁止搜索引擎收录</li></ul></div>
               <div class="card"><h3>公网 Git 密钥保护</h3><ul class="checklist"><li>.gitignore 屏蔽 .env、密钥文件、备份和本地部署配置</li><li>.env.example 只有变量名和假占位符</li><li>QQ 授权码、百度网盘 API、OSS、数据库和会话密钥只放服务器</li><li>首次公网推送前扫描已跟踪文件和完整 Git 历史</li><li>推送前与 CI 持续扫描，命中即阻止</li><li>泄露后先撤销轮换，再清理 Git 历史</li></ul></div>
               <div class="card"><h3>禁止进入仓库</h3><p>真实 QQ 邮箱或管理员私人账号、授权码、API Key/Secret、AccessKey、密码、私钥、带凭据的连接串、生产数据库备份，以及日志中打印出的配置值。</p></div>
             </div>
@@ -416,10 +438,10 @@
           <section id="testing">
             <div class="rule"></div><h2>测试与验收标准</h2>
             <div class="grid-3">
-              <div class="card"><h3>功能</h3><p>双语页面、案例 CRUD、发布与下架、slug 跳转、QQ 邮件、隐私条款和管理员认证。</p></div>
-              <div class="card"><h3>富文本</h3><p>字体、12–48px 字号、颜色、图片和表格保存正确；危险 HTML 被拒绝；手机布局不溢出。</p></div>
+              <div class="card"><h3>功能</h3><p>双语页面、案例 CRUD、英文 AI 草稿与人工确认、发布与下架、QQ 邮件和管理员认证。</p></div>
+              <div class="card"><h3>翻译可靠性</h3><p>冻结快照、段落 AST 回填、术语命中、重复任务、超时回收、失败重试和英文历史版本回退。</p></div>
               <div class="card"><h3>容量</h3><p>用 100 条测试数据验证分页和查询，不提供批量导入入口。</p></div>
-              <div class="card"><h3>响应式</h3><p>iPhone、Android、iPad 横竖屏、Safari、Chrome 和 Edge。</p></div>
+              <div class="card"><h3>响应式</h3><p>320–2560px、横竖屏、英文文本膨胀和 200% 缩放，无页面级横向溢出。</p></div>
               <div class="card"><h3>性能</h3><p>移动端 LCP ≤2.5s、CLS ≤0.1、INP ≤200ms；手机不请求桌面视频。</p></div>
               <div class="card"><h3>恢复</h3><p>数据库备份可恢复；旧站可回切；缓存发布与 CDN 版本更新可验证。</p></div>
               <div class="card"><h3>Git 安全</h3><p>用测试密钥验证提交和 CI 扫描能够拦截；前端代码、构建产物与日志均不含服务端凭据。</p></div>
@@ -430,8 +452,8 @@
             <div class="rule"></div><h2>实施顺序</h2>
             <div class="phase"><div class="num">1</div><div><h3>基础与数据</h3><p>Next.js、PostgreSQL、认证、测试、Docker 和现有站点备份。</p></div></div>
             <div class="phase"><div class="num">2</div><div><h3>公开站迁移</h3><p>拆分现有首页、服务、关于、联系、法律页面和双语内容。</p></div></div>
-            <div class="phase"><div class="num">3</div><div><h3>内容后台与富文本</h3><p>页面内容、服务、案例、媒体、字体/字号/颜色工具栏和多设备预览。</p></div></div>
-            <div class="phase"><div class="num">4</div><div><h3>案例、缓存与 SEO</h3><p>分页、详情、slug/301、预渲染、发布失效、Sitemap 与 hreflang。</p></div></div>
+            <div class="phase"><div class="num">3</div><div><h3>内容后台、富文本与翻译</h3><p>页面内容、服务、案例、术语库、冻结快照、PostgreSQL 队列、DeepSeek 英文初稿和多设备预览。</p></div></div>
+            <div class="phase"><div class="num">4</div><div><h3>案例、缓存、SEO 与连续自适应</h3><p>分页、详情、slug/301、预渲染、语言状态、双向 hreflang、Sitemap 与流动布局。</p></div></div>
             <div class="phase"><div class="num">5</div><div><h3>OSS/CDN 与有声视频</h3><p>响应式图片、两档视频、封面先行、声音按钮、Range 和缓存策略。</p></div></div>
             <div class="phase"><div class="num">6</div><div><h3>QQ 邮件与安全</h3><p>联系表单、SSL SMTP、限流、隐私告知、TOTP 和安全头；联系页只预留地图地点展示。</p></div></div>
             <div class="phase"><div class="num">7</div><div><h3>阿里云部署</h3><p>预发布验证、备份恢复、真实设备测试、上线与旧站回滚入口。</p></div></div>
@@ -439,7 +461,7 @@
 
           <section class="sources">
             <div class="rule"></div><h2>方案依据</h2>
-            <ul><li><a href="https://nextjs.org/docs/app/guides/self-hosting">Next.js Self-Hosting</a></li><li><a href="https://help.aliyun.com/zh/ecs/user-guide/install-and-use-docker">阿里云 ECS Docker 与 Compose</a></li><li><a href="https://help.aliyun.com/en/oss/user-guide/cdn-acceleration">阿里云 OSS/CDN 媒体加速</a></li></ul>
+            <ul><li><a href="https://nextjs.org/docs/app/guides/self-hosting">Next.js Self-Hosting</a></li><li><a href="https://help.aliyun.com/zh/ecs/user-guide/install-and-use-docker">阿里云 ECS Docker 与 Compose</a></li><li><a href="https://help.aliyun.com/en/oss/user-guide/cdn-acceleration">阿里云 OSS/CDN 媒体加速</a></li><li><a href="https://api-docs.deepseek.com/guides/json_mode/">DeepSeek JSON Output</a></li></ul>
           </section>
 
           <footer>Rongelec 企业官网与内容后台完整方案 · 与 <code>docs/superpowers/specs/2026-08-19-rongelec-fullstack-website-design.md</code> 保持一致。</footer>
