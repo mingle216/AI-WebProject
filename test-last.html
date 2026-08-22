@@ -140,6 +140,33 @@
       .animate-dash {
         animation: dash-flow 1s linear infinite;
       }
+
+      @keyframes core-value-breathe {
+        0%, 100% {
+          transform: scale(0.88);
+          box-shadow: 0 0 0 4px rgba(230, 0, 18, 0.08);
+          opacity: 0.82;
+        }
+        50% {
+          transform: scale(1.15);
+          box-shadow: 0 0 0 8px rgba(230, 0, 18, 0.14);
+          opacity: 1;
+        }
+      }
+      .core-value-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        flex: 0 0 auto;
+        border-radius: 9999px;
+        background: #e60012;
+        animation: core-value-breathe 2.4s ease-in-out infinite;
+        will-change: transform, box-shadow, opacity;
+      }
+      .core-value-item:nth-child(2) .core-value-dot { animation-delay: 0.3s; }
+      .core-value-item:nth-child(3) .core-value-dot { animation-delay: 0.6s; }
+      .core-value-item:nth-child(4) .core-value-dot { animation-delay: 0.9s; }
+
     </style>
   </head>
   <body class="bg-white text-slate-800 antialiased font-sans flex flex-col min-h-screen">
@@ -272,7 +299,7 @@
                         </li>
                         <li>
                           <a href="#" onclick="navigate('services', 'amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_4">船级社 (Class) 报验</span></a
+                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_4">并网调试与保护测试</span></a
                           >
                         </li>
                       </ul>
@@ -525,75 +552,65 @@
           
           <canvas id="techCanvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-80 z-0"></canvas>
           
-          <section class="py-16 md:py-24 relative z-10 border-b border-gray-100/50" id="welcome-section">
+          <section class="py-14 md:py-20 relative z-10 border-b border-gray-100/50" id="welcome-section">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
               
-              <div class="mb-12 md:mb-20 text-center">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-mrBlue tracking-tight" data-i18n="welcome_title">欢迎来到睦融</h2>
+              <div class="mb-10 md:mb-14 text-center">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-mrBlue tracking-tight" data-i18n="welcome_title">南通睦融电气设备有限公司</h2>
               </div>
 
-              <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-                <div class="w-full lg:w-1/2 space-y-6 md:space-y-8 bg-white/70 backdrop-blur-md p-6 md:p-8 rounded-2xl shadow-sm border border-gray-50/50">
-                  <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#c89255] leading-snug tracking-wide">
-                    <span data-i18n="welcome_slogan1">“全方位”海事电气服务</span><br />
-                    <span data-i18n="welcome_slogan2" class="block mt-2">供应 · 安全 · 工程 · 技术</span><br />
-                    <span data-i18n="welcome_slogan3" class="block mt-2">省时，省力，省心</span>
+              <div class="grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] items-stretch gap-6 lg:gap-8">
+                <article class="w-full min-h-0 lg:min-h-[540px] flex flex-col justify-center bg-white/80 backdrop-blur-md p-6 sm:p-8 lg:p-12 rounded-2xl shadow-sm border border-mrBlue/5">
+                  <p class="text-[11px] sm:text-xs font-bold text-mrRed tracking-[0.18em] mb-3">MARINE ELECTRICAL &amp; AUTOMATION</p>
+                  <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black text-mrBlue leading-snug tracking-tight">
+                    <span data-i18n="welcome_slogan1">“全方位”海事电气服务</span>
+                    <span data-i18n="welcome_slogan2" class="block mt-1.5 text-lg sm:text-xl lg:text-2xl text-[#31436f] tracking-[0.08em]">供应 · 安全 · 工程 · 技术</span>
                   </h3>
-                  <p class="text-base md:text-lg text-gray-600 leading-relaxed max-w-xl text-justify" data-i18n="welcome_desc">
-                    南通睦融电气设备有限公司（MURONG）深耕于海事工业领域，致力于为全球航行的船舶提供高精度、高响应率的电气自动化系统维修与保养服务。依托资深的技术工程师团队，我们始终将“快速响应、一次修复”作为服务准则。
+                  <p class="text-sm sm:text-base text-gray-600 leading-relaxed max-w-xl mt-4" data-i18n="welcome_desc">
+                    南通睦融电气设备有限公司（MURONG）深耕海事电气与自动化技术服务，围绕现场测量、故障定位、维修调试和技术交付，为船舶设备恢复可靠运行提供支持。
                   </p>
 
-                  <div class="pt-4 pb-2">
-                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4" data-i18n="values_title_en">OUR CORE VALUES</h4>
-                    <div class="grid grid-cols-2 gap-y-4 gap-x-2">
-                      <div class="flex items-center space-x-3 group">
-                        <div class="relative w-2.5 h-2.5 flex items-center justify-center">
-                          <span class="absolute w-full h-full bg-mrRed rounded-full animate-ping opacity-20"></span>
-                          <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full group-hover:scale-150 transition-transform"></span>
-                        </div>
+                  <div class="mt-5">
+                    <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-2.5" data-i18n="values_title_en">OUR CORE VALUES</h4>
+                    <div class="grid grid-cols-2 gap-y-2 gap-x-5">
+                      <div class="core-value-item flex items-center space-x-3 min-h-8">
+                        <span class="core-value-dot"></span>
                         <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_1_title">守正至诚</span>
                       </div>
-                      <div class="flex items-center space-x-3 group">
-                        <div class="relative w-2.5 h-2.5 flex items-center justify-center">
-                          <span class="absolute w-full h-full bg-mrRed rounded-full animate-ping opacity-20" style="animation-delay: 0.2s"></span>
-                          <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full group-hover:scale-150 transition-transform"></span>
-                        </div>
+                      <div class="core-value-item flex items-center space-x-3 min-h-8">
+                        <span class="core-value-dot"></span>
                         <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_2_title">极致履责</span>
                       </div>
-                      <div class="flex items-center space-x-3 group">
-                        <div class="relative w-2.5 h-2.5 flex items-center justify-center">
-                          <span class="absolute w-full h-full bg-mrRed rounded-full animate-ping opacity-20" style="animation-delay: 0.4s"></span>
-                          <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full group-hover:scale-150 transition-transform"></span>
-                        </div>
+                      <div class="core-value-item flex items-center space-x-3 min-h-8">
+                        <span class="core-value-dot"></span>
                         <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_3_title">同舟共济</span>
                       </div>
-                      <div class="flex items-center space-x-3 group">
-                        <div class="relative w-2.5 h-2.5 flex items-center justify-center">
-                          <span class="absolute w-full h-full bg-mrRed rounded-full animate-ping opacity-20" style="animation-delay: 0.6s"></span>
-                          <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full group-hover:scale-150 transition-transform"></span>
-                        </div>
+                      <div class="core-value-item flex items-center space-x-3 min-h-8">
+                        <span class="core-value-dot"></span>
                         <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_4_title">锐意破壁</span>
                       </div>
                     </div>
                   </div>
 
-                  <div class="pt-6 border-t border-gray-100">
-                    <a href="#" onclick="navigate('about')" class="inline-flex items-center text-gray-400 hover:text-[#c89255] transition duration-300 group">
-                      <span class="w-2 h-2 bg-gray-300 rounded-full mr-3 group-hover:bg-[#c89255] transition"></span>
-                      <span class="text-sm font-medium tracking-wider" data-i18n="welcome_more">了解更多</span>
+                  <div class="mt-4">
+                    <a href="#" onclick="navigate('about')" class="inline-flex items-center gap-2 py-1 text-mrBlue border-b border-mrBlue/25 hover:text-mrRed hover:border-mrRed transition duration-300 group">
+                      <span class="text-sm font-bold tracking-wider" data-i18n="welcome_more">了解更多</span>
+                      <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
                   </div>
-                </div>
+                </article>
 
-                <div class="w-full lg:w-1/2 relative flex justify-center py-10 overflow-visible">
-                  <div class="relative w-full flex items-center justify-center font-black text-6xl sm:text-[5.5rem] md:text-[7.5rem] lg:text-[6rem] xl:text-[8rem] leading-none tracking-normal whitespace-nowrap select-none"
-                       style="background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1000'); background-size: cover; background-position: center; -webkit-background-clip: text; color: transparent;">
-                    MURONG
-                  </div>
-                  <div class="absolute bottom-0 w-full text-center text-gray-300 text-[10px] md:text-sm font-bold tracking-[0.3em] md:tracking-[0.8em] pointer-events-none uppercase">
-                    RELIABLE & RESPONSIVE
-                  </div>
-                </div>
+                <figure class="relative w-full min-h-[360px] lg:min-h-[540px] overflow-hidden bg-[#10275f] shadow-xl">
+                  <img src="murong-pic/pic3.jpg" alt="港口内停靠的船舶与作业拖轮" class="absolute inset-0 w-full h-full object-cover object-center" />
+                  <div class="absolute inset-0 bg-gradient-to-b from-[#10275f]/5 via-transparent to-[#09183d]/95"></div>
+                  <figcaption class="absolute inset-0 flex flex-col justify-between p-5 sm:p-7">
+                    <span class="self-end px-3 py-2 bg-mrRed text-white text-[10px] sm:text-xs font-black tracking-[0.16em]">ONBOARD SUPPORT</span>
+                    <span class="text-white">
+                      <strong class="block text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-[-0.045em]">MURONG</strong>
+                      <span class="block mt-3 text-[10px] sm:text-xs font-bold tracking-[0.32em] text-white/75">RELIABLE &amp; RESPONSIVE</span>
+                    </span>
+                  </figcaption>
+                </figure>
               </div>
             </div>
           </section>
@@ -620,7 +637,7 @@
                   </div>
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="srv_amp">高/低压岸电改造 (AMP)</h3>
                   <p class="text-gray-600 mb-4 text-xs sm:text-sm md:text-base leading-relaxed" data-i18n="home_amp_desc">
-                    响应IMO绿色航运，提供定制化的高低压岸电系统交钥匙工程，涵盖设计、安装、调试及船级社报验。
+                    根据船舶电力参数与靠港用电条件，提供高低压岸电系统方案、设备安装、并网调试及保护功能测试。
                   </p>
                   <span class="text-mrRed font-bold text-sm flex items-center group-hover:translate-x-2 transition"
                     ><span data-i18n="read_more">了解更多</span><svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -638,7 +655,7 @@
                   </div>
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="srv_auto">船舶自动化设备维修</h3>
                   <p class="text-gray-600 mb-4 text-xs sm:text-sm md:text-base leading-relaxed" data-i18n="home_auto_desc">
-                    全面覆盖主机遥控、液位监测、阀门自控及电站管理系统。我们提供主板级深度维修与原厂级校验，确保船舶控制系统精准、高效运行。
+                    覆盖主机遥控、液位监测、阀门遥控及电站管理系统，通过电源、I/O、通信与控制逻辑测量定位故障并完成维修验证。
                   </p>
                   <span class="text-mrRed font-bold text-sm flex items-center group-hover:translate-x-2 transition"
                     ><span data-i18n="read_more">了解更多</span><svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
@@ -660,6 +677,98 @@
                     ><span data-i18n="read_more">了解更多</span><svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section class="py-12 md:py-20 relative z-10 border-b border-gray-100/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="max-w-5xl mb-8 md:mb-12 flex flex-col items-start text-left">
+                <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-mrBlue tracking-tight" data-i18n="capability_title">技术团队与专业装备</h2>
+                <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mt-4 md:mt-5" data-i18n="capability_intro">
+                  面向靠港时间紧、故障信息不完整的现场场景，以测量数据为依据，从供电、信号、控制逻辑到执行机构逐级排查。
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-start">
+                <article class="bg-white p-6 md:p-8 group shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue transition-all duration-300">
+                  <div class="flex items-end gap-2 mb-4 md:mb-5">
+                    <span class="text-4xl md:text-5xl font-black text-mrBlue leading-none">15</span>
+                    <span class="text-mrRed text-sm md:text-base font-bold pb-1">YEARS</span>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="capability_exp_title">15 年一线船舶电气/自动化排查经验</h3>
+                  <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-i18n="capability_exp_desc">
+                    熟悉机舱与驾驶台设备的现场排查节奏。到船即测，结合报警、图纸与实测信号缩小故障范围，快速定位疑难问题。
+                  </p>
+                </article>
+
+                <article class="bg-white p-6 md:p-8 group shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue transition-all duration-300">
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-blue-100 text-mrBlue flex items-center justify-center mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5m4.75-11.396c.251.023.501.05.75.082m-.75-.082a24.301 24.301 0 00-5.25.714m6 0v5.714c0 .597.237 1.17.659 1.591l3.091 3.091m-3.75-10.396a24.3 24.3 0 015.25.714m0 0v5.714c0 .597-.237 1.17-.659 1.591L11 14.5m4.75-10.682c.251-.023.501-.05.75-.082M5 14.5l-1.215 1.215a3 3 0 004.243 4.243L11 17m-6-2.5h6m3.25-.286l1.722 1.722a3 3 0 01-4.243 4.243L11 19.45" /></svg>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="capability_tools_title">专业检测与调试工具</h3>
+                  <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-i18n="capability_tools_desc">
+                    常备仪器覆盖绝缘、电压电流、波形与模拟信号检测，可在船快速复现和验证控制回路状态。
+                  </p>
+                </article>
+
+                <article class="bg-white p-6 md:p-8 group shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue transition-all duration-300">
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-blue-100 text-mrBlue flex items-center justify-center mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5V5.625a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3h4.5M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="capability_delivery_title">规范技术交付</h3>
+                  <p class="text-sm md:text-base text-gray-600 leading-relaxed" data-i18n="capability_delivery_desc">
+                    修后提供故障排查记录与技术交付报告，说明检测数据、处置内容、调试结果及后续建议，便于机务留档与复盘。
+                  </p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="py-16 md:py-24 relative z-10 border-b border-gray-100/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="max-w-5xl mb-8 md:mb-12 flex flex-col items-start text-left">
+                <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-mrBlue tracking-tight" data-i18n="workflow_title">现场服务流程</h2>
+                <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mt-4 md:mt-5" data-i18n="workflow_intro">
+                  从信息确认到修后报告，每一步均围绕现场时间窗口、故障依据与可复核的交付结果展开。
+                </p>
+              </div>
+
+              <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+                <li class="relative bg-white rounded-xl border border-gray-200 p-6 md:p-7 shadow-sm">
+                  <span class="text-4xl font-black text-blue-100 absolute top-4 right-5">01</span>
+                  <div class="w-10 h-10 rounded-full bg-mrBlue text-white flex items-center justify-center mb-5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.184a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V5.507c0-1.621-1.152-3.028-2.757-3.248A48.394 48.394 0 0012 1.875c-2.21 0-4.37.15-6.443.435C3.952 2.53 2.8 3.938 2.8 5.558v7.202z" /></svg>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2" data-i18n="workflow_1_title">需求确认</h3>
+                  <p class="text-sm text-gray-600 leading-relaxed" data-i18n="workflow_1_desc">确认船期、港口、故障现象和设备范围，提前准备图纸、仪器与可能需要的备件。</p>
+                </li>
+                <li class="relative bg-white rounded-xl border border-gray-200 p-6 md:p-7 shadow-sm">
+                  <span class="text-4xl font-black text-blue-100 absolute top-4 right-5">02</span>
+                  <div class="w-10 h-10 rounded-full bg-mrBlue text-white flex items-center justify-center mb-5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2" data-i18n="workflow_2_title">登轮检测</h3>
+                  <p class="text-sm text-gray-600 leading-relaxed" data-i18n="workflow_2_desc">核对报警与运行状态，分段测量电源、输入输出和现场信号，形成清晰的故障边界。</p>
+                </li>
+                <li class="relative bg-white rounded-xl border border-gray-200 p-6 md:p-7 shadow-sm">
+                  <span class="text-4xl font-black text-blue-100 absolute top-4 right-5">03</span>
+                  <div class="w-10 h-10 rounded-full bg-mrBlue text-white flex items-center justify-center mb-5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.42 15.17l-5.384 3.102A2.25 2.25 0 013 16.324V7.676a2.25 2.25 0 013.036-1.948l5.384 3.102m0 6.34l5.384 3.102A2.25 2.25 0 0020.25 16.324V7.676a2.25 2.25 0 00-3.446-1.948L11.42 8.83m0 6.34V8.83" /></svg>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2" data-i18n="workflow_3_title">故障处置与调试验证</h3>
+                  <p class="text-sm text-gray-600 leading-relaxed" data-i18n="workflow_3_desc">根据测量结果实施修复、参数调整或部件更换，并在真实工况下完成联动与报警验证。</p>
+                </li>
+                <li class="relative bg-white rounded-xl border border-gray-200 p-6 md:p-7 shadow-sm">
+                  <span class="text-4xl font-black text-blue-100 absolute top-4 right-5">04</span>
+                  <div class="w-10 h-10 rounded-full bg-mrRed text-white flex items-center justify-center mb-5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25m-9.375-9h.375A2.625 2.625 0 0113.125 4.875v.375m-3-3v3m3-.375h3m-3 0l6.75 6.75M9 15l2.25 2.25L15 13.5" /></svg>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2" data-i18n="workflow_4_title">技术报告交付</h3>
+                  <p class="text-sm text-gray-600 leading-relaxed" data-i18n="workflow_4_desc">记录故障原因、测量结果、维修内容与验证结论，为机务复核和后续维护提供依据。</p>
+                </li>
+              </ol>
             </div>
           </section>
 
@@ -753,7 +862,7 @@
                   <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
                   <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-4 tracking-tight" data-i18n="srv_auto">船舶自动化服务</h2>
                   <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed" data-i18n="srv_auto_p1">
-                    南通睦融电气为全球航行的各类船舶提供专业、快速的电气自动化控制系统芯片级故障排查与修复服务。我们的技术团队24小时待命，确保您的船舶在最短的时间内恢复最高效的运营状态。
+                    面向主机遥控、电站管理、液位遥测、阀门控制及报警监测等系统，技术团队依据图纸、报警记录与现场测量结果逐级排查，完成板卡、回路与控制逻辑的故障定位和维修验证。
                   </p>
                 </div>
 
@@ -768,7 +877,7 @@
                     <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden md:block" alt="电站控制" />
                   </div>
                   <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-6" data-i18n="srv_auto_desc1">
-                    针对船舶核心动力输出与电力分配，我们提供最精确的电子元件级检测、调试及原厂备件更换，保障航行心脏的安全输出。
+                    针对动力控制与电力分配系统，检查供电质量、控制回路、输入输出信号与保护逻辑，并根据测量结果实施板卡维修、参数调整或部件更换。
                   </p>
                   <div class="bg-gray-50 p-4 sm:p-6 rounded border border-gray-200">
                     <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-8 text-sm sm:text-base md:text-lg text-gray-800">
@@ -814,7 +923,7 @@
                     <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden md:block" alt="监控屏幕" />
                   </div>
                   <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-6" data-i18n="srv_auto_desc3">
-                    严守海事合规底线。针对各类液位、油分浓度及致命的安全火警报警系统，进行最严格的自动化修复及船级社认证级别校验。
+                    针对液位遥测、15PPM 油份浓度、火警及货舱报警系统，逐项检查传感器、线路、控制模块与报警输出，并通过模拟信号和联动测试验证修复结果。
                   </p>
                   <div class="bg-gray-50 p-4 sm:p-6 rounded border border-gray-200">
                     <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-8 text-sm sm:text-base md:text-lg text-gray-800">
@@ -872,13 +981,13 @@
                   <div class="bg-white p-5 sm:p-8 rounded shadow-sm border-l-4 border-mrRed">
                     <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 md:mb-4" data-i18n="amp_sub2">高压岸电改造 (HV AMP)</h3>
                     <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed" data-i18n="amp_desc2">
-                      对于大型船舶，如集装箱船、油轮、货轮，我们提供高压岸电改造服务，满足高功率需求（如 6.6kV/11kV 平台）。高压系统采用先进的配电控制技术，确保电力高效传输和使用，同时具备完善的硬件防呆联锁（Interlock）与继电保护措施，保障电力连接绝对安全。
+                      面向集装箱船、油轮及大型货轮等高功率需求场景，可提供 6.6kV/11kV 高压岸电方案。设计与调试重点覆盖受电容量、并网条件、硬件联锁和继电保护功能。
                     </p>
                   </div>
                   <div class="bg-gray-50 p-6 sm:p-10 rounded border border-gray-200 mt-6 md:mt-8">
                     <h3 class="text-xl sm:text-2xl font-bold text-mrBlue mb-4 md:mb-6" data-i18n="amp_sub3">全生命周期交钥匙工程 (Turn-Key)</h3>
                     <p class="text-sm sm:text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed" data-i18n="amp_desc3">
-                      我们提供全程技术支持，包括系统设计、安装、调试和维护，确保岸电系统的稳定运行，并与港口管理部门及各大船级社合作，确保安装符合国际标准，顺利完成船级社报验，满足船东和运营方的需求。
+                      服务范围覆盖船上勘查、负荷与接口核对、系统设计、安装接线、并网调试和操作交底。关键测试数据与调试结果形成记录，便于船东和运营方后续维护。
                     </p>
                     <p class="text-sm sm:text-base md:text-lg text-gray-800 font-bold leading-relaxed border-t border-gray-300 pt-4 md:pt-6" data-i18n="amp_desc4">
                       实施岸电改造后，客户可显著降低燃油成本，减少设备的磨损与维护费用，同时符合国际海事组织（IMO）的环保法规。我们的目标是为每艘停泊的船舶提供环保、经济、安全的电力支持，为碳中和目标作出贡献。
@@ -983,7 +1092,7 @@
                   <strong>南通睦融电气设备有限公司（MURONG）</strong> 是一家深耕于海事工业领域的专业技术服务型企业。我们致力于为全球航行的船舶提供高精度、高响应率的电气自动化系统维修与保养服务。
                 </p>
                 <p data-i18n="about_p2">
-                  依托资深的技术工程师团队，我们在内部通信、导航安全、液位监测、动力环保等多个核心领域积累了丰富的现场排障与系统校准经验。我们深知航运的时间成本与安全底线，始终将“快速响应、一次修复”作为服务准则。
+                  团队拥有 15 年一线船舶电气与自动化排查经验，在内部通信、导航报警、液位监测、动力与环保系统等领域积累了大量现场测量、故障隔离和调试验证经验。
                 </p>
               </div>
             </div>
@@ -1129,7 +1238,7 @@
           <div class="mb-8 md:mb-12 flex flex-col items-start text-left">
             <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
             <h3 class="text-3xl md:text-4xl font-black text-mrBlue tracking-wide" data-i18n="network_title">全球服务网络</h3>
-            <p class="text-sm md:text-base text-gray-600 leading-relaxed mt-4 max-w-4xl font-medium" data-i18n="network_desc">本地化快速响应：老何团队深耕江浙沪，精通全船系统维修保养。服务网络覆盖 上海、舟山、靖江、南京、张家港、南通、泰州 等所有主要港口，响应迅速，随叫随到！</p>
+            <p class="text-sm md:text-base text-gray-600 leading-relaxed mt-4 max-w-4xl font-medium" data-i18n="network_desc">团队立足南通，服务范围覆盖上海、舟山、靖江、南京、张家港、南通、泰州等长三角主要港口，可结合船期与泊位计划协调登轮支持。</p>
           </div>
 
           <div class="relative w-full h-[400px] md:h-[550px] bg-[#f8fafc] rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex items-center justify-center">
@@ -1420,28 +1529,78 @@
         home_srv_title: { zh: '我们的服务', en: 'Our Services' },
         srv_amp: { zh: '高/低压岸电改造 (AMP)', en: 'HV/LV Shore Power (AMP)' },
         home_amp_desc: {
-          zh: '响应IMO绿色航运，提供定制化的高低压岸电系统交钥匙工程，涵盖设计、安装、调试及船级社报验。',
-          en: 'Responding to IMO green shipping, providing customized HV/LV shore power turnkey projects covering design, installation, commissioning, and Class approval.',
+          zh: '根据船舶电力参数与靠港用电条件，提供高低压岸电系统方案、设备安装、并网调试及保护功能测试。',
+          en: 'Based on vessel power parameters and port-side conditions, we provide HV/LV shore-power solutions, installation, synchronisation commissioning, and protection-function testing.',
         },
         srv_auto: { zh: '船舶自动化设备维修', en: 'Marine Automation Maintenance' },
         srv_auto_p1: {
-          zh: '南通睦融电气为全球航行的各类船舶提供专业、快速的电气自动化控制系统芯片级故障排查与修复服务。我们的技术团队24小时待命，确保您的船舶在最短的时间内恢复最高效的运营状态。',
-          en: 'We provide professional and rapid chip-level troubleshooting and repair services for electrical automation control systems of various ships globally. Our team is on standby 24/7.',
+          zh: '面向主机遥控、电站管理、液位遥测、阀门控制及报警监测等系统，技术团队依据图纸、报警记录与现场测量结果逐级排查，完成板卡、回路与控制逻辑的故障定位和维修验证。',
+          en: 'For main-engine remote control, power management, level telemetry, valve control, and alarm-monitoring systems, our engineers use drawings, alarm records, and field measurements to isolate faults across boards, circuits, and control logic, followed by repair verification.',
         },
         home_auto_desc: {
-          zh: '全面覆盖主机遥控、液位监测、阀门自控及电站管理系统。我们提供主板级深度维修与原厂级校验，确保船舶控制系统精准、高效运行。',
-          en: 'Comprehensive coverage of main engine remote control, level monitoring, valve auto-control, and PMS. We provide motherboard-level deep repair and original-level calibration.',
+          zh: '覆盖主机遥控、液位监测、阀门遥控及电站管理系统，通过电源、I/O、通信与控制逻辑测量定位故障并完成维修验证。',
+          en: 'Covering main-engine remote control, level monitoring, valve remote control, and power management, with fault isolation across power, I/O, communications, and control logic followed by repair verification.',
         },
         srv_parts: { zh: '原厂备件与技术支持', en: 'Original Parts & Support' },
         srv_parts_p1: {
-          zh: '我们深知船舶设备故障对航期的影响。依托强大的全球供应链网络，南通睦融电气为航运企业提供高品质的传感器、控制板卡及气动液压等各类原厂备件，并配有极速物流通道。',
-          en: 'We know the impact of equipment failure on shipping schedules. Relying on a strong global supply chain, we provide high-quality sensors, PCBs, and pneumatic/hydraulic parts with express delivery.',
+          zh: '针对传感器、控制板卡及气动液压部件等需求，我们根据设备铭牌、技术参数与现场接口进行型号核对，并结合船期提供可行的供应与替代建议。',
+          en: 'For sensors, control boards, and pneumatic or hydraulic components, we verify models against nameplates, technical parameters, and site interfaces, then propose practical supply or replacement options around the vessel schedule.',
         },
         home_parts_desc: {
-          zh: '依托强大的供应链网络，提供全球范围内的核心电子元器件及传感器供应，并提供全天候远程技术指导。',
-          en: 'Relying on a strong supply chain network, we provide global supply of core electronic components and sensors, along with 24/7 remote technical guidance.',
+          zh: '根据设备型号、现场参数与交期需求匹配控制板卡、传感器及气动液压部件，并提供安装与调试建议。',
+          en: 'We match control boards, sensors, and pneumatic or hydraulic parts against equipment models, site parameters, and delivery windows, with installation and commissioning guidance.',
         },
         read_more: { zh: '了解更多', en: 'Read More' },
+
+        capability_title: { zh: '技术团队与专业装备', en: 'Technical Capability & Equipment' },
+        capability_intro: {
+          zh: '面向靠港时间紧、故障信息不完整的现场场景，以测量数据为依据，从供电、信号、控制逻辑到执行机构逐级排查。',
+          en: 'For short port calls and incomplete fault information, we troubleshoot step by step from power and signals to control logic and actuators, using measured data as the basis for each decision.',
+        },
+        capability_exp_title: {
+          zh: '15 年一线船舶电气/自动化排查经验',
+          en: '15 Years of Frontline Marine Electrical & Automation Troubleshooting',
+        },
+        capability_exp_desc: {
+          zh: '熟悉机舱与驾驶台设备的现场排查节奏。到船即测，结合报警、图纸与实测信号缩小故障范围，快速定位疑难问题。',
+          en: 'Experienced in engine-room and bridge troubleshooting. We begin testing on arrival, using alarms, drawings, and live signals to narrow the fault area and locate complex problems efficiently.',
+        },
+        capability_tools_title: { zh: '专业检测与调试工具', en: 'Professional Test & Commissioning Tools' },
+        capability_tools_desc: {
+          zh: '常备仪器覆盖绝缘、电压电流、波形与模拟信号检测，可在船快速复现和验证控制回路状态。',
+          en: 'Our onboard kit covers insulation, voltage, current, waveform, and analogue-signal testing for efficient reproduction and verification of control-circuit conditions.',
+        },
+        capability_delivery_title: { zh: '规范技术交付', en: 'Structured Technical Handover' },
+        capability_delivery_desc: {
+          zh: '修后提供故障排查记录与技术交付报告，说明检测数据、处置内容、调试结果及后续建议，便于机务留档与复盘。',
+          en: 'After repair, we provide troubleshooting records and a technical handover report covering measurements, work performed, commissioning results, and follow-up recommendations.',
+        },
+
+        workflow_title: { zh: '现场服务流程', en: 'Onboard Service Workflow' },
+        workflow_intro: {
+          zh: '从信息确认到修后报告，每一步均围绕现场时间窗口、故障依据与可复核的交付结果展开。',
+          en: 'From initial confirmation to the final report, every step is organised around the vessel schedule, fault evidence, and verifiable delivery results.',
+        },
+        workflow_1_title: { zh: '需求确认', en: 'Scope Confirmation' },
+        workflow_1_desc: {
+          zh: '确认船期、港口、故障现象和设备范围，提前准备图纸、仪器与可能需要的备件。',
+          en: 'Confirm the vessel schedule, port, symptoms, and equipment scope so drawings, instruments, and likely spares can be prepared in advance.',
+        },
+        workflow_2_title: { zh: '登轮检测', en: 'Onboard Testing' },
+        workflow_2_desc: {
+          zh: '核对报警与运行状态，分段测量电源、输入输出和现场信号，形成清晰的故障边界。',
+          en: 'Verify alarms and operating conditions, then measure power, I/O, and field signals section by section to establish a clear fault boundary.',
+        },
+        workflow_3_title: { zh: '故障处置与调试验证', en: 'Repair & Commissioning Verification' },
+        workflow_3_desc: {
+          zh: '根据测量结果实施修复、参数调整或部件更换，并在真实工况下完成联动与报警验证。',
+          en: 'Carry out repair, parameter adjustment, or component replacement based on measurements, followed by interlock and alarm verification under operating conditions.',
+        },
+        workflow_4_title: { zh: '技术报告交付', en: 'Technical Report Handover' },
+        workflow_4_desc: {
+          zh: '记录故障原因、测量结果、维修内容与验证结论，为机务复核和后续维护提供依据。',
+          en: 'Document the cause, measurements, work performed, and verification results for superintendent review and future maintenance.',
+        },
 
         auto_1: { zh: '内通与广播系统', en: 'Internal Comm & PA Systems' },
         auto_2: { zh: '航行与安全报警系统', en: 'Navigation & Safety Alarms' },
@@ -1452,7 +1611,7 @@
         amp_1: { zh: '低压岸电方案 (LV AMP)', en: 'Low Voltage AMP (LV)' },
         amp_2: { zh: '高压岸电方案 (HV AMP)', en: 'High Voltage AMP (HV)' },
         amp_3: { zh: '交钥匙工程服务', en: 'Turn-Key Projects' },
-        amp_4: { zh: '船级社 (Class) 报验', en: 'Class Approval' },
+        amp_4: { zh: '并网调试与保护测试', en: 'Synchronisation & Protection Testing' },
 
         parts_1: { zh: '核心电子元器件', en: 'Core Electronic Components' },
         parts_2: { zh: '船舶高精度传感器', en: 'High-Precision Sensors' },
@@ -1473,8 +1632,8 @@
 
         srv_auto_sub1: { zh: '动力与控制系统', en: 'Power & Control Systems' },
         srv_auto_desc1: {
-          zh: '针对船舶核心动力输出与电力分配，我们提供最精确的电子元件级检测、调试及原厂备件更换，保障航行心脏的安全输出。',
-          en: 'For core power output and distribution, we provide precise electronic-level testing, commissioning, and original parts replacement to ensure safe output.',
+          zh: '针对动力控制与电力分配系统，检查供电质量、控制回路、输入输出信号与保护逻辑，并根据测量结果实施板卡维修、参数调整或部件更换。',
+          en: 'For propulsion control and power distribution, we check supply quality, control circuits, I/O signals, and protection logic, then carry out board repair, parameter adjustment, or component replacement based on measurements.',
         },
         auto_sub1_1: { zh: '主机遥控系统 / 辅机遥控系统', en: 'Main/Aux Engine Remote Control' },
         auto_sub1_2: { zh: '电站自控系统 / 锅炉控制系统', en: 'PMS / Boiler Control Systems' },
@@ -1484,8 +1643,8 @@
 
         srv_auto_sub2: { zh: '航行与通信系统', en: 'Navigation & Comm Systems' },
         srv_auto_desc2: {
-          zh: '内部通信与外部导航是保障船舶安全的神经中枢。我们提供全套驾驶台导航仪器报警、对讲及各类信号灯系统的深度排障与检修。',
-          en: 'Internal communication and external navigation are the nervous system of ship safety. We offer deep troubleshooting for bridge alarms, intercoms, and signal light systems.',
+          zh: '针对驾驶台报警、内部通信、广播、电话及航行信号系统，检查供电、线路、终端设备与通信链路，定位间歇性报警、失联和信号异常。',
+          en: 'For bridge alarms, internal communications, PA, telephone, and navigation-signal systems, we inspect power, wiring, terminal equipment, and communication links to locate intermittent alarms, communication loss, and signal faults.',
         },
         auto_sub2_1: { zh: '航行灯及信号灯系统', en: 'Navigation & Signal Lights' },
         auto_sub2_2: { zh: '对讲系统 / 广播系统 / 字母钟系统', en: 'Intercom / PA / Master Clock' },
@@ -1495,8 +1654,8 @@
 
         srv_auto_sub3: { zh: '环境与安全监控', en: 'Environment & Safety Monitoring' },
         srv_auto_desc3: {
-          zh: '严守海事合规底线。针对各类液位、油分浓度及致命的安全火警报警系统，进行最严格的自动化修复及船级社认证级别校验。',
-          en: 'Strict adherence to maritime compliance. We perform rigorous repairs and class-certified calibrations for level, oil concentration, and fire alarm systems.',
+          zh: '针对液位遥测、15PPM 油份浓度、火警及货舱报警系统，逐项检查传感器、线路、控制模块与报警输出，并通过模拟信号和联动测试验证修复结果。',
+          en: 'For level telemetry, 15PPM oil-content monitoring, fire alarms, and cargo-hold alarms, we inspect sensors, wiring, control modules, and alarm outputs, then verify repairs using simulated signals and functional tests.',
         },
         auto_sub3_1: { zh: '油份浓度装置 15PPM 修理校验', en: '15PPM OWS Monitor Calibration' },
         auto_sub3_2: { zh: '分油机系统 / 生活污水系统', en: 'Purifier / Sewage Treatment Systems' },
@@ -1516,8 +1675,8 @@
         auto_sub4_5: { zh: '应急照明充放电板 / 雨刮器系统', en: 'Emergency Light Boards / Wiper Systems' },
 
         srv_amp_p1: {
-          zh: '我们具备丰富的技术经验，可为各种类型的船舶提供量身定制的岸电解决方案。主要分为低压和高压两种方案，适用于不同类型和规模的船舶。',
-          en: 'With rich technical experience, we offer tailored Alternative Maritime Power (AMP) solutions, primarily LV and HV systems suitable for all ship sizes.',
+          zh: '根据船舶负荷、电压等级、频率、接入方式与港口供电条件，提供低压或高压岸电方案，并完成船上设备安装、接线检查和并网调试。',
+          en: 'Based on vessel load, voltage, frequency, connection method, and port-side supply conditions, we develop LV or HV shore-power solutions and complete onboard installation, wiring checks, and synchronisation commissioning.',
         },
         amp_sub1: { zh: '低压岸电改造 (LV AMP)', en: 'Low Voltage AMP Retrofit' },
         amp_desc1: {
@@ -1526,13 +1685,13 @@
         },
         amp_sub2: { zh: '高压岸电改造 (HV AMP)', en: 'High Voltage AMP Retrofit' },
         amp_desc2: {
-          zh: '对于大型船舶，如集装箱船、油轮、货轮，我们提供高压岸电改造服务，满足高功率需求（如 6.6kV/11kV 平台）。高压系统采用先进的配电控制技术，确保电力高效传输和使用，同时具备完善的硬件防呆联锁（Interlock）与继电保护措施，保障电力连接绝对安全。',
-          en: 'For large vessels (Containers, Tankers) requiring high power (6.6kV/11kV). Features advanced distribution control, robust hardware interlocks, and relay protection for absolute safety.',
+          zh: '面向集装箱船、油轮及大型货轮等高功率需求场景，可提供 6.6kV/11kV 高压岸电方案。设计与调试重点覆盖受电容量、并网条件、硬件联锁和继电保护功能。',
+          en: 'For container ships, tankers, and large cargo vessels with high power demand, we can provide 6.6kV/11kV shore-power solutions focused on receiving capacity, synchronisation conditions, hardware interlocks, and relay-protection functions.',
         },
         amp_sub3: { zh: '全生命周期交钥匙工程 (Turn-Key)', en: 'Full Lifecycle Turn-Key Solutions' },
         amp_desc3: {
-          zh: '我们提供全程技术支持，包括系统设计、安装、调试和维护，确保岸电系统的稳定运行，并与港口管理部门及各大船级社合作，确保安装符合国际标准，顺利完成船级社报验，满足船东和运营方的需求。',
-          en: 'Providing end-to-end support including design, installation, commissioning, and maintenance. We collaborate with port authorities and classification societies to ensure standard compliance and seamless approval.',
+          zh: '服务范围覆盖船上勘查、负荷与接口核对、系统设计、安装接线、并网调试和操作交底。关键测试数据与调试结果形成记录，便于船东和运营方后续维护。',
+          en: 'The service scope covers onboard survey, load and interface checks, system design, installation and wiring, synchronisation commissioning, and operator handover. Key test data and commissioning results are recorded for future maintenance.',
         },
         amp_desc4: {
           zh: '实施岸电改造后，客户可显著降低燃油成本，减少设备的磨损与维护费用，同时符合国际海事组织（IMO）的环保法规。我们的目标是为每艘停泊的船舶提供环保、经济、安全的电力支持，为碳中和目标作出贡献。',
@@ -1573,8 +1732,8 @@
           en: '<strong>Nantong Murong Electrical Equipment Co., Ltd. (MURONG)</strong> is a professional technical service enterprise deeply rooted in the maritime industry. We are dedicated to providing high-precision, rapid-response electrical automation maintenance services.',
         },
         about_p2: {
-          zh: '依托资深的技术工程师团队，我们在内部通信、导航安全、液位监测、动力环保等多个核心领域积累了丰富的现场排障与系统校准经验。我们深知航运的时间成本与安全底线，始终将“快速响应、一次修复”作为服务准则。',
-          en: 'Relying on senior engineers, we have rich experience in comms, navigation, monitoring, and eco-power troubleshooting. Knowing the time cost of shipping, we adhere to the "Fast Response, Fix First Time" principle.',
+          zh: '团队拥有 15 年一线船舶电气与自动化排查经验，在内部通信、导航报警、液位监测、动力与环保系统等领域积累了大量现场测量、故障隔离和调试验证经验。',
+          en: 'Our team brings 15 years of frontline marine electrical and automation troubleshooting experience across internal communications, navigation alarms, level monitoring, power, and environmental systems, with a strong focus on field measurement, fault isolation, and commissioning verification.',
         },
         
         /* 核心优势四宫格翻译 */
@@ -1595,8 +1754,8 @@
         /* 全球服务网络版块翻译 */
         network_title: { zh: '全球服务网络', en: 'Global Service Network' },
         network_desc: { 
-          zh: '本地化快速响应：老何团队深耕江浙沪，精通全船系统维修保养。服务网络覆盖 上海、舟山、靖江、南京、张家港、南通、泰州 等所有主要港口，响应迅速，随叫随到！', 
-          en: 'Localized rapid response: Our team is deeply rooted in the Yangtze River Delta region, mastering full-vessel maintenance. Covering major ports including Shanghai, Zhoushan, Jingjiang, Nanjing, Zhangjiagang, Nantong, and Taizhou. On call and ready to respond!' 
+          zh: '团队立足南通，服务范围覆盖上海、舟山、靖江、南京、张家港、南通、泰州等长三角主要港口，可结合船期与泊位计划协调登轮支持。',
+          en: 'Based in Nantong, our service coverage includes major Yangtze River Delta ports such as Shanghai, Zhoushan, Jingjiang, Nanjing, Zhangjiagang, Nantong, and Taizhou, with onboard attendance coordinated around vessel and berth schedules.'
         },
 
         values_title: { zh: '核心价值观', en: 'Core Values' },
@@ -1655,7 +1814,6 @@
         footer_legal: { zh: '法律条款', en: 'Legal Terms' },
         legal_privacy: { zh: '隐私政策', en: 'Privacy Policy' },
         legal_terms: { zh: '服务条款', en: 'Terms of Service' },
-        legal_iso: { zh: 'ISO 认证信息', en: 'ISO Certification' },
         footer_copy: {
           zh: '版权所有 © 南通睦融电气设备有限公司并保留一切权利',
           en: 'Copyright © 2026 Nantong Murong Electrical Equipment. All Rights Reserved.',
@@ -1668,13 +1826,13 @@
         },
         
         /* 首页欢迎区块翻译 */
-        welcome_title: { zh: '欢迎来到睦融', en: 'Welcome to Murong' },
+        welcome_title: { zh: '南通睦融电气设备有限公司', en: 'Nantong Murong Electrical Equipment Co., Ltd.' },
         welcome_slogan1: { zh: '“全方位”海事电气服务', en: '"All-Around" Marine Electrical Services' },
         welcome_slogan2: { zh: '供应 · 安全 · 工程 · 技术', en: 'Supply · Safety · Engineering · Tech' },
         welcome_slogan3: { zh: '省时，省力，省心', en: 'Time-saving, Effortless, Worry-free' },
         welcome_desc: {
-          zh: '南通睦融电气设备有限公司（MURONG）深耕于海事工业领域，致力于为全球航行的船舶提供高精度、高响应率的电气自动化系统维修与保养服务。依托资深的技术工程师团队，我们始终将“快速响应、一次修复”作为服务准则。',
-          en: 'Nantong Murong Electrical Equipment Co., Ltd. is deeply engaged in the maritime industry. Dedicated to providing high-precision, rapid-response electrical automation maintenance. With our senior engineer team, we adhere to the "Fast Response, Fix First Time" principle.'
+          zh: '南通睦融电气设备有限公司（MURONG）深耕海事电气与自动化技术服务，围绕现场测量、故障定位、维修调试和技术交付，为船舶设备恢复可靠运行提供支持。',
+          en: 'Nantong Murong Electrical Equipment Co., Ltd. focuses on marine electrical and automation services, supporting reliable equipment recovery through field measurement, fault isolation, repair commissioning, and structured technical handover.'
         },
         welcome_more: { zh: '了解更多', en: 'Learn More' },
         values_title_en: { zh: 'OUR CORE VALUES', en: 'OUR CORE VALUES' }
