@@ -18,6 +18,7 @@ class PageParser(HTMLParser):
         self.text = []
         self.element_stack = []
         self.elements_by_i18n = {}
+        self.elements_by_id = {}
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
@@ -28,6 +29,8 @@ class PageParser(HTMLParser):
         }
         if values.get("data-i18n"):
             self.elements_by_i18n[values["data-i18n"]] = element
+        if values.get("id"):
+            self.elements_by_id[values["id"]] = element
         if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}:
             self.element_stack.append(element)
         if tag == "a" and values.get("href"):
@@ -57,6 +60,142 @@ def parse_page(path):
 
 
 class SiteContentTests(unittest.TestCase):
+    def test_home_page_leads_with_automation_repair_outcome_and_contact_path(self):
+        source = HOME.read_text(encoding="utf-8")
+        hero = source.split('<main id="page-home"', 1)[1].split("</section>", 1)[0]
+
+        self.assertIn("让船舶自动化系统", hero)
+        self.assertIn("稳定运行", hero)
+        self.assertIn("船舶自动化设备维修", hero)
+        self.assertIn("主机遥控", hero)
+        self.assertIn("报警监测", hero)
+        self.assertIn("调试验证", hero)
+        self.assertIn("navigate('contact')", hero)
+        self.assertIn("提交服务需求", hero)
+
+    def test_home_page_places_proof_banner_before_company_story(self):
+        source = HOME.read_text(encoding="utf-8")
+        home = source.split('<main id="page-home"', 1)[1].split('<main id="page-services"', 1)[0]
+
+        for section_id in (
+            'id="service-overview-section"',
+            'id="capability-section"',
+            'id="workflow-section"',
+            'id="ship-types-section"',
+            'id="welcome-section"',
+        ):
+            self.assertIn(section_id, home)
+
+        ordered_sections = [
+            home.index('aria-label="服务能力摘要"'),
+            home.index('id="welcome-section"'),
+            home.index('id="service-overview-section"'),
+            home.index('id="capability-section"'),
+            home.index('id="workflow-section"'),
+            home.index('id="ship-types-section"'),
+        ]
+        self.assertEqual(sorted(ordered_sections), ordered_sections)
+
+    def test_animated_grid_background_is_visible_on_home_only(self):
+        source = HOME.read_text(encoding="utf-8")
+        page = parse_page(HOME)
+
+        self.assertEqual(1, source.count('id="techCanvas"'))
+        self.assertEqual("main-content", page.elements_by_id["techCanvas"]["parent"]["attrs"].get("id"))
+        main_content = source.split('<div id="main-content"', 1)[1].split("<footer", 1)[0]
+        self.assertLess(main_content.index('id="techCanvas"'), main_content.index('id="page-home"'))
+
+        main_content_tag = source.split('<div id="main-content"', 1)[1].split(">", 1)[0]
+        self.assertIn("home-background-active", main_content_tag)
+
+        styles = source.split("<style>", 1)[1].split("</style>", 1)[0]
+        self.assertIn("#main-content:not(.home-background-active) #techCanvas", styles)
+
+        navigate = source.split("function navigate(pageId", 1)[1].split("function ", 1)[0]
+        self.assertIn("classList.toggle('home-background-active', pageId === 'home')", navigate)
+
+        self.assertIn("new ResizeObserver(resize)", source)
+        self.assertIn("resizeObserver.observe(canvas.parentElement)", source)
+
+    def test_inner_pages_use_clean_white_and_light_gray_surfaces(self):
+        source = HOME.read_text(encoding="utf-8")
+        styles = source.split("<style>", 1)[1].split("</style>", 1)[0]
+        self.assertIn(".welcome-copy-card {", styles)
+        welcome_card_rules = styles.split(".welcome-copy-card {", 1)[1].split("}", 1)[0]
+
+        self.assertIn("#page-services,", styles)
+        self.assertIn("#page-about,", styles)
+        self.assertIn("#page-contact", styles)
+        self.assertIn("background: #f8fafc", styles)
+        self.assertIn("#page-services .site-surface", styles)
+        self.assertIn("#page-about .site-surface", styles)
+        self.assertIn("#page-contact .site-surface", styles)
+        self.assertIn("background: #fff", styles)
+        self.assertIn("rgba(255, 255, 255", welcome_card_rules)
+
+    def test_home_page_surfaces_concrete_customer_proof_points(self):
+        page = parse_page(HOME)
+        for proof_key in (
+            "proof_experience",
+            "proof_coverage",
+            "proof_diagnosis",
+            "proof_handover",
+        ):
+            self.assertIn(proof_key, page.elements_by_i18n)
+
+    def test_about_page_avoids_unverifiable_guarantees_and_overstatements(self):
+        source = HOME.read_text(encoding="utf-8")
+        for unsupported_claim in (
+            "确保航期零延误",
+            "zero delay",
+            "全球服务网络",
+            "Global Service Network",
+            "各大船级社",
+            "all major classification societies",
+            "极速物流通道",
+            "express logistics channel",
+            "全栈式系统攻坚",
+            "Full-Stack Troubleshooting",
+            "零摩擦岸基与船检支持",
+            "Seamless Shore Support",
+            "原厂备件全球直供",
+            "Global Original Parts Supply",
+            "原厂配件与全球供应",
+            "Original Parts & Global Supply",
+            "致力于为全球航线提供",
+        ):
+            self.assertNotIn(unsupported_claim, source)
+
+    def test_contact_form_does_not_report_a_fake_success(self):
+        source = HOME.read_text(encoding="utf-8")
+
+        self.assertNotIn("表单提交成功", source)
+        self.assertNotIn("Form submitted successfully", source)
+        self.assertIn("页面暂未接入自动提交", source)
+        self.assertIn("This page is not connected to automatic submission", source)
+
+    def test_footer_restores_spacious_backup_layout(self):
+        source = HOME.read_text(encoding="utf-8")
+        footer_tag = source.split("<footer", 1)[1].split(">", 1)[0]
+        footer = source.split("<footer", 1)[1].split("</footer>", 1)[0]
+
+        self.assertIn("md:aspect-[16/9]", footer_tag)
+        self.assertIn('<div class="flex-grow"></div>', footer)
+        self.assertIn('class="relative z-10 pt-16 pb-6', footer)
+
+    def test_home_canvas_and_footer_use_complementary_edge_fades(self):
+        source = HOME.read_text(encoding="utf-8")
+        styles = source.split("<style>", 1)[1].split("</style>", 1)[0]
+        canvas_rules = styles.split("#techCanvas {", 1)[1].split("}", 1)[0]
+        self.assertIn("footer::before {", styles)
+        footer_fade_rules = styles.split("footer::before {", 1)[1].split("}", 1)[0]
+
+        self.assertIn("calc(100% - 180px)", canvas_rules)
+        self.assertIn("mask-image: linear-gradient", canvas_rules)
+        self.assertIn("#main-content.home-background-active + footer", styles)
+        self.assertIn("height: clamp(96px, 12vw, 180px)", footer_fade_rules)
+        self.assertIn("var(--footer-transition-start)", footer_fade_rules)
+
     def test_home_page_explains_field_capability_and_service_delivery(self):
         page = HOME.read_text(encoding="utf-8")
         for required_copy in (
@@ -99,6 +238,10 @@ class SiteContentTests(unittest.TestCase):
         welcome = source.split('id="welcome-section"', 1)[1].split("</section>", 1)[0]
 
         self.assertIn("南通睦融电气设备有限公司", welcome)
+        self.assertIn("“全方位”海事电气服务", welcome)
+        self.assertIn("供应 · 安全 · 工程 · 技术", welcome)
+        self.assertIn("深耕海事电气与自动化技术服务", welcome)
+        self.assertIn("为船舶设备恢复可靠运行提供支持", welcome)
         self.assertIn('src="murong-pic/pic3.jpg"', welcome)
         self.assertNotIn("images.unsplash.com", welcome)
         self.assertIn("MURONG", welcome)

@@ -31,6 +31,9 @@
       .page-section {
         display: none;
         opacity: 0;
+        position: relative;
+        z-index: 1;
+        background: transparent;
         transition: opacity 0.5s ease-in-out;
       }
       .page-active {
@@ -76,6 +79,258 @@
       .nav-active {
         color: #1c3a82;
         font-weight: 700;
+      }
+
+      #main-content {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        background: #f8fbff;
+      }
+      #techCanvas {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.82;
+        visibility: visible;
+        transition: opacity 220ms ease, visibility 220ms ease;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 180px), transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 180px), transparent 100%);
+      }
+      #main-content:not(.home-background-active) #techCanvas {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .site-page {
+        background: transparent;
+      }
+      .site-surface {
+        background: transparent;
+      }
+      .site-surface-soft {
+        background: transparent;
+      }
+      #page-services,
+      #page-about,
+      #page-contact {
+        background: #fff;
+      }
+      #page-services .site-surface,
+      #page-about .site-surface,
+      #page-contact .site-surface {
+        background: #fff;
+      }
+      #page-services .site-surface-soft,
+      #page-about .site-surface-soft,
+      #page-contact .site-surface-soft {
+        background: #f8fafc;
+      }
+      #main-content + footer {
+        --footer-transition-start: 255, 255, 255;
+      }
+      #main-content.home-background-active + footer {
+        --footer-transition-start: 248, 251, 255;
+      }
+      footer::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        z-index: 6;
+        height: clamp(96px, 12vw, 180px);
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(var(--footer-transition-start), 1) 0%,
+          rgba(var(--footer-transition-start), 0.92) 32%,
+          rgba(var(--footer-transition-start), 0) 100%
+        );
+      }
+
+      .welcome-section-heading {
+        max-width: 1080px;
+        margin: 0 auto 36px;
+        text-align: center;
+      }
+      .welcome-section-rule {
+        width: 48px;
+        height: 6px;
+        margin: 0 auto 16px;
+        background: #e60012;
+      }
+      .welcome-section-title {
+        margin: 0;
+        color: #1c3a82;
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        line-height: 1.12;
+        font-weight: 900;
+        letter-spacing: -0.035em;
+      }
+      .welcome-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+        gap: 34px;
+        align-items: stretch;
+      }
+      .welcome-copy-card {
+        display: flex;
+        min-height: 540px;
+        padding: clamp(34px, 4vw, 52px);
+        flex-direction: column;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(28, 58, 130, 0.07);
+        border-radius: 18px;
+        box-shadow: 0 12px 36px rgba(20, 38, 76, 0.055);
+        -webkit-backdrop-filter: blur(7px);
+        backdrop-filter: blur(7px);
+      }
+      .welcome-eyebrow {
+        margin: 0 0 14px;
+        color: #e60012;
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+      }
+      .welcome-slogan {
+        margin: 0;
+        color: #1c3a82;
+        font-size: clamp(27px, 3vw, 38px);
+        line-height: 1.28;
+        font-weight: 900;
+        letter-spacing: -0.025em;
+      }
+      .welcome-service-line {
+        display: block;
+        margin-top: 8px;
+        color: #31436f;
+        font-size: 0.65em;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+      .welcome-description {
+        max-width: 680px;
+        margin: 18px 0 0;
+        color: #5b6575;
+        font-size: 16px;
+        line-height: 1.85;
+      }
+      .welcome-values-label {
+        margin: 22px 0 10px;
+        color: #8a94a6;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+      }
+      .welcome-values-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+        row-gap: 8px;
+      }
+      .welcome-values-grid .core-value-dot {
+        margin-right: 12px;
+      }
+      .welcome-learn-more {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 12px;
+        margin-top: 18px;
+        padding: 8px 0 2px;
+        color: #1c3a82;
+        border-bottom: 1px solid rgba(28, 58, 130, 0.28);
+        font-size: 14px;
+        font-weight: 800;
+        transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+      }
+      .welcome-learn-more:hover {
+        color: #e60012;
+        border-color: #e60012;
+        transform: translateX(3px);
+      }
+      .welcome-image-card {
+        position: relative;
+        min-height: 540px;
+        margin: 0;
+        overflow: hidden;
+        background: #10275f;
+        box-shadow: 0 18px 48px rgba(20, 38, 76, 0.14);
+      }
+      .welcome-image-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 55% center;
+      }
+      .welcome-image-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(16, 39, 95, 0.06) 24%, rgba(9, 24, 61, 0.9) 100%);
+      }
+      .welcome-image-kicker {
+        position: absolute;
+        z-index: 1;
+        top: 24px;
+        right: 24px;
+        padding: 9px 12px;
+        color: #fff;
+        background: #e60012;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+      }
+      .welcome-image-brand {
+        position: absolute;
+        z-index: 1;
+        right: 30px;
+        bottom: 30px;
+        left: 30px;
+        color: #fff;
+      }
+      .welcome-image-brand strong {
+        display: block;
+        font-size: clamp(44px, 6vw, 76px);
+        line-height: 0.95;
+        font-weight: 900;
+        letter-spacing: -0.045em;
+      }
+      .welcome-image-brand span {
+        display: block;
+        margin-top: 13px;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.34em;
+      }
+      @media (max-width: 1040px) {
+        .welcome-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 760px) {
+        .welcome-section-heading {
+          margin-bottom: 24px;
+        }
+        .welcome-grid {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        .welcome-copy-card,
+        .welcome-image-card {
+          min-height: 0;
+        }
+        .welcome-copy-card {
+          padding: 28px 22px;
+          border-radius: 14px;
+        }
+        .welcome-image-card {
+          height: 420px;
+        }
       }
 
       .no-scrollbar::-webkit-scrollbar {
@@ -223,7 +478,7 @@
                         </svg>
                       </h3>
                       <p class="text-gray-600 text-xs lg:text-sm leading-relaxed mb-6" data-i18n="nav_services_desc">
-                        全方位覆盖船舶电气、自动化、岸电及配件。致力于为全球航线提供精密、安全的技术保障。
+                        覆盖船舶电气、自动化、岸电改造及备件技术支持，服务前确认设备信息、故障范围、港口和船期。
                       </p>
                     </div>
                     <button
@@ -335,7 +590,7 @@
                         </li>
                         <li>
                           <a href="#" onclick="navigate('services', 'parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_4">原厂备件全球直供</span></a
+                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_4">型号核对与替换建议</span></a
                           >
                         </li>
                       </ul>
@@ -477,12 +732,13 @@
       </div>
     </header>
 
-    <div id="main-content" class="flex-grow">
+    <div id="main-content" class="relative flex-grow overflow-hidden bg-[#f8fbff] isolate home-background-active">
+      <canvas id="techCanvas" aria-hidden="true"></canvas>
       
-      <main id="page-home" class="page-section page-active">
+      <main id="page-home" class="page-section site-page page-active">
         
         <section
-          class="relative w-full overflow-hidden bg-black min-h-[550px] sm:min-h-[600px] md:min-h-[70vh] lg:min-h-[800px] lg:aspect-[16/9]"
+          class="relative w-full overflow-hidden bg-black min-h-[560px] sm:min-h-[620px] md:min-h-[680px] lg:min-h-[720px]"
         >
           <video
             id="heroVideo"
@@ -508,39 +764,39 @@
           </button>
           <div class="absolute inset-0 flex flex-col justify-center pointer-events-none">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 pointer-events-auto mt-10 md:mt-0">
-              <div class="max-w-2xl text-white">
+              <div class="max-w-3xl text-white">
                 <div
                   class="inline-block bg-mrRed px-2 py-1 md:px-3 md:py-1 mb-3 sm:mb-6 text-xs sm:text-sm font-bold tracking-widest uppercase"
                   data-i18n="hero_tag"
                 >
-                  Marine Automation Expert
+                  Marine Automation Repair &amp; Service
                 </div>
                 <h1
                   class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-3 sm:mb-6 leading-tight"
                   data-i18n-html="hero_title"
                 >
-                  安全护航 <br /><span class="text-blue-200">精准驱动</span>
+                  让船舶自动化系统<br /><span class="text-blue-200">稳定运行</span>
                 </h1>
                 <p
-                  class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 sm:mb-10 leading-relaxed max-w-lg"
+                  class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 sm:mb-10 leading-relaxed max-w-2xl"
                   data-i18n="hero_desc"
                 >
-                  南通睦融电气设备有限公司，专注于船舶电气及自动化系统的维修与技术改造。为全球航运提供全天候、专业、高效的解决方案。
+                  聚焦船舶自动化设备维修，覆盖主机遥控、报警监测、液位遥测、阀门控制与电站管理等系统；结合船期协调登轮检测、故障修复、调试验证与技术交付。
                 </p>
                 <div class="flex flex-wrap gap-3 sm:gap-4">
                   <button
-                    onclick="navigate('services', 'automation')"
-                    class="bg-white text-mrBlue px-5 py-2.5 sm:px-8 sm:py-3 text-sm md:text-base font-bold hover:bg-gray-100 transition shadow-lg pointer-events-auto"
+                    onclick="navigate('contact')"
+                    class="bg-mrRed text-white px-5 py-2.5 sm:px-8 sm:py-3 text-sm md:text-base font-bold hover:bg-red-700 transition shadow-lg pointer-events-auto"
                     data-i18n="hero_btn1"
                   >
-                    探索核心业务
+                    提交服务需求
                   </button>
                   <button
-                    onclick="navigate('about')"
+                    onclick="navigate('services', 'automation')"
                     class="border border-white sm:border-2 text-white px-5 py-2.5 sm:px-8 sm:py-3 text-sm md:text-base font-bold hover:bg-white hover:text-mrBlue transition pointer-events-auto"
                     data-i18n="hero_btn2"
                   >
-                    了解睦融
+                    查看服务范围
                   </button>
                 </div>
               </div>
@@ -548,86 +804,86 @@
           </div>
         </section>
 
-        <div class="relative w-full bg-white overflow-hidden">
-          
-          <canvas id="techCanvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-80 z-0"></canvas>
-          
-          <section class="py-14 md:py-20 relative z-10 border-b border-gray-100/50" id="welcome-section">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              
-              <div class="mb-10 md:mb-14 text-center">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-mrBlue tracking-tight" data-i18n="welcome_title">南通睦融电气设备有限公司</h2>
-              </div>
-
-              <div class="grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] items-stretch gap-6 lg:gap-8">
-                <article class="w-full min-h-0 lg:min-h-[540px] flex flex-col justify-center bg-white/80 backdrop-blur-md p-6 sm:p-8 lg:p-12 rounded-2xl shadow-sm border border-mrBlue/5">
-                  <p class="text-[11px] sm:text-xs font-bold text-mrRed tracking-[0.18em] mb-3">MARINE ELECTRICAL &amp; AUTOMATION</p>
-                  <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black text-mrBlue leading-snug tracking-tight">
-                    <span data-i18n="welcome_slogan1">“全方位”海事电气服务</span>
-                    <span data-i18n="welcome_slogan2" class="block mt-1.5 text-lg sm:text-xl lg:text-2xl text-[#31436f] tracking-[0.08em]">供应 · 安全 · 工程 · 技术</span>
-                  </h3>
-                  <p class="text-sm sm:text-base text-gray-600 leading-relaxed max-w-xl mt-4" data-i18n="welcome_desc">
-                    南通睦融电气设备有限公司（MURONG）深耕海事电气与自动化技术服务，围绕现场测量、故障定位、维修调试和技术交付，为船舶设备恢复可靠运行提供支持。
-                  </p>
-
-                  <div class="mt-5">
-                    <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-2.5" data-i18n="values_title_en">OUR CORE VALUES</h4>
-                    <div class="grid grid-cols-2 gap-y-2 gap-x-5">
-                      <div class="core-value-item flex items-center space-x-3 min-h-8">
-                        <span class="core-value-dot"></span>
-                        <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_1_title">守正至诚</span>
-                      </div>
-                      <div class="core-value-item flex items-center space-x-3 min-h-8">
-                        <span class="core-value-dot"></span>
-                        <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_2_title">极致履责</span>
-                      </div>
-                      <div class="core-value-item flex items-center space-x-3 min-h-8">
-                        <span class="core-value-dot"></span>
-                        <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_3_title">同舟共济</span>
-                      </div>
-                      <div class="core-value-item flex items-center space-x-3 min-h-8">
-                        <span class="core-value-dot"></span>
-                        <span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_4_title">锐意破壁</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="mt-4">
-                    <a href="#" onclick="navigate('about')" class="inline-flex items-center gap-2 py-1 text-mrBlue border-b border-mrBlue/25 hover:text-mrRed hover:border-mrRed transition duration-300 group">
-                      <span class="text-sm font-bold tracking-wider" data-i18n="welcome_more">了解更多</span>
-                      <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </a>
-                  </div>
-                </article>
-
-                <figure class="relative w-full min-h-[360px] lg:min-h-[540px] overflow-hidden bg-[#10275f] shadow-xl">
-                  <img src="murong-pic/pic3.jpg" alt="港口内停靠的船舶与作业拖轮" class="absolute inset-0 w-full h-full object-cover object-center" />
-                  <div class="absolute inset-0 bg-gradient-to-b from-[#10275f]/5 via-transparent to-[#09183d]/95"></div>
-                  <figcaption class="absolute inset-0 flex flex-col justify-between p-5 sm:p-7">
-                    <span class="self-end px-3 py-2 bg-mrRed text-white text-[10px] sm:text-xs font-black tracking-[0.16em]">ONBOARD SUPPORT</span>
-                    <span class="text-white">
-                      <strong class="block text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-[-0.045em]">MURONG</strong>
-                      <span class="block mt-3 text-[10px] sm:text-xs font-bold tracking-[0.32em] text-white/75">RELIABLE &amp; RESPONSIVE</span>
-                    </span>
-                  </figcaption>
-                </figure>
-              </div>
+        <section class="relative z-20 bg-mrBlue text-white border-t border-white/10" aria-label="服务能力摘要">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-7 grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-5">
+            <div class="border-l-2 border-mrRed pl-3 md:pl-4">
+              <strong class="block text-lg md:text-xl font-black" data-i18n="proof_experience">15 年一线经验</strong>
+              <span class="block mt-1 text-xs md:text-sm text-blue-100" data-i18n="proof_experience_desc">船舶电气与自动化排查</span>
             </div>
-          </section>
+            <div class="border-l-2 border-mrRed pl-3 md:pl-4">
+              <strong class="block text-lg md:text-xl font-black" data-i18n="proof_coverage">长三角登轮支持</strong>
+              <span class="block mt-1 text-xs md:text-sm text-blue-100" data-i18n="proof_coverage_desc">结合船期与泊位协调</span>
+            </div>
+            <div class="border-l-2 border-mrRed pl-3 md:pl-4">
+              <strong class="block text-lg md:text-xl font-black" data-i18n="proof_diagnosis">测量驱动诊断</strong>
+              <span class="block mt-1 text-xs md:text-sm text-blue-100" data-i18n="proof_diagnosis_desc">从供电、信号到控制逻辑</span>
+            </div>
+            <div class="border-l-2 border-mrRed pl-3 md:pl-4">
+              <strong class="block text-lg md:text-xl font-black" data-i18n="proof_handover">修后技术交付</strong>
+              <span class="block mt-1 text-xs md:text-sm text-blue-100" data-i18n="proof_handover_desc">记录检测、处置与验证结果</span>
+            </div>
+          </div>
+        </section>
 
-          <section class="py-12 md:py-20 relative z-10 border-b border-gray-100/50">
+        <section class="relative z-10 py-12 md:py-20 border-b border-gray-100/50" id="welcome-section">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <header class="welcome-section-heading">
+              <div class="welcome-section-rule" aria-hidden="true"></div>
+              <h2 class="welcome-section-title" data-i18n="welcome_title">南通睦融电气设备有限公司</h2>
+            </header>
+
+            <div class="welcome-grid">
+              <article class="welcome-copy-card">
+                <p class="welcome-eyebrow">MARINE ELECTRICAL &amp; AUTOMATION</p>
+                <h3 class="welcome-slogan">
+                  <span data-i18n="welcome_slogan">“全方位”海事电气服务</span>
+                  <span class="welcome-service-line" data-i18n="welcome_service_line">供应 · 安全 · 工程 · 技术</span>
+                </h3>
+                <p class="welcome-description" data-i18n="welcome_desc">
+                  南通睦融电气设备有限公司（MURONG）深耕海事电气与自动化技术服务，围绕现场测量、故障定位、维修调试和技术交付，为船舶设备恢复可靠运行提供支持。
+                </p>
+
+                <p class="welcome-values-label" data-i18n="values_title_en">OUR CORE VALUES</p>
+                <div class="welcome-values-grid" aria-label="核心价值观">
+                  <div class="core-value-item flex items-center min-h-8"><span class="core-value-dot"></span><span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_1_title">守正至诚</span></div>
+                  <div class="core-value-item flex items-center min-h-8"><span class="core-value-dot"></span><span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_2_title">极致履责</span></div>
+                  <div class="core-value-item flex items-center min-h-8"><span class="core-value-dot"></span><span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_3_title">同舟共济</span></div>
+                  <div class="core-value-item flex items-center min-h-8"><span class="core-value-dot"></span><span class="text-sm md:text-base font-bold text-mrBlue" data-i18n="val_4_title">锐意破壁</span></div>
+                </div>
+
+                <a href="#" onclick="navigate('about')" class="welcome-learn-more">
+                  <span data-i18n="welcome_more">了解更多</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+              </article>
+
+              <figure class="welcome-image-card">
+                <img src="murong-pic/pic3.jpg" alt="港口内停靠的船舶与作业拖轮" />
+                <figcaption>
+                  <span class="welcome-image-kicker">ONBOARD SUPPORT</span>
+                  <span class="welcome-image-brand"><strong>MURONG</strong><span>RELIABLE &amp; RESPONSIVE</span></span>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <div class="relative w-full site-surface overflow-hidden">
+          
+          <section class="py-12 md:py-20 relative z-10 border-b border-gray-100/50" id="service-overview-section">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               
               <div class="mb-8 md:mb-12 flex flex-col items-start text-left">
                 <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-mrBlue tracking-tight" data-i18n="home_srv_title">
-                  我们的服务
+                  可提供的现场服务
                 </h2>
+                <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mt-4 max-w-4xl" data-i18n="home_srv_intro">根据故障现象、设备型号、船期和靠港地点确认服务范围；复杂问题先依据图纸、报警与实测数据缩小故障范围。</p>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                 <div
-                  class="bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
+                  class="order-2 bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
                   onclick="navigate('services', 'amp')"
                 >
                   <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center text-mrBlue mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
@@ -644,7 +900,7 @@
                   ></span>
                 </div>
                 <div
-                  class="bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
+                  class="order-1 bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
                   onclick="navigate('services', 'automation')"
                 >
                   <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center text-mrBlue mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
@@ -661,7 +917,7 @@
                     ><span data-i18n="read_more">了解更多</span><svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
                 </div>
                 <div
-                  class="bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
+                  class="order-3 bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
                   onclick="navigate('services', 'parts')"
                 >
                   <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center text-mrBlue mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
@@ -669,9 +925,9 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                     </svg>
                   </div>
-                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="srv_parts">原厂备件与技术支持</h3>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" data-i18n="srv_parts">备件核对与技术支持</h3>
                   <p class="text-gray-600 mb-4 text-xs sm:text-sm md:text-base leading-relaxed" data-i18n="home_parts_desc">
-                    依托强大的供应链网络，提供全球范围内的核心电子元器件及传感器供应，并提供全天候远程技术指导。
+                    根据设备品牌、型号、铭牌和旧件照片协助核对电子元器件、传感器及控制板卡，并提供选型与替换建议。
                   </p>
                   <span class="text-mrRed font-bold text-sm flex items-center group-hover:translate-x-2 transition"
                     ><span data-i18n="read_more">了解更多</span><svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
@@ -680,7 +936,7 @@
             </div>
           </section>
 
-          <section class="py-12 md:py-20 relative z-10 border-b border-gray-100/50">
+          <section class="py-12 md:py-20 relative z-10 border-b border-gray-100/50" id="capability-section">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="max-w-5xl mb-8 md:mb-12 flex flex-col items-start text-left">
                 <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
@@ -725,7 +981,7 @@
             </div>
           </section>
 
-          <section class="py-16 md:py-24 relative z-10 border-b border-gray-100/50">
+          <section class="py-12 md:py-20 relative z-10 border-b border-gray-100/50" id="workflow-section">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="max-w-5xl mb-8 md:mb-12 flex flex-col items-start text-left">
                 <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
@@ -772,7 +1028,7 @@
             </div>
           </section>
 
-          <section class="py-12 md:py-20 relative z-10">
+          <section class="py-12 md:py-20 relative z-10" id="ship-types-section">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               
               <div class="mb-10 md:mb-14 flex flex-col items-start text-left">
@@ -826,7 +1082,7 @@
 
         </div> </main>
 
-      <main id="page-services" class="page-section">
+      <main id="page-services" class="page-section site-page">
         <div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center">
           <img src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-60" />
           <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
@@ -835,7 +1091,7 @@
           </div>
         </div>
 
-        <div class="bg-gray-50 border-b border-gray-200 py-4 shadow-inner">
+        <div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200">
               <a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a>
@@ -845,7 +1101,7 @@
           </div>
         </div>
 
-        <div class="md:py-20 bg-mrGray">
+        <div class="md:py-20 site-surface">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8 md:gap-10">
             <div class="w-full md:w-1/4">
               <div class="bg-white shadow-md rounded-xl p-3 md:p-0 md:bg-white md:shadow-sm md:rounded-lg overflow-hidden md:sticky md:top-28 flex flex-wrap justify-center gap-2 md:flex-col md:gap-0 border border-gray-200 md:border-none">
@@ -1000,9 +1256,9 @@
                 
                 <div class="mb-8 md:mb-10 flex flex-col items-start text-left">
                   <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
-                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-4 tracking-tight" data-i18n="srv_parts">原厂配件与全球供应</h2>
+                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-4 tracking-tight" data-i18n="srv_parts">备件核对与技术支持</h2>
                   <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed" data-i18n="srv_parts_p1">
-                    我们深知船舶设备故障对航期的影响。依托强大的全球供应链网络，南通睦融电气为航运企业提供高品质的传感器、控制板卡及气动液压等各类原厂备件，并配有极速物流通道。
+                    我们深知船舶设备故障对航期的影响。技术团队根据品牌、型号、铭牌、接口参数及旧件照片核对传感器、控制板卡和气动液压部件，并结合交期提供供应或替换建议。
                   </p>
                 </div>
 
@@ -1055,7 +1311,7 @@
         </div>
       </main>
 
-      <main id="page-about" class="page-section bg-circuit-pattern">
+      <main id="page-about" class="page-section site-page">
         
         <div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center">
           <img src="https://images.unsplash.com/photo-1521618755572-156ae0cdd74d?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-60" />
@@ -1065,7 +1321,7 @@
           </div>
         </div>
 
-        <div class="bg-gray-50 border-b border-gray-200 py-4 shadow-inner">
+        <div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200">
               <a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a>
@@ -1089,7 +1345,7 @@
               
               <div class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 space-y-4 md:space-y-6 leading-loose">
                 <p data-i18n-html="about_p1">
-                  <strong>南通睦融电气设备有限公司（MURONG）</strong> 是一家深耕于海事工业领域的专业技术服务型企业。我们致力于为全球航行的船舶提供高精度、高响应率的电气自动化系统维修与保养服务。
+                  <strong>南通睦融电气设备有限公司（MURONG）</strong> 是一家专注海事电气与自动化的技术服务企业，为靠港船舶提供故障排查、维修调试、岸电改造与备件技术支持。
                 </p>
                 <p data-i18n="about_p2">
                   团队拥有 15 年一线船舶电气与自动化排查经验，在内部通信、导航报警、液位监测、动力与环保系统等领域积累了大量现场测量、故障隔离和调试验证经验。
@@ -1103,7 +1359,7 @@
           
           <div class="mb-10 md:mb-16 flex flex-col items-start text-left">
             <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-mrBlue tracking-wide" data-i18n="about_adv_title">睦融优势</h2>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-mrBlue tracking-wide" data-i18n="about_adv_title">客户可以获得什么</h2>
           </div>
           
           <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-8 md:p-14 relative overflow-hidden">
@@ -1126,9 +1382,9 @@
                   <div class="text-mrRed mr-3 md:mr-4 transform group-hover:scale-110 transition duration-300 flex-shrink-0">
                     <svg class="w-10 h-10 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                   </div>
-                  <h4 class="text-4xl md:text-5xl lg:text-6xl font-black text-mrBlue leading-none">6<span class="text-2xl text-mrRed ml-1">+</span></h4>
+                  <h4 class="text-3xl md:text-4xl lg:text-5xl font-black text-mrBlue leading-none" data-i18n="about_proof_measurement">实测</h4>
                 </div>
-                <p class="text-sm md:text-base text-gray-500 font-bold tracking-widest text-center" data-i18n="about_adv2">资深专业工程师</p>
+                <p class="text-sm md:text-base text-gray-500 font-bold tracking-widest text-center" data-i18n="about_adv2">测量数据辅助判断</p>
               </div>
               
               <div class="flex flex-col items-center justify-center group">
@@ -1136,9 +1392,9 @@
                   <div class="text-mrRed mr-3 md:mr-4 transform group-hover:scale-110 transition duration-300 flex-shrink-0">
                     <svg class="w-10 h-10 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                   </div>
-                  <h4 class="text-4xl md:text-5xl lg:text-6xl font-black text-mrBlue leading-none">15<span class="text-2xl text-mrRed ml-1">+</span></h4>
+                  <h4 class="text-3xl md:text-4xl lg:text-5xl font-black text-mrBlue leading-none" data-i18n="about_proof_report">报告</h4>
                 </div>
-                <p class="text-sm md:text-base text-gray-500 font-bold tracking-widest text-center" data-i18n="about_adv3">长期合作优质船东</p>
+                <p class="text-sm md:text-base text-gray-500 font-bold tracking-widest text-center" data-i18n="about_adv3">维修结果可复核</p>
               </div>
             </div>
 
@@ -1148,8 +1404,8 @@
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
                 <div>
-                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card1_title">江浙沪极速响应</h4>
-                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card1_desc">服务网络深度覆盖上海、舟山、靖江、南京、张家港、南通及泰州等长三角核心港口。全天候待命，实现本地化极速登船，确保航期零延误。</p>
+                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card1_title">区域登轮协调</h4>
+                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card1_desc">立足南通，覆盖上海、舟山、靖江、南京、张家港、南通及泰州等长三角主要港口，根据船期、泊位与人员安排确认登轮窗口。</p>
                 </div>
               </div>
               
@@ -1158,8 +1414,8 @@
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
                 <div>
-                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card2_title">全栈式系统攻坚</h4>
-                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card2_desc">从内通导航、监控报警到动力环保系统，精通全船自动化设备的应急航修、设备校验与定期保养，提供一站式闭环技术保障。</p>
+                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card2_title">跨系统故障排查</h4>
+                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card2_desc">围绕内通、报警、液位、阀门遥控、电站管理及环保设备，从供电、I/O、通信和控制逻辑逐级测量，减少无依据换件。</p>
                 </div>
               </div>
               
@@ -1168,8 +1424,8 @@
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <div>
-                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card3_title">外轮无障碍服务</h4>
-                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card3_desc">拥有具备丰富外轮服务经验的资深工程师团队。全程纯熟英语技术沟通与调试，严格对接并执行国际海事技术标准。</p>
+                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card3_title">中英文技术沟通</h4>
+                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card3_desc">可依据英文图纸、报警信息和设备资料开展沟通与排查，并在服务前确认船舶信息、故障范围和现场配合条件。</p>
                 </div>
               </div>
               
@@ -1178,15 +1434,15 @@
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                 </div>
                 <div>
-                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card4_title">零摩擦岸基与船检支持</h4>
-                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card4_desc">深谙本地港口及各大船级社（Class）检验与报验流程。提供高效、专业的沟通与岸基配合，快速解决各类疑难杂症与合规问题。</p>
+                  <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-mrBlue transition duration-300" data-i18n="adv_card4_title">岸基协同与技术资料</h4>
+                  <p class="text-sm text-gray-600 leading-relaxed text-justify" data-i18n="adv_card4_desc">配合机务、船员和相关服务方确认技术条件；修后整理检测数据、处置内容与验证结论，便于后续维护与复盘。</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-gray-50 border-y border-gray-200 py-16 md:py-24">
+        <div class="site-surface-soft border-y border-gray-200/80 py-16 md:py-24">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="mb-12 md:mb-16 flex flex-col items-start text-left">
@@ -1237,7 +1493,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-24">
           <div class="mb-8 md:mb-12 flex flex-col items-start text-left">
             <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
-            <h3 class="text-3xl md:text-4xl font-black text-mrBlue tracking-wide" data-i18n="network_title">全球服务网络</h3>
+            <h3 class="text-3xl md:text-4xl font-black text-mrBlue tracking-wide" data-i18n="network_title">长三角服务区域</h3>
             <p class="text-sm md:text-base text-gray-600 leading-relaxed mt-4 max-w-4xl font-medium" data-i18n="network_desc">团队立足南通，服务范围覆盖上海、舟山、靖江、南京、张家港、南通、泰州等长三角主要港口，可结合船期与泊位计划协调登轮支持。</p>
           </div>
 
@@ -1318,7 +1574,7 @@
           </div>
         </div>
 
-        <div class="bg-mrGray py-16 md:py-24 border-t border-gray-100">
+        <div class="site-surface-soft py-16 md:py-24 border-t border-gray-100/80">
           <div class="max-w-4xl mx-auto px-4 text-center">
             <svg class="w-12 h-12 md:w-16 md:h-16 text-mrBlue/10 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
             <h3 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-6 tracking-wide" data-i18n="spirit_title">长风破浪，臻于至善。</h3>
@@ -1327,7 +1583,7 @@
         </div>
       </main>
 
-      <main id="page-contact" class="page-section">
+      <main id="page-contact" class="page-section site-page">
         <div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center">
           <img src="https://images.unsplash.com/photo-1516387938699-a93567ec168e?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-60" />
           <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
@@ -1335,7 +1591,7 @@
             <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-wider" data-i18n="nav_contact">联系我们</h1>
           </div>
         </div>
-        <div class="bg-gray-50 border-b border-gray-200 py-4 shadow-inner">
+        <div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200">
               <a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a>
@@ -1345,7 +1601,7 @@
           </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+        <div class="site-surface max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
           <div class="mb-8 md:mb-12">
             <p class="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl" data-i18n="contact_subtitle">无论是紧急维修还是常规保养，我们的工程师已准备就绪。</p>
           </div>
@@ -1377,7 +1633,8 @@
                   <label class="block text-sm md:text-base font-medium text-gray-700 mb-1.5 md:mb-2" data-i18n="form_desc">船舶信息及故障描述 *</label>
                   <textarea rows="4" required class="w-full border-gray-300 rounded shadow-sm focus:border-mrBlue focus:ring-mrBlue p-2.5 md:p-3 border text-sm md:text-lg"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-mrBlue text-white py-3 md:py-4 text-base md:text-lg font-bold rounded hover:bg-blue-900 transition mt-2 md:mt-4" data-i18n="form_submit">发送请求</button>
+                <p class="text-xs md:text-sm text-gray-500 leading-relaxed" data-i18n="form_delivery_note">页面暂未接入自动提交。填写后点击下方按钮可查看电话与邮箱，请将船名、IMO（如有）、港口、船期、设备型号和故障现象一并提供。</p>
+                <button type="submit" class="w-full bg-mrBlue text-white py-3 md:py-4 text-base md:text-lg font-bold rounded hover:bg-blue-900 transition mt-2 md:mt-4" data-i18n="form_submit">查看联系渠道</button>
               </form>
             </div>
 
@@ -1455,7 +1712,7 @@
             <img src="mr-logo-white.png" alt="MURONG Logo" class="h-8 sm:h-10 md:h-14 w-auto object-contain" onerror="this.style.display = 'none'" />
             <h3 class="text-lg md:text-xl font-bold mb-2 mt-4" data-i18n="company_name">南通睦融电气设备有限公司</h3>
             <p class="text-blue-100 text-xs md:text-sm max-w-sm leading-relaxed" data-i18n="footer_desc">
-              船舶电气系统与自动化维修领域的专业护航者。为全球航线提供精密、安全的技术保障。
+              面向船舶电气与自动化系统，提供基于测量数据的故障排查、维修调试与技术交付。
             </p>
           </div>
 
@@ -1506,27 +1763,40 @@
         nav_services: { zh: '维修服务', en: 'Services' },
         nav_services_title: { zh: '服务', en: 'Services' },
         nav_services_desc: {
-          zh: '全方位覆盖船舶电气、自动化、岸电及配件。致力于为全球航线提供精密、安全的技术保障。',
-          en: 'Comprehensive coverage of marine electrical, automation, shore power & parts. Delivering precise, safe technical support for global shipping.',
+          zh: '覆盖船舶电气、自动化、岸电改造及备件技术支持，服务前确认设备信息、故障范围、港口和船期。',
+          en: 'Marine electrical, automation, shore-power retrofit, and parts support, scoped against equipment details, fault symptoms, port, and vessel schedule.',
         },
         btn_submit_req: { zh: '提交需求', en: 'Submit Request' },
         nav_about: { zh: '关于我们', en: 'About Us' },
         nav_contact: { zh: '联系我们', en: 'Contact' },
         nav_support: { zh: '获取技术支持', en: 'Get Support' },
 
-        hero_tag: { zh: 'Marine Automation Expert', en: 'Marine Automation Expert' },
+        hero_tag: { zh: 'Marine Automation Repair & Service', en: 'Marine Automation Repair & Service' },
         hero_title: {
-          zh: '安全护航 <br><span class="text-blue-200">精准驱动</span>',
-          en: 'Safe Voyage <br><span class="text-blue-200">Precision Drive</span>',
+          zh: '让船舶自动化系统<br><span class="text-blue-200">稳定运行</span>',
+          en: 'Keeping Marine Automation Systems<br><span class="text-blue-200">Reliable at Sea</span>',
         },
         hero_desc: {
-          zh: '南通睦融电气设备有限公司，专注于船舶电气及自动化系统的维修与技术改造。为全球航运提供全天候、专业、高效的解决方案。',
-          en: 'Nantong Murong Electrical Equipment Co., Ltd. specializes in marine electrical and automation system maintenance and retrofitting. We provide 24/7, professional, and efficient solutions for global shipping.',
+          zh: '聚焦船舶自动化设备维修，覆盖主机遥控、报警监测、液位遥测、阀门控制与电站管理等系统；结合船期协调登轮检测、故障修复、调试验证与技术交付。',
+          en: 'Marine automation repair for main-engine remote control, alarm monitoring, level telemetry, valve control, and power-management systems—from onboard diagnosis and repair to commissioning verification and technical handover.',
         },
-        hero_btn1: { zh: '探索核心业务', en: 'Explore Services' },
-        hero_btn2: { zh: '了解睦融', en: 'About Murong' },
+        hero_btn1: { zh: '提交服务需求', en: 'Request Service' },
+        hero_btn2: { zh: '查看服务范围', en: 'View Service Scope' },
 
-        home_srv_title: { zh: '我们的服务', en: 'Our Services' },
+        proof_experience: { zh: '15 年一线经验', en: '15 Years Frontline Experience' },
+        proof_experience_desc: { zh: '船舶电气与自动化排查', en: 'Marine electrical & automation troubleshooting' },
+        proof_coverage: { zh: '长三角登轮支持', en: 'Yangtze Delta Attendance' },
+        proof_coverage_desc: { zh: '结合船期与泊位协调', en: 'Coordinated around berth and schedule' },
+        proof_diagnosis: { zh: '测量驱动诊断', en: 'Measurement-led Diagnosis' },
+        proof_diagnosis_desc: { zh: '从供电、信号到控制逻辑', en: 'From power and signals to control logic' },
+        proof_handover: { zh: '修后技术交付', en: 'Technical Handover' },
+        proof_handover_desc: { zh: '记录检测、处置与验证结果', en: 'Testing, action, and verification records' },
+
+        home_srv_title: { zh: '可提供的现场服务', en: 'Onboard Services We Provide' },
+        home_srv_intro: {
+          zh: '根据故障现象、设备型号、船期和靠港地点确认服务范围；复杂问题先依据图纸、报警与实测数据缩小故障范围。',
+          en: 'We confirm scope against symptoms, equipment model, schedule, and port. For complex faults, drawings, alarms, and measured data are used to narrow the fault area before action.',
+        },
         srv_amp: { zh: '高/低压岸电改造 (AMP)', en: 'HV/LV Shore Power (AMP)' },
         home_amp_desc: {
           zh: '根据船舶电力参数与靠港用电条件，提供高低压岸电系统方案、设备安装、并网调试及保护功能测试。',
@@ -1541,14 +1811,14 @@
           zh: '覆盖主机遥控、液位监测、阀门遥控及电站管理系统，通过电源、I/O、通信与控制逻辑测量定位故障并完成维修验证。',
           en: 'Covering main-engine remote control, level monitoring, valve remote control, and power management, with fault isolation across power, I/O, communications, and control logic followed by repair verification.',
         },
-        srv_parts: { zh: '原厂备件与技术支持', en: 'Original Parts & Support' },
+        srv_parts: { zh: '备件核对与技术支持', en: 'Parts Verification & Support' },
         srv_parts_p1: {
           zh: '针对传感器、控制板卡及气动液压部件等需求，我们根据设备铭牌、技术参数与现场接口进行型号核对，并结合船期提供可行的供应与替代建议。',
           en: 'For sensors, control boards, and pneumatic or hydraulic components, we verify models against nameplates, technical parameters, and site interfaces, then propose practical supply or replacement options around the vessel schedule.',
         },
         home_parts_desc: {
-          zh: '根据设备型号、现场参数与交期需求匹配控制板卡、传感器及气动液压部件，并提供安装与调试建议。',
-          en: 'We match control boards, sensors, and pneumatic or hydraulic parts against equipment models, site parameters, and delivery windows, with installation and commissioning guidance.',
+          zh: '根据设备品牌、型号、铭牌和旧件照片协助核对电子元器件、传感器及控制板卡，并提供选型与替换建议。',
+          en: 'We use equipment make, model, nameplate, and old-part photos to verify electronic components, sensors, and control boards, then provide selection or replacement guidance.',
         },
         read_more: { zh: '了解更多', en: 'Read More' },
 
@@ -1616,7 +1886,7 @@
         parts_1: { zh: '核心电子元器件', en: 'Core Electronic Components' },
         parts_2: { zh: '船舶高精度传感器', en: 'High-Precision Sensors' },
         parts_3: { zh: 'PLC 控制板卡修复', en: 'PLC & PCB Repair' },
-        parts_4: { zh: '原厂备件全球直供', en: 'Global Original Parts Supply' },
+        parts_4: { zh: '型号核对与替换建议', en: 'Model Verification & Replacement Advice' },
 
         ship_types_title: { zh: '船型', en: 'Vessel Types' },
         ship_types_desc: {
@@ -1728,8 +1998,8 @@
         about_tag: { zh: '关于睦融', en: 'About Murong' },
         about_title: { zh: '连接技术与海洋', en: 'Connecting Tech & Ocean' },
         about_p1: {
-          zh: '<strong>南通睦融电气设备有限公司（MURONG）</strong> 是一家深耕于海事工业领域的专业技术服务型企业。我们致力于为全球航行的船舶提供高精度、高响应率的电气自动化系统维修与保养服务。',
-          en: '<strong>Nantong Murong Electrical Equipment Co., Ltd. (MURONG)</strong> is a professional technical service enterprise deeply rooted in the maritime industry. We are dedicated to providing high-precision, rapid-response electrical automation maintenance services.',
+          zh: '<strong>南通睦融电气设备有限公司（MURONG）</strong> 是一家专注海事电气与自动化的技术服务企业，为靠港船舶提供故障排查、维修调试、岸电改造与备件技术支持。',
+          en: '<strong>Nantong Murong Electrical Equipment Co., Ltd. (MURONG)</strong> is a marine electrical and automation service company providing fault isolation, repair commissioning, shore-power retrofits, and parts support for vessels in port.',
         },
         about_p2: {
           zh: '团队拥有 15 年一线船舶电气与自动化排查经验，在内部通信、导航报警、液位监测、动力与环保系统等领域积累了大量现场测量、故障隔离和调试验证经验。',
@@ -1737,22 +2007,24 @@
         },
         
         /* 核心优势四宫格翻译 */
-        adv_card1_title: { zh: '江浙沪极速响应', en: 'Rapid Regional Response' },
-        adv_card1_desc: { zh: '服务网络深度覆盖上海、舟山、靖江、南京、张家港、南通及泰州等长三角核心港口。全天候待命，实现本地化极速登船，确保航期零延误。', en: 'Deep network coverage across Shanghai, Zhoushan, Jingjiang, Nanjing, Zhangjiagang, Nantong, and Taizhou. 24/7 standby for rapid boarding with zero delay.' },
-        adv_card2_title: { zh: '全栈式系统攻坚', en: 'Full-Stack Troubleshooting' },
-        adv_card2_desc: { zh: '从内通导航、监控报警到动力环保系统，精通全船自动化设备的应急航修、设备校验与定期保养，提供一站式闭环技术保障。', en: 'From comms/nav to eco-power systems, we master emergency repairs, calibration, and routine maintenance for all marine automation equipment.' },
-        adv_card3_title: { zh: '外轮无障碍服务', en: 'Global Vessel Support' },
-        adv_card3_desc: { zh: '拥有具备丰富外轮服务经验的资深工程师团队。全程纯熟英语技术沟通与调试，严格对接并执行国际海事技术标准。', en: 'Experienced engineers fluent in English for seamless technical communication and commissioning, strictly adhering to international maritime standards.' },
-        adv_card4_title: { zh: '零摩擦岸基与船检支持', en: 'Seamless Shore Support' },
-        adv_card4_desc: { zh: '深谙本地港口及各大船级社（Class）检验与报验流程。提供高效、专业的沟通与岸基配合，快速解决各类疑难杂症与合规问题。', en: 'Profound understanding of local port and Class inspection processes. Providing highly efficient shore-based coordination to resolve complex compliance issues.' },
+        adv_card1_title: { zh: '区域登轮协调', en: 'Regional Attendance Coordination' },
+        adv_card1_desc: { zh: '立足南通，覆盖上海、舟山、靖江、南京、张家港、南通及泰州等长三角主要港口，根据船期、泊位与人员安排确认登轮窗口。', en: 'Based in Nantong and covering major Yangtze River Delta ports, we confirm attendance windows against vessel schedule, berth, and engineer availability.' },
+        adv_card2_title: { zh: '跨系统故障排查', en: 'Cross-System Fault Isolation' },
+        adv_card2_desc: { zh: '围绕内通、报警、液位、阀门遥控、电站管理及环保设备，从供电、I/O、通信和控制逻辑逐级测量，减少无依据换件。', en: 'Across communications, alarms, level, valve remote control, power management, and environmental equipment, we measure power, I/O, communications, and control logic step by step to avoid unsupported parts replacement.' },
+        adv_card3_title: { zh: '中英文技术沟通', en: 'Chinese & English Technical Communication' },
+        adv_card3_desc: { zh: '可依据英文图纸、报警信息和设备资料开展沟通与排查，并在服务前确认船舶信息、故障范围和现场配合条件。', en: 'We can work with English drawings, alarms, and equipment documents, confirming vessel details, fault scope, and onboard conditions before attendance.' },
+        adv_card4_title: { zh: '岸基协同与技术资料', en: 'Shore Coordination & Records' },
+        adv_card4_desc: { zh: '配合机务、船员和相关服务方确认技术条件；修后整理检测数据、处置内容与验证结论，便于后续维护与复盘。', en: 'We coordinate technical conditions with superintendents, crew, and relevant service parties, then document test data, actions, and verification conclusions for future maintenance.' },
 
-        about_adv_title: { zh: '睦融优势', en: 'Murong Advantages' },
+        about_adv_title: { zh: '客户可以获得什么', en: 'What Clients Receive' },
         about_adv1: { zh: '深耕船舶行业', en: 'Years in Maritime' },
-        about_adv2: { zh: '资深专业工程师', en: 'Senior Engineers' },
-        about_adv3: { zh: '长期合作优质船东', en: 'Partner Shipowners' },
+        about_proof_measurement: { zh: '实测', en: 'MEASURE' },
+        about_adv2: { zh: '测量数据辅助判断', en: 'Measured Data Supports Decisions' },
+        about_proof_report: { zh: '报告', en: 'REPORT' },
+        about_adv3: { zh: '维修结果可复核', en: 'Repair Results Can Be Reviewed' },
 
-        /* 全球服务网络版块翻译 */
-        network_title: { zh: '全球服务网络', en: 'Global Service Network' },
+        /* 长三角服务区域版块翻译 */
+        network_title: { zh: '长三角服务区域', en: 'Yangtze River Delta Service Area' },
         network_desc: { 
           zh: '团队立足南通，服务范围覆盖上海、舟山、靖江、南京、张家港、南通、泰州等长三角主要港口，可结合船期与泊位计划协调登轮支持。',
           en: 'Based in Nantong, our service coverage includes major Yangtze River Delta ports such as Shanghai, Zhoushan, Jingjiang, Nanjing, Zhangjiagang, Nantong, and Taizhou, with onboard attendance coordinated around vessel and berth schedules.'
@@ -1795,7 +2067,11 @@
         form_company: { zh: '公司名称', en: 'Company Name' },
         form_contact: { zh: '联系电话 / 邮箱 *', en: 'Phone / Email *' },
         form_desc: { zh: '船舶信息及故障描述 *', en: 'Vessel Info & Fault Description *' },
-        form_submit: { zh: '发送请求', en: 'Send Request' },
+        form_delivery_note: {
+          zh: '页面暂未接入自动提交。填写后点击下方按钮可查看电话与邮箱，请将船名、IMO（如有）、港口、船期、设备型号和故障现象一并提供。',
+          en: 'This page is not connected to automatic submission. Use the button below to view our phone and email, and include vessel name, IMO (if available), port, schedule, equipment model, and fault symptoms.',
+        },
+        form_submit: { zh: '查看联系渠道', en: 'View Contact Channels' },
         company_name: { zh: '南通睦融电气设备有限公司', en: 'Nantong Murong Electrical Equipment Co., Ltd.' },
         addr_title: { zh: '总部地址', en: 'Headquarters Address' },
         addr_val: {
@@ -1806,8 +2082,8 @@
         email_title: { zh: '服务邮箱', en: 'Service Email' },
 
         footer_desc: {
-          zh: '船舶电气系统与自动化维修领域的专业护航者。为全球航线提供精密、安全的技术保障。',
-          en: 'Professional escort in marine electrical and automation maintenance. Providing precise and safe technical guarantee for global routes.',
+          zh: '面向船舶电气与自动化系统，提供基于测量数据的故障排查、维修调试与技术交付。',
+          en: 'Measurement-led troubleshooting, repair commissioning, and technical handover for marine electrical and automation systems.',
         },
         footer_links: { zh: '快速链接', en: 'Quick Links' },
         footer_about: { zh: '关注我们', en: 'Follow us' },
@@ -1827,14 +2103,14 @@
         
         /* 首页欢迎区块翻译 */
         welcome_title: { zh: '南通睦融电气设备有限公司', en: 'Nantong Murong Electrical Equipment Co., Ltd.' },
-        welcome_slogan1: { zh: '“全方位”海事电气服务', en: '"All-Around" Marine Electrical Services' },
-        welcome_slogan2: { zh: '供应 · 安全 · 工程 · 技术', en: 'Supply · Safety · Engineering · Tech' },
-        welcome_slogan3: { zh: '省时，省力，省心', en: 'Time-saving, Effortless, Worry-free' },
+        welcome_slogan: { zh: '“全方位”海事电气服务', en: 'All-round Marine Electrical Service' },
+        welcome_service_line: { zh: '供应 · 安全 · 工程 · 技术', en: 'SUPPLY · SAFETY · ENGINEERING · TECHNOLOGY' },
         welcome_desc: {
           zh: '南通睦融电气设备有限公司（MURONG）深耕海事电气与自动化技术服务，围绕现场测量、故障定位、维修调试和技术交付，为船舶设备恢复可靠运行提供支持。',
-          en: 'Nantong Murong Electrical Equipment Co., Ltd. focuses on marine electrical and automation services, supporting reliable equipment recovery through field measurement, fault isolation, repair commissioning, and structured technical handover.'
+          en: 'Nantong Murong Electrical Equipment Co., Ltd. specialises in marine electrical and automation services, supporting reliable vessel equipment recovery through field measurement, fault diagnosis, repair commissioning, and technical handover.'
         },
         welcome_more: { zh: '了解更多', en: 'Learn More' },
+        welcome_contact: { zh: '联系技术团队', en: 'Contact the Technical Team' },
         values_title_en: { zh: 'OUR CORE VALUES', en: 'OUR CORE VALUES' }
       }
 
@@ -1887,7 +2163,9 @@
 
       function handleFormSubmit(e) {
         e.preventDefault()
-        const msg = currentLang === 'zh' ? '原型演示：表单提交成功！' : 'Demo: Form submitted successfully!'
+        const msg = currentLang === 'zh'
+          ? '页面暂未接入自动提交，请拨打 +86 156 8211 2719 或发送邮件至 hmm@rongelec.com。'
+          : 'This page is not connected to automatic submission. Please call +86 156 8211 2719 or email hmm@rongelec.com.'
         alert(msg)
       }
 
@@ -1932,6 +2210,11 @@
         pages.forEach((page) => {
           page.classList.remove('page-active')
         })
+
+        const mainContent = document.getElementById('main-content')
+        if (mainContent) {
+          mainContent.classList.toggle('home-background-active', pageId === 'home')
+        }
 
         const targetPage = document.getElementById('page-' + pageId)
         if (targetPage) {
@@ -2049,7 +2332,7 @@
         }
       }
 
-      /* 首页动态科技电路背景 JS */
+      /* 全站动态科技电路背景 JS */
       function initTechCanvas() {
         const canvas = document.getElementById('techCanvas');
         if (!canvas) return;
@@ -2061,6 +2344,10 @@
           h = canvas.height = canvas.parentElement.offsetHeight;
         }
         window.addEventListener('resize', resize);
+        if ('ResizeObserver' in window) {
+          const resizeObserver = new ResizeObserver(resize)
+          resizeObserver.observe(canvas.parentElement)
+        }
         resize();
 
         const gridSize = 40;
@@ -2151,7 +2438,7 @@
 
       window.addEventListener('DOMContentLoaded', () => {
         applyTranslations()
-        initTechCanvas() // 初始化首页科技动画
+        initTechCanvas() // 初始化全站科技动画
       })
 
     </script>
