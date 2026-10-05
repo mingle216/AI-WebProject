@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>南通睦融电气设备有限公司 | MURONG</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+    <script src="assets/maps/yangtze-delta-geo.js"></script>
 
     <script
       type="text/javascript"
@@ -113,17 +115,23 @@
       .site-surface-soft {
         background: transparent;
       }
-      #page-services,
+      #page-automation,
+      #page-amp,
+      #page-parts,
       #page-about,
       #page-contact {
         background: #fff;
       }
-      #page-services .site-surface,
+      #page-automation .site-surface,
+      #page-amp .site-surface,
+      #page-parts .site-surface,
       #page-about .site-surface,
       #page-contact .site-surface {
         background: #fff;
       }
-      #page-services .site-surface-soft,
+      #page-automation .site-surface-soft,
+      #page-amp .site-surface-soft,
+      #page-parts .site-surface-soft,
       #page-about .site-surface-soft,
       #page-contact .site-surface-soft {
         background: #f8fafc;
@@ -364,30 +372,14 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%231C3A82' stroke-width='1.5' stroke-opacity='0.05'%3E%3Cpath d='M20 20h30l20 20v30m-70-50v-10m80 80l20 20h20m-50-30v-20l-20-20h-20m60 60a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm-80-80a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm90 100a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm-90-20a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm40 40h-20l-20-20v-20m50 50a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/%3E%3Cpath d='M100 20h20l20 20v20m-60 80h-20l-20-20v-20'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%231C3A82' fill-opacity='0.05'/%3E%3Ccircle cx='20' cy='100' r='3' fill='%231C3A82' fill-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E");
       }
 
-      /* 真正的高级点阵地图生成器 (利用 CSS 蒙版 + 维基百科开源地图) */
-      .map-bg-dots {
-        /* 生成点阵图案 */
-        background-image: radial-gradient(#cbd5e1 2.5px, transparent 2.5px);
-        background-size: 14px 14px;
-        /* 使用真实世界地图作为蒙版遮罩 */
-        -webkit-mask-image: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg');
-        mask-image: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg');
-        /* 放大 2.5 倍并聚焦在东亚/中国东海岸 */
-        -webkit-mask-size: 250%;
-        mask-size: 250%;
-        -webkit-mask-position: 85% 30%;
-        mask-position: 85% 30%;
-        -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;
+      /* 长三角服务网络：实际区域轮廓由本地 GeoJSON + ECharts 绘制。 */
+      .yangtze-delta-map canvas {
+        outline: none;
       }
-
-      /* 精密微弱呼吸波纹 (Ripple) 动效 */
-      @keyframes ripple-wave-subtle {
-        0% { transform: scale(0.8); opacity: 0.6; }
-        100% { transform: scale(2.2); opacity: 0; }
-      }
-      .animate-ripple-subtle {
-        animation: ripple-wave-subtle 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+      #service-network-corridor:focus-visible {
+        outline: 3px solid rgba(230, 0, 18, 0.72);
+        outline-offset: 4px;
+        border-radius: 10px;
       }
       @keyframes dash-flow {
         to { stroke-dashoffset: -20; }
@@ -421,6 +413,145 @@
       .core-value-item:nth-child(2) .core-value-dot { animation-delay: 0.3s; }
       .core-value-item:nth-child(3) .core-value-dot { animation-delay: 0.6s; }
       .core-value-item:nth-child(4) .core-value-dot { animation-delay: 0.9s; }
+
+      .business-scope-section {
+        position: relative;
+        overflow: hidden;
+        background:
+          linear-gradient(135deg, rgba(28, 58, 130, 0.035), transparent 42%),
+          #f8fafc;
+        border-top: 1px solid #e5e7eb;
+      }
+      .business-scope-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 34%;
+        height: 5px;
+        background: linear-gradient(90deg, transparent, #1c3a82 55%, #e60012);
+      }
+      .business-scope-filter {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 17px;
+        color: #475569;
+        background: #fff;
+        border: 1px solid #dbe2ea;
+        border-radius: 9999px;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.2;
+        transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        touch-action: manipulation;
+      }
+      .business-scope-filter:hover {
+        color: #1c3a82;
+        border-color: rgba(28, 58, 130, 0.45);
+      }
+      .business-scope-filter.is-active {
+        color: #fff;
+        background: #1c3a82;
+        border-color: #1c3a82;
+        box-shadow: 0 8px 20px rgba(28, 58, 130, 0.18);
+      }
+      .business-scope-filter:focus-visible,
+      .business-scope-image-button:focus-visible,
+      .business-lightbox-close:focus-visible {
+        outline: 3px solid rgba(230, 0, 18, 0.72);
+        outline-offset: 3px;
+      }
+      .business-scope-card {
+        min-width: 0;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 8px 26px rgba(15, 23, 42, 0.055);
+        content-visibility: auto;
+        contain-intrinsic-size: 390px;
+        transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+      }
+      .business-scope-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(28, 58, 130, 0.28);
+        box-shadow: 0 18px 38px rgba(15, 23, 42, 0.11);
+      }
+      .business-scope-image-button {
+        position: relative;
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: linear-gradient(145deg, #eef2f7, #e2e8f0);
+        cursor: zoom-in;
+      }
+      .business-scope-image-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 260ms ease;
+      }
+      .business-scope-card:hover .business-scope-image-button img {
+        transform: scale(1.025);
+      }
+      .business-scope-index {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 5px 8px;
+        color: #fff;
+        background: rgba(15, 23, 42, 0.76);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.12em;
+        backdrop-filter: blur(6px);
+      }
+      .business-scope-zoom {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background: #1c3a82;
+        border-radius: 9999px;
+        box-shadow: 0 6px 18px rgba(28, 58, 130, 0.25);
+      }
+      .business-lightbox {
+        overscroll-behavior: contain;
+        backdrop-filter: blur(10px);
+      }
+      .business-lightbox-image {
+        max-width: min(1120px, calc(100vw - 32px));
+        max-height: calc(100vh - 150px);
+        object-fit: contain;
+      }
+      body.business-modal-open {
+        overflow: hidden;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .business-scope-card,
+        .business-scope-image-button img,
+        .business-scope-filter {
+          transition: none;
+        }
+        .business-scope-card:hover,
+        .business-scope-card:hover .business-scope-image-button img {
+          transform: none;
+        }
+        .yangtze-delta-map {
+          filter: saturate(0.9);
+        }
+      }
 
     </style>
   </head>
@@ -460,7 +591,7 @@
             <div class="group h-full flex items-center cursor-pointer">
               <a
                 href="#"
-                onclick="navigate('services', 'automation')"
+                onclick="navigate('automation')"
                 class="nav-link text-gray-700 hover:text-mrBlue px-2 py-2 text-sm lg:text-base font-medium uppercase tracking-wide"
                 data-i18n="nav_services"
                 >维修服务</a
@@ -468,8 +599,8 @@
               <div
                 class="mega-menu absolute left-0 top-[80px] md:top-[96px] w-full bg-white shadow-xl border-t-2 border-mrRed z-50"
               >
-                <div class="flex w-full min-h-[300px]">
-                  <div class="w-1/4 bg-mrGray py-10 px-8 flex flex-col justify-between border-r border-gray-200">
+                <div class="max-w-7xl mx-auto flex w-full min-h-[300px]">
+                  <div class="w-[28%] bg-mrGray py-10 px-8 flex flex-col justify-between border-x border-gray-100">
                     <div>
                       <h3 class="text-xl lg:text-2xl font-black text-gray-900 mb-4 flex items-center">
                         <span data-i18n="nav_services_title">服务</span>
@@ -490,40 +621,40 @@
                     </button>
                   </div>
 
-                  <div class="w-3/4 py-10 px-8 lg:px-12 grid grid-cols-3 gap-8 lg:gap-12 bg-white">
+                  <div class="w-[72%] py-10 px-10 lg:px-12 grid grid-cols-3 gap-8 bg-white">
                     <div class="flex flex-col h-full">
-                      <h4 class="text-base lg:text-lg font-bold text-mrBlue mb-6 border-b border-gray-100 pb-3" data-i18n="srv_auto">
+                      <h4 class="text-base lg:text-lg font-bold text-mrBlue mb-5 border-b border-gray-100 pb-3" data-i18n="srv_auto">
                         自动化维修
                       </h4>
-                      <ul class="space-y-3 lg:space-y-4 flex-grow mb-6">
+                      <ul class="space-y-2.5 flex-grow mb-6">
                         <li>
-                          <a href="#" onclick="navigate('services', 'automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_1">内通与广播系统</span></a
+                          <a href="#" onclick="navigate('automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_1">内通与广播系统</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_2">航行与安全报警系统</span></a
+                          <a href="#" onclick="navigate('automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_2">航行与安全报警系统</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_3">液位遥测与阀门控制</span></a
+                          <a href="#" onclick="navigate('automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_3">液位遥测与阀门控制</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_4">燃油、动力与电站管理</span></a
+                          <a href="#" onclick="navigate('automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_4">燃油、动力与电站管理</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_5">环保系统排障</span></a
+                          <a href="#" onclick="navigate('automation')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="auto_5">环保系统排障</span></a
                           >
                         </li>
                       </ul>
                       <div class="mt-auto pt-4 border-t border-gray-50">
-                        <a href="#" onclick="navigate('services', 'automation')" class="inline-flex items-center text-mrRed text-xs lg:text-sm font-bold hover:text-red-700 transition group">
+                        <a href="#" onclick="navigate('automation')" class="inline-flex items-center text-mrRed text-xs lg:text-sm font-bold hover:text-red-700 transition group">
                           <span data-i18n="read_more">了解更多</span>
                           <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -533,33 +664,33 @@
                     </div>
 
                     <div class="flex flex-col h-full">
-                      <h4 class="text-base lg:text-lg font-bold text-mrBlue mb-6 border-b border-gray-100 pb-3" data-i18n="srv_amp">
+                      <h4 class="text-base lg:text-lg font-bold text-mrBlue mb-5 border-b border-gray-100 pb-3" data-i18n="srv_amp">
                         岸电改造
                       </h4>
-                      <ul class="space-y-3 lg:space-y-4 flex-grow mb-6">
+                      <ul class="space-y-2.5 flex-grow mb-6">
                         <li>
-                          <a href="#" onclick="navigate('services', 'amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_1">低压岸电方案 (LV AMP)</span></a
+                          <a href="#" onclick="navigate('amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_1">低压岸电方案 (LV AMP)</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_2">高压岸电方案 (HV AMP)</span></a
+                          <a href="#" onclick="navigate('amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_2">高压岸电方案 (HV AMP)</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_3">交钥匙工程服务</span></a
+                          <a href="#" onclick="navigate('amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_3">交钥匙工程服务</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_4">并网调试与保护测试</span></a
+                          <a href="#" onclick="navigate('amp')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="amp_4">并网调试与保护测试</span></a
                           >
                         </li>
                       </ul>
                       <div class="mt-auto pt-4 border-t border-gray-50">
-                        <a href="#" onclick="navigate('services', 'amp')" class="inline-flex items-center text-mrRed text-xs lg:text-sm font-bold hover:text-red-700 transition group">
+                        <a href="#" onclick="navigate('amp')" class="inline-flex items-center text-mrRed text-xs lg:text-sm font-bold hover:text-red-700 transition group">
                           <span data-i18n="read_more">了解更多</span>
                           <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -569,33 +700,33 @@
                     </div>
 
                     <div class="flex flex-col h-full">
-                      <h4 class="text-base lg:text-lg font-bold text-mrBlue mb-6 border-b border-gray-100 pb-3" data-i18n="srv_parts">
+                      <h4 class="text-base lg:text-lg font-bold text-mrBlue mb-5 border-b border-gray-100 pb-3" data-i18n="srv_parts">
                         配件供应
                       </h4>
-                      <ul class="space-y-3 lg:space-y-4 flex-grow mb-6">
+                      <ul class="space-y-2.5 flex-grow mb-6">
                         <li>
-                          <a href="#" onclick="navigate('services', 'parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_1">核心电子元器件</span></a
+                          <a href="#" onclick="navigate('parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_1">核心电子元器件</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_2">船舶高精度传感器</span></a
+                          <a href="#" onclick="navigate('parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_2">船舶高精度传感器</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_3">PLC 控制板卡修复</span></a
+                          <a href="#" onclick="navigate('parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_3">PLC 控制板卡修复</span></a
                           >
                         </li>
                         <li>
-                          <a href="#" onclick="navigate('services', 'parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
-                            ><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_4">型号核对与替换建议</span></a
+                          <a href="#" onclick="navigate('parts')" class="text-gray-600 hover:text-mrRed text-xs lg:text-sm flex items-center transition"
+                            ><span class="w-1 h-1 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_4">型号核对与替换建议</span></a
                           >
                         </li>
                       </ul>
                       <div class="mt-auto pt-4 border-t border-gray-50">
-                        <a href="#" onclick="navigate('services', 'parts')" class="inline-flex items-center text-mrRed text-xs lg:text-sm font-bold hover:text-red-700 transition group">
+                        <a href="#" onclick="navigate('parts')" class="inline-flex items-center text-mrRed text-xs lg:text-sm font-bold hover:text-red-700 transition group">
                           <span data-i18n="read_more">了解更多</span>
                           <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -683,21 +814,21 @@
           <div id="mobile-services-menu" class="hidden bg-gray-50 px-4 py-2 border-b border-gray-100">
             <a
               href="#"
-              onclick="navigate('services', 'automation'); toggleMobileMenu()"
+              onclick="navigate('automation'); toggleMobileMenu()"
               class="block py-3 text-sm text-gray-600 hover:text-mrRed"
               data-i18n="srv_auto"
               >自动化维修</a
             >
             <a
               href="#"
-              onclick="navigate('services', 'amp'); toggleMobileMenu()"
+              onclick="navigate('amp'); toggleMobileMenu()"
               class="block py-3 text-sm text-gray-600 hover:text-mrRed border-t border-gray-200"
               data-i18n="srv_amp"
               >岸电改造</a
             >
             <a
               href="#"
-              onclick="navigate('services', 'parts'); toggleMobileMenu()"
+              onclick="navigate('parts'); toggleMobileMenu()"
               class="block py-3 text-sm text-gray-600 hover:text-mrRed border-t border-gray-200"
               data-i18n="srv_parts"
               >配件供应</a
@@ -792,7 +923,7 @@
                     提交服务需求
                   </button>
                   <button
-                    onclick="navigate('services', 'automation')"
+                    onclick="navigate('automation')"
                     class="border border-white sm:border-2 text-white px-5 py-2.5 sm:px-8 sm:py-3 text-sm md:text-base font-bold hover:bg-white hover:text-mrBlue transition pointer-events-auto"
                     data-i18n="hero_btn2"
                   >
@@ -884,7 +1015,7 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                 <div
                   class="order-2 bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
-                  onclick="navigate('services', 'amp')"
+                  onclick="navigate('amp')"
                 >
                   <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center text-mrBlue mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
                     <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -901,7 +1032,7 @@
                 </div>
                 <div
                   class="order-1 bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
-                  onclick="navigate('services', 'automation')"
+                  onclick="navigate('automation')"
                 >
                   <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center text-mrBlue mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
                     <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -918,7 +1049,7 @@
                 </div>
                 <div
                   class="order-3 bg-white p-6 md:p-8 group hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl border border-gray-100 border-t-4 border-t-transparent hover:border-t-mrBlue cursor-pointer"
-                  onclick="navigate('services', 'parts')"
+                  onclick="navigate('parts')"
                 >
                   <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center text-mrBlue mb-4 md:mb-6 group-hover:bg-mrBlue group-hover:text-white transition">
                     <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1082,234 +1213,57 @@
 
         </div> </main>
 
-      <main id="page-services" class="page-section site-page">
-        <div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center">
-          <img src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-60" />
-          <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
-          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-wider" data-i18n="nav_services">维修服务</h1>
-          </div>
-        </div>
 
-        <div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200">
-              <a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a>
-              <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-              <span class="text-mrBlue font-bold" id="breadcrumb-service-title" data-i18n="srv_auto">船舶自动化服务</span>
-            </div>
-          </div>
-        </div>
+<main id="page-automation" class="page-section site-page">
+  <div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center"><img src="assets/business-scope/service-cover.webp" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="船舶自动化维修" /><div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div><div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"><h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-wider" data-i18n="srv_auto">船舶自动化维修</h1></div></div>
 
-        <div class="md:py-20 site-surface">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8 md:gap-10">
-            <div class="w-full md:w-1/4">
-              <div class="bg-white shadow-md rounded-xl p-3 md:p-0 md:bg-white md:shadow-sm md:rounded-lg overflow-hidden md:sticky md:top-28 flex flex-wrap justify-center gap-2 md:flex-col md:gap-0 border border-gray-200 md:border-none">
-                <button id="btn-automation" onclick="showServiceTab('automation')" class="service-tab-btn flex-1 min-w-[30%] md:w-full text-center md:text-left px-2 py-2.5 md:px-6 md:py-4 rounded-lg md:rounded-none border md:border-0 border-transparent md:border-b md:border-gray-100 transition text-xs sm:text-sm md:text-base font-bold bg-mrBlue text-white shadow-md md:shadow-none md:border-l-4 md:border-mrRed" data-i18n="srv_auto">船舶自动化服务</button>
-                <button id="btn-amp" onclick="showServiceTab('amp')" class="service-tab-btn flex-1 min-w-[30%] md:w-full text-center md:text-left px-2 py-2.5 md:px-6 md:py-4 rounded-lg md:rounded-none border md:border-0 border-gray-200 md:border-b md:border-gray-100 hover:bg-gray-50 transition text-xs sm:text-sm md:text-base font-bold text-gray-700 bg-white" data-i18n="srv_amp">岸电改造服务</button>
-                <button id="btn-parts" onclick="showServiceTab('parts')" class="service-tab-btn flex-1 min-w-[30%] md:w-full text-center md:text-left px-2 py-2.5 md:px-6 md:py-4 rounded-lg md:rounded-none border md:border-0 border-gray-200 md:border-b md:border-gray-100 hover:bg-gray-50 transition text-xs sm:text-sm md:text-base font-bold text-gray-700 bg-white" data-i18n="srv_parts">配件供应</button>
-              </div>
-            </div>
+  <div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200"><a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a><svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg><span class="text-mrBlue font-bold" data-i18n="srv_auto">船舶自动化维修</span></div></div></div>
+  <div class="site-surface py-16 md:py-24"><div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"><div class="mb-12"><p class="text-lg md:text-xl text-gray-700 leading-relaxed text-justify" data-i18n="srv_auto_p1">现代船舶高度依赖自动化系统。我们的技术团队具备底层电路与控制逻辑分析能力，强调故障定位与长期稳定的维修验证。</p></div>
 
-            <div class="w-full md:w-3/4">
-              <div id="tab-automation" class="service-tab-content block">
-                
-                <div class="mb-8 md:mb-10 flex flex-col items-start text-left">
-                  <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
-                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-4 tracking-tight" data-i18n="srv_auto">船舶自动化服务</h2>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed" data-i18n="srv_auto_p1">
-                    面向主机遥控、电站管理、液位遥测、阀门控制及报警监测等系统，技术团队依据图纸、报警记录与现场测量结果逐级排查，完成板卡、回路与控制逻辑的故障定位和维修验证。
-                  </p>
-                </div>
+  <section class="mb-16 md:mb-20">
+    <div class="flex items-center mb-6"><div class="w-2 h-8 bg-mrRed mr-4"></div><h3 class="text-2xl md:text-3xl font-black text-mrBlue" data-i18n="srv_auto_sub1">动力与控制系统</h3></div>
+    <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8">从发电机组、主辅机遥控逻辑到变频与温控节点，逐项检查供电网络、板卡与控制回路，保障航行动力输出稳定。</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img01.webp" class="w-full h-40 object-cover" alt="发电机系统实景" data-i18n-alt="scope_item_01" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img09.webp" class="w-full h-40 object-cover" alt="马达变频器实景" data-i18n-alt="scope_item_09" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img12.webp" class="w-full h-40 object-cover" alt="应急发电机实景" data-i18n-alt="scope_item_12" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img13.webp" class="w-full h-40 object-cover" alt="主机遥控系统实景" data-i18n-alt="scope_item_13" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img14.webp" class="w-full h-40 object-cover" alt="ICCP 检测实景" data-i18n-alt="scope_item_14" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img15.webp" class="w-full h-40 object-cover" alt="主机温控阀实景" data-i18n-alt="scope_item_15" /></button></div>
+    <div class="bg-gray-50 p-6 rounded border border-gray-200"><ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800"><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub1_1">主机遥控系统 / 辅机遥控系统</span></li><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub1_2">电站自控系统 / 锅炉控制系统</span></li><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub1_4">燃油黏度控制系统</span></li></ul></div>
+  </section>
 
-                <div class="mb-10 md:mb-16 bg-white p-5 sm:p-8 rounded-lg shadow-sm border border-gray-100">
-                  <div class="mb-6 md:mb-8 flex flex-col items-start text-left">
-                    <div class="w-8 md:w-10 h-1.5 bg-mrRed mb-3"></div>
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-mrBlue tracking-tight" data-i18n="srv_auto_sub1">动力与控制系统</h3>
-                  </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 md:mb-8">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm" alt="控制面板" />
-                    <img src="https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden sm:block" alt="发电机组" />
-                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden md:block" alt="电站控制" />
-                  </div>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-6" data-i18n="srv_auto_desc1">
-                    针对动力控制与电力分配系统，检查供电质量、控制回路、输入输出信号与保护逻辑，并根据测量结果实施板卡维修、参数调整或部件更换。
-                  </p>
-                  <div class="bg-gray-50 p-4 sm:p-6 rounded border border-gray-200">
-                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-8 text-sm sm:text-base md:text-lg text-gray-800">
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub1_1">主机遥控系统 / 辅机遥控系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub1_2">电站自控系统 / 锅炉控制系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub1_3">主开关和仪表修理及校验</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub1_4">燃油黏度控制系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub1_5">曲轴箱油雾浓度检测装置</span></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="mb-10 md:mb-16 bg-white p-5 sm:p-8 rounded-lg shadow-sm border border-gray-100">
-                  <div class="mb-6 md:mb-8 flex flex-col items-start text-left">
-                    <div class="w-8 md:w-10 h-1.5 bg-mrRed mb-3"></div>
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-mrBlue tracking-tight" data-i18n="srv_auto_sub2">航行与通信系统</h3>
-                  </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 md:mb-8">
-                    <img src="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm" alt="驾驶台雷达" />
-                    <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden sm:block" alt="通信设备" />
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden md:block" alt="车钟系统" />
-                  </div>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-6" data-i18n="srv_auto_desc2">
-                    内部通信与外部导航是保障船舶安全的神经中枢。我们提供全套驾驶台导航仪器报警、对讲及各类信号灯系统的深度排障与检修。
-                  </p>
-                  <div class="bg-gray-50 p-4 sm:p-6 rounded border border-gray-200">
-                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-8 text-sm sm:text-base md:text-lg text-gray-800">
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub2_1">航行灯及信号灯系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub2_2">对讲系统 / 广播系统 / 字母钟系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub2_3">自动电话系统 / 声力电话系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub2_4">航海报警系统 / 值班报警系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub2_5">通用报警系统 / 车钟维修保养</span></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="mb-10 md:mb-16 bg-white p-5 sm:p-8 rounded-lg shadow-sm border border-gray-100">
-                  <div class="mb-6 md:mb-8 flex flex-col items-start text-left">
-                    <div class="w-8 md:w-10 h-1.5 bg-mrRed mb-3"></div>
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-mrBlue tracking-tight" data-i18n="srv_auto_sub3">环境与安全监控</h3>
-                  </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 md:mb-8">
-                    <img src="https://images.unsplash.com/photo-1534398079543-7ae6d016b86a?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm" alt="管路监控" />
-                    <img src="https://images.unsplash.com/photo-1563851508249-16630fbc4d8e?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden sm:block" alt="火警系统" />
-                    <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden md:block" alt="监控屏幕" />
-                  </div>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-6" data-i18n="srv_auto_desc3">
-                    针对液位遥测、15PPM 油份浓度、火警及货舱报警系统，逐项检查传感器、线路、控制模块与报警输出，并通过模拟信号和联动测试验证修复结果。
-                  </p>
-                  <div class="bg-gray-50 p-4 sm:p-6 rounded border border-gray-200">
-                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-8 text-sm sm:text-base md:text-lg text-gray-800">
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub3_1">油份浓度装置 15PPM 修理校验</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub3_2">分油机系统 / 生活污水系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub3_3">火警系统 / 大仓烟雾系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub3_4">货舱进水报警 / 二氧化碳系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub3_5">液位遥测系统 / 冷库误锁报警</span></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="bg-white p-5 sm:p-8 rounded-lg shadow-sm border border-gray-100">
-                  <div class="mb-6 md:mb-8 flex flex-col items-start text-left">
-                    <div class="w-8 md:w-10 h-1.5 bg-mrRed mb-3"></div>
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-mrBlue tracking-tight" data-i18n="srv_auto_sub4">甲板与机械辅助</h3>
-                  </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 md:mb-8">
-                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm" alt="甲板绞车" />
-                    <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden sm:block" alt="克令吊" />
-                    <img src="https://images.unsplash.com/photo-1581092162384-8987c1d64718?q=80&w=600" class="w-full h-32 md:h-48 object-cover rounded shadow-sm hidden md:block" alt="阀门液压" />
-                  </div>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-6" data-i18n="srv_auto_desc4">
-                    覆盖全船的重型机械物理执行层，提供液压控制系统、起重设备及各类阀门自控系统的专业检修与模块更换。
-                  </p>
-                  <div class="bg-gray-50 p-4 sm:p-6 rounded border border-gray-200">
-                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-8 text-sm sm:text-base md:text-lg text-gray-800">
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub4_1">舵机系统 / 阀门遥控系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub4_2">锚机 / 绞车 / 克令吊系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub4_3">舱口盖液压系统 / 机舱吊机</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub4_4">救助艇抛落系统 / 防海生物系统</span></li>
-                      <li class="flex items-start leading-relaxed"><span class="text-mrBlue text-lg mr-2 leading-none mt-0.5">■</span><span data-i18n="auto_sub4_5">应急照明充放电板 / 雨刮器系统</span></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+  <section class="mb-16 md:mb-20">
+    <div class="flex items-center mb-6"><div class="w-2 h-8 bg-mrRed mr-4"></div><h3 class="text-2xl md:text-3xl font-black text-mrBlue" data-i18n="srv_auto_sub2">航行、通信与报警监测</h3></div>
+    <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8">通过信号级测量，处理广播对讲、货舱进水、油雾浓度与通用报警等系统的隐蔽故障，恢复关键安防中枢的可靠响应。</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img02.webp" class="w-full h-40 object-cover" alt="货舱进水报警系统实景" data-i18n-alt="scope_item_02" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img05.webp" class="w-full h-40 object-cover" alt="广播电话对讲实景" data-i18n-alt="scope_item_05" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img10.webp" class="w-full h-40 object-cover" alt="主机油雾探测器实景" data-i18n-alt="scope_item_10" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img16.webp" class="w-full h-40 object-cover" alt="通用报警系统实景" data-i18n-alt="scope_item_16" /></button></div>
+    <div class="bg-gray-50 p-6 rounded border border-gray-200"><ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800"><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub2_1">航行灯及信号灯系统</span></li><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub2_2">广播对讲与声力电话系统</span></li><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub3_3">火警与大仓烟雾系统排障</span></li></ul></div>
+  </section>
 
-              <div id="tab-amp" class="service-tab-content hidden">
-                
-                <div class="mb-8 md:mb-10 flex flex-col items-start text-left">
-                  <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
-                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-4 tracking-tight" data-i18n="srv_amp">岸电改造服务 (AMP)</h2>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mb-6" data-i18n="srv_amp_p1">
-                    我们具备丰富的技术经验，可为各种类型的船舶提供量身定制的岸电解决方案。主要分为低压和高压两种方案，适用于不同类型和规模的船舶。
-                  </p>
-                </div>
+  <section class="mb-16 md:mb-20">
+    <div class="flex items-center mb-6"><div class="w-2 h-8 bg-mrRed mr-4"></div><h3 class="text-2xl md:text-3xl font-black text-mrBlue" data-i18n="srv_auto_sub3">环保系统与辅助设备</h3></div>
+    <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8">围绕油污水、分油机、焚烧炉及相关报警控制回路，协助设备恢复稳定、合规的运行状态。</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img03.webp" class="w-full h-40 object-cover" alt="焚烧炉实景" data-i18n-alt="scope_item_03" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img04.webp" class="w-full h-40 object-cover" alt="锅炉实景" data-i18n-alt="scope_item_04" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img08.webp" class="w-full h-40 object-cover" alt="分油机实景" data-i18n-alt="scope_item_08" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img11.webp" class="w-full h-40 object-cover" alt="15PPM 检测实景" data-i18n-alt="scope_item_11" /></button></div>
+    <div class="bg-gray-50 p-6 rounded border border-gray-200"><ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800"><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub3_1">15PPM 油污水浓度装置修理校验</span></li><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub3_2">分油机 / 焚烧炉 / 污水系统控制</span></li></ul></div>
+  </section>
 
-                <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=1200" alt="岸电改造" class="w-full h-48 sm:h-64 md:h-80 object-cover rounded-lg shadow-md mb-8 md:mb-10" />
-                <div class="space-y-6 md:space-y-10">
-                  <div class="bg-white p-5 sm:p-8 rounded shadow-sm border-l-4 border-mrBlue">
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 md:mb-4" data-i18n="amp_sub1">低压岸电改造 (LV AMP)</h3>
-                    <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed" data-i18n="amp_desc1">
-                      主要适用于中小型港口设施。低压系统操作简单，建设与改造成本较低，提供高度灵活的基础停泊电力接入。系统集成智能并网、相序保护与负荷分配控制，确保船电网络平稳切换。
-                    </p>
-                  </div>
-                  <div class="bg-white p-5 sm:p-8 rounded shadow-sm border-l-4 border-mrRed">
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 md:mb-4" data-i18n="amp_sub2">高压岸电改造 (HV AMP)</h3>
-                    <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed" data-i18n="amp_desc2">
-                      面向集装箱船、油轮及大型货轮等高功率需求场景，可提供 6.6kV/11kV 高压岸电方案。设计与调试重点覆盖受电容量、并网条件、硬件联锁和继电保护功能。
-                    </p>
-                  </div>
-                  <div class="bg-gray-50 p-6 sm:p-10 rounded border border-gray-200 mt-6 md:mt-8">
-                    <h3 class="text-xl sm:text-2xl font-bold text-mrBlue mb-4 md:mb-6" data-i18n="amp_sub3">全生命周期交钥匙工程 (Turn-Key)</h3>
-                    <p class="text-sm sm:text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed" data-i18n="amp_desc3">
-                      服务范围覆盖船上勘查、负荷与接口核对、系统设计、安装接线、并网调试和操作交底。关键测试数据与调试结果形成记录，便于船东和运营方后续维护。
-                    </p>
-                    <p class="text-sm sm:text-base md:text-lg text-gray-800 font-bold leading-relaxed border-t border-gray-300 pt-4 md:pt-6" data-i18n="amp_desc4">
-                      实施岸电改造后，客户可显著降低燃油成本，减少设备的磨损与维护费用，同时符合国际海事组织（IMO）的环保法规。我们的目标是为每艘停泊的船舶提供环保、经济、安全的电力支持，为碳中和目标作出贡献。
-                    </p>
-                  </div>
-                </div>
-              </div>
+  <section class="mb-16 md:mb-20">
+    <div class="flex items-center mb-6"><div class="w-2 h-8 bg-mrRed mr-4"></div><h3 class="text-2xl md:text-3xl font-black text-mrBlue" data-i18n="srv_auto_sub4">精密检测与校验</h3></div>
+    <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8">对主配开关与关键检测仪表进行检修和校验，为航行安全、设备可靠性与检验准备提供扎实的数据支撑。</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img06.webp" class="w-full h-40 object-cover" alt="主配开关检测实景" data-i18n-alt="scope_item_06" /></button><button type="button" class="business-scope-image-button rounded overflow-hidden shadow-sm" onclick="openBusinessLightbox(this)"><img src="assets/business-scope/product-img07.webp" class="w-full h-40 object-cover" alt="仪表检测实景" data-i18n-alt="scope_item_07" /></button></div>
+    <div class="bg-gray-50 p-6 rounded border border-gray-200"><ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800"><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub1_3">主开关特性测试及精密仪表校验</span></li><li class="flex items-start"><span class="text-mrBlue mr-2">■</span><span data-i18n="auto_sub4_1">舵机系统 / 阀门遥控系统</span></li></ul></div>
+  </section>
+  </div></div>
+</main>
 
-              <div id="tab-parts" class="service-tab-content hidden">
-                
-                <div class="mb-8 md:mb-10 flex flex-col items-start text-left">
-                  <div class="w-10 md:w-12 h-1.5 bg-mrRed mb-3 md:mb-4"></div>
-                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-mrBlue mb-4 tracking-tight" data-i18n="srv_parts">备件核对与技术支持</h2>
-                  <p class="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed" data-i18n="srv_parts_p1">
-                    我们深知船舶设备故障对航期的影响。技术团队根据品牌、型号、铭牌、接口参数及旧件照片核对传感器、控制板卡和气动液压部件，并结合交期提供供应或替换建议。
-                  </p>
-                </div>
+<main id="page-amp" class="page-section site-page">
+<div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center"><img src="assets/business-scope/shore-power-service.webp" class="absolute inset-0 w-full h-full object-cover opacity-60 object-top" alt="岸电改造服务" /><div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div><div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"><h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-wider" data-i18n="srv_amp">岸电改造服务</h1></div></div>
+<div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200"><a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a><svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg><span class="text-mrBlue font-bold" data-i18n="srv_amp">高/低压岸电改造 (AMP)</span></div></div></div>
+<div class="site-surface py-16 md:py-24"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="mb-12 md:mb-20 max-w-4xl"><div class="w-10 md:w-12 h-1.5 bg-mrRed mb-4"></div><p class="text-lg md:text-xl text-gray-600 leading-relaxed" data-i18n="srv_amp_p1">岸电技术（Alternative Maritime Power）是实现绿色港口的关键。睦融电气提供从方案设计到并网调试的端到端交钥匙工程服务。</p></div>
+<section class="flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-16 md:mb-24"><div class="w-full md:w-1/2"><div class="inline-block bg-mrBlue text-white text-xs font-bold px-3 py-1 rounded mb-4 uppercase tracking-widest">LV AMP</div><h3 class="text-2xl md:text-3xl font-black text-gray-900 mb-4" data-i18n="amp_sub1">低压岸电改造方案</h3><p class="text-base md:text-lg text-gray-600 leading-relaxed mb-6" data-i18n="amp_desc1">提供完整低压岸电接入配电盘，集成相序检测、断相保护与无缝负荷转移功能，通过主配电板联动逻辑实现船电与岸电的安全平滑切换。</p><ul class="space-y-2 text-sm md:text-base text-gray-700 font-medium"><li class="flex items-center"><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span>主配电板 (MSB) 同步逻辑改造</li><li class="flex items-center"><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span>岸电接入箱 (AMPS) 安装与绝缘监测</li><li class="flex items-center"><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span>负载测试与船级社检验支持</li></ul></div><div class="w-full md:w-1/2"><div class="relative rounded-lg overflow-hidden shadow-2xl"><div class="absolute inset-0 bg-mrBlue/10 mix-blend-multiply z-10"></div><img src="assets/business-scope/product-img06.webp" class="w-full h-[300px] md:h-[400px] object-cover transform hover:scale-105 transition duration-700" alt="主配开关检测实景" /></div></div></section>
+<section class="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-16 mb-16 md:mb-24"><div class="w-full md:w-1/2"><div class="inline-block bg-mrRed text-white text-xs font-bold px-3 py-1 rounded mb-4 uppercase tracking-widest">HV AMP</div><h3 class="text-2xl md:text-3xl font-black text-gray-900 mb-4" data-i18n="amp_sub2">高压岸电改造方案</h3><p class="text-base md:text-lg text-gray-600 leading-relaxed mb-6" data-i18n="amp_desc2">面向大型集装箱船、邮轮及高功率需求船舶，提供符合 IEC/IEEE 80005-1 国际标准的 6.6kV/11kV 高压岸电方案，覆盖连接屏、CMS 与真空断路器保护设定。</p><ul class="space-y-2 text-sm md:text-base text-gray-700 font-medium"><li class="flex items-center"><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span>6.6kV / 11kV 高压盘及继电保护校验</li><li class="flex items-center"><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span>光纤通讯接口与硬接线安全联锁</li><li class="flex items-center"><span class="w-1.5 h-1.5 bg-mrRed rounded-full mr-3"></span>大型电缆卷筒控制系统集成</li></ul></div><div class="w-full md:w-1/2"><div class="relative rounded-lg overflow-hidden shadow-2xl"><div class="absolute inset-0 bg-mrBlue/10 mix-blend-multiply z-10"></div><img src="assets/business-scope/product-img12.webp" class="w-full h-[300px] md:h-[400px] object-cover transform hover:scale-105 transition duration-700" alt="高压及应急盘实景" /></div></div></section>
+<section class="bg-[linear-gradient(135deg,#f8fbff,#eef4fb)] p-8 md:p-12 rounded-2xl border border-[#dce5f2] shadow-sm relative overflow-hidden"><h3 class="text-2xl md:text-3xl font-black text-mrBlue mb-6" data-i18n="amp_sub3">全生命周期交钥匙工程 (Turn-Key)</h3><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div><h4 class="text-lg font-bold text-gray-900 mb-2">1. 现场勘查与设计</h4><p class="text-sm text-gray-600 leading-relaxed">核对发电机负荷、主配电板空间与接口参数，输出电气图纸与施工方案。</p></div><div><h4 class="text-lg font-bold text-gray-900 mb-2">2. 安装与布线</h4><p class="text-sm text-gray-600 leading-relaxed">完成控制柜组装、接线及高低压电缆敷设与通讯链路搭建。</p></div><div><h4 class="text-lg font-bold text-gray-900 mb-2">3. 调试与验证交付</h4><p class="text-sm text-gray-600 leading-relaxed">执行负载测试、保护校验与并网联调，形成检测报告与操作指南。</p></div></div></section></div></div>
+</main>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8">
-                  <div class="bg-white p-5 sm:p-6 rounded border border-gray-200 hover:shadow-md transition">
-                    <h3 class="text-base sm:text-lg md:text-xl font-bold text-mrBlue mb-3 md:mb-4 flex items-center">
-                      <span class="w-1.5 h-1.5 md:w-2 md:h-2 bg-mrRed rounded-full mr-2 md:mr-3"></span><span data-i18n="parts_sub1">电子控制板卡 (PCB)</span>
-                    </h3>
-                    <p class="text-sm md:text-base text-gray-700 leading-relaxed" data-i18n="parts_desc1">
-                      提供各类主机遥控控制主板、辅机电站PLC模块、扩展I/O板卡、稳压电源模块及通用继电器。支持老旧型号板卡的修复与平替方案。
-                    </p>
-                  </div>
-                  <div class="bg-white p-5 sm:p-6 rounded border border-gray-200 hover:shadow-md transition">
-                    <h3 class="text-base sm:text-lg md:text-xl font-bold text-mrBlue mb-3 md:mb-4 flex items-center">
-                      <span class="w-1.5 h-1.5 md:w-2 md:h-2 bg-mrRed rounded-full mr-2 md:mr-3"></span><span data-i18n="parts_sub2">高精度传感器探头</span>
-                    </h3>
-                    <p class="text-sm md:text-base text-gray-700 leading-relaxed" data-i18n="parts_desc2">
-                      供应原装进口压力变送器、PT100温度传感器、液位雷达探头、转速传感器及曲轴箱油雾浓度探测器探头等精密测量仪器。
-                    </p>
-                  </div>
-                  <div class="bg-white p-5 sm:p-6 rounded border border-gray-200 hover:shadow-md transition">
-                    <h3 class="text-base sm:text-lg md:text-xl font-bold text-mrBlue mb-3 md:mb-4 flex items-center">
-                      <span class="w-1.5 h-1.5 md:w-2 md:h-2 bg-mrRed rounded-full mr-2 md:mr-3"></span><span data-i18n="parts_sub3">气动与液压执行机构</span>
-                    </h3>
-                    <p class="text-sm md:text-base text-gray-700 leading-relaxed" data-i18n="parts_desc3">
-                      涵盖阀门遥控系统专用的各类电磁阀、比例调节阀、气动控制阀、液压电磁换向阀及执行器专用保养密封套件。
-                    </p>
-                  </div>
-                  <div class="bg-white p-5 sm:p-6 rounded border border-gray-200 hover:shadow-md transition">
-                    <h3 class="text-base sm:text-lg md:text-xl font-bold text-mrBlue mb-3 md:mb-4 flex items-center">
-                      <span class="w-1.5 h-1.5 md:w-2 md:h-2 bg-mrRed rounded-full mr-2 md:mr-3"></span><span data-i18n="parts_sub4">安防与通讯模块</span>
-                    </h3>
-                    <p class="text-sm md:text-base text-gray-700 leading-relaxed" data-i18n="parts_desc4">
-                      提供火灾报警探测头（感烟/感温）、15PPM油污水检测仪灯管及主板、声力电话听筒组件及广播系统功放模块。
-                    </p>
-                  </div>
-                </div>
-                <div class="bg-mrBlue text-white p-6 sm:p-8 md:p-10 rounded-lg flex flex-col items-center text-center shadow-lg">
-                  <h4 class="text-xl sm:text-2xl font-bold mb-3 md:mb-4" data-i18n="parts_urgent_title">需要加急寻找特定备件？</h4>
-                  <p class="text-sm sm:text-base md:text-lg text-blue-200 mb-6 md:mb-8 max-w-2xl" data-i18n="parts_urgent_desc">
-                    如果您有明确的备件型号、铭牌照片或旧件图片，请直接联系我们的工程师，我们将为您快速匹配并提供报价。
-                  </p>
-                  <button onclick="navigate('contact')" class="bg-mrRed hover:bg-red-700 text-white px-6 py-3 md:px-8 md:py-4 text-sm sm:text-base md:text-lg font-bold rounded-full shadow transition whitespace-nowrap" data-i18n="parts_btn">
-                    获取备件报价
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+<main id="page-parts" class="page-section site-page">
+<div class="relative w-full h-[250px] sm:h-[300px] md:h-[400px] bg-gray-900 flex items-center"><img src="murong-pic/pic3.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 object-top" alt="备件与技术支持" /><div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div><div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"><h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-wider" data-i18n="srv_parts">备件与技术支持</h1></div></div>
+<div class="site-surface-soft border-b border-gray-200/80 py-4 shadow-inner"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="inline-flex items-center bg-white px-4 py-2.5 rounded-md shadow-sm text-xs md:text-sm text-gray-600 uppercase tracking-widest border border-gray-200"><a href="#" onclick="navigate('home')" class="hover:text-mrBlue transition font-medium" data-i18n="nav_home">首页</a><svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg><span class="text-mrBlue font-bold" data-i18n="srv_parts">备件核对与技术支持</span></div></div></div>
+<div class="site-surface py-16 md:py-24"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="mb-12 md:mb-16 max-w-4xl"><div class="w-10 md:w-12 h-1.5 bg-mrRed mb-4"></div><p class="text-lg md:text-xl text-gray-600 leading-relaxed" data-i18n="srv_parts_p1">设备停机意味着高昂的航期损失。我们提供查件、匹配与技术核对的一站式保障。</p></div><div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 mb-16"><article class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition duration-300 flex flex-col group"><div class="h-56 overflow-hidden bg-gray-100 relative"><div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition z-10"></div><img src="assets/business-scope/product-img09.webp" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="PLC与变频器控制板" /></div><div class="p-8 flex-grow"><h3 class="text-xl font-bold text-mrBlue mb-4 flex items-center"><span class="w-2 h-2 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_sub1">PLC控制器与核心板卡 (PCB)</span></h3><p class="text-gray-600 leading-relaxed" data-i18n="parts_desc1">涵盖主机遥控主板、电站控制模块及马达变频器，支持 Allen-Bradley、西门子等工业 PLC 的通讯模块、型号核对与程序迁移。</p></div></article><article class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition duration-300 flex flex-col group"><div class="h-56 overflow-hidden bg-gray-100 relative"><div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition z-10"></div><img src="assets/business-scope/product-img11.webp" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="精密检测仪表与ODME" /></div><div class="p-8 flex-grow"><h3 class="text-xl font-bold text-mrBlue mb-4 flex items-center"><span class="w-2 h-2 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_sub2">高精度传感器与环保仪表</span></h3><p class="text-gray-600 leading-relaxed" data-i18n="parts_desc2">供应压力变送器、PT100 温度传感器与液位雷达探头，并提供 15PPM 舱底水报警及 ODME 测量单元的检测探头和校验支持。</p></div></article><article class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition duration-300 flex flex-col group"><div class="h-56 overflow-hidden bg-gray-100 relative"><div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition z-10"></div><img src="assets/business-scope/product-img15.webp" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="气动液压与温控阀" /></div><div class="p-8 flex-grow"><h3 class="text-xl font-bold text-mrBlue mb-4 flex items-center"><span class="w-2 h-2 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_sub3">气动与液压执行机构</span></h3><p class="text-gray-600 leading-relaxed" data-i18n="parts_desc3">涵盖电磁阀、比例调节阀、主机温控阀及液压换向阀，并按铭牌参数协助核对螺纹和法兰接口。</p></div></article><article class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition duration-300 flex flex-col group"><div class="h-56 overflow-hidden bg-gray-100 relative"><div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition z-10"></div><img src="assets/business-scope/product-img05.webp" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="安防与通信模块" /></div><div class="p-8 flex-grow"><h3 class="text-xl font-bold text-mrBlue mb-4 flex items-center"><span class="w-2 h-2 bg-mrRed rounded-full mr-3"></span><span data-i18n="parts_sub4">安防通讯与报警模块</span></h3><p class="text-gray-600 leading-relaxed" data-i18n="parts_desc4">提供感烟感温探测头、报警警铃、对讲系统功放模块及防爆等级的声力电话听筒与防水组件。</p></div></article></div><div class="relative bg-mrBlue text-white p-10 md:p-14 rounded-2xl flex flex-col items-center text-center shadow-2xl overflow-hidden"><h4 class="relative z-10 text-2xl md:text-3xl font-black mb-4" data-i18n="parts_urgent_title">需要加急寻找特定备件？</h4><p class="relative z-10 text-base md:text-lg text-blue-100 mb-8 max-w-2xl leading-relaxed" data-i18n="parts_urgent_desc">提交型号、铭牌照片、PLC 原始程序包或旧件图片，我们将快速匹配并提供报价。</p><button onclick="navigate('contact')" class="relative z-10 bg-mrRed hover:bg-red-700 text-white px-8 py-4 text-base md:text-lg font-bold rounded-full shadow-xl transition" data-i18n="parts_btn">获取技术与备件报价</button></div></div></div>
+</main>
 
       <main id="page-about" class="page-section site-page">
         
@@ -1497,80 +1451,28 @@
             <p class="text-sm md:text-base text-gray-600 leading-relaxed mt-4 max-w-4xl font-medium" data-i18n="network_desc">团队立足南通，服务范围覆盖上海、舟山、靖江、南京、张家港、南通、泰州等长三角主要港口，可结合船期与泊位计划协调登轮支持。</p>
           </div>
 
-          <div class="relative w-full h-[400px] md:h-[550px] bg-[#f8fafc] rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex items-center justify-center">
-
-            <div class="absolute inset-0 z-0 opacity-50 map-bg-dots pointer-events-none"></div>
-
-            <svg class="absolute inset-0 w-full h-full pointer-events-none drop-shadow-sm z-10" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
-              <path d="M 350 250 L 450 300 L 550 320 L 650 280 L 800 450 L 850 550" fill="none" stroke="#1C3A82" stroke-width="1" stroke-dasharray="4 4" opacity="0.3" />
-              <path d="M 350 250 L 450 300 L 550 320" fill="none" stroke="url(#line-grad-subtle)" stroke-width="1.5" stroke-dasharray="4 4" class="animate-dash" />
-              <path d="M 550 320 L 650 280 L 800 450 L 850 550" fill="none" stroke="url(#line-grad-subtle)" stroke-width="1.5" stroke-dasharray="4 4" class="animate-dash" style="animation-direction: reverse; animation-duration: 2s;" />
-              <defs>
-                <linearGradient id="line-grad-subtle" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#1C3A82" stop-opacity="0" />
-                  <stop offset="50%" stop-color="#E60012" stop-opacity="0.5" />
-                  <stop offset="100%" stop-color="#1C3A82" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
-
-            <div class="relative w-full max-w-[1000px] h-[600px] z-20">
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer" style="left: 35%; top: 41.66%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-6 h-6 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 0s"></span>
-                  <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full shadow-[0_0_4px_rgba(230,0,18,0.8)]"></span>
+          <div class="relative w-full h-[460px] md:h-[540px] overflow-hidden rounded-2xl border border-[#dce5f2] bg-[linear-gradient(135deg,#f8fbff,#eef4fb)] shadow-sm">
+            <div class="absolute inset-0 pointer-events-none opacity-35" style="background-image: radial-gradient(rgba(28,58,130,0.16) 1px, transparent 1px); background-size: 18px 18px;"></div>
+            <div id="yangtze-delta-map" class="yangtze-delta-map absolute inset-0 z-10" role="img" tabindex="0" data-i18n-aria-label="network_map_aria" aria-label="长三角核心服务带区域地图。"></div>
+            <div class="pointer-events-none absolute inset-y-0 right-0 z-20 w-[38%] min-w-[330px] bg-gradient-to-l from-white via-white/95 to-white/0"></div>
+            <aside class="absolute inset-y-4 right-4 z-30 flex w-[300px] max-w-[calc(100%-2rem)] flex-col rounded-2xl border border-white/90 bg-white/90 p-5 shadow-[0_16px_38px_rgba(28,58,130,0.12)] backdrop-blur-md md:right-6 md:w-[320px] md:p-6">
+              <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                <div>
+                  <p class="text-xs font-black tracking-[0.18em] text-mrBlue" data-i18n="network_port_list_eyebrow">SERVICE PORTS</p>
+                  <h4 class="mt-1 text-lg font-black text-slate-900" data-i18n="network_port_list_title">服务港口</h4>
                 </div>
-                <span class="absolute top-4 text-xs font-bold text-mrBlue tracking-widest bg-white/80 backdrop-blur-sm px-1.5 py-0.5 rounded shadow-sm border border-gray-100 opacity-90">南京</span>
+                <span class="mt-1 rounded-full bg-mrBlue/8 px-2.5 py-1 text-[11px] font-bold text-mrBlue" data-i18n="network_port_list_count">13 个节点</span>
               </div>
-
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer" style="left: 45%; top: 50%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-6 h-6 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 0.4s"></span>
-                  <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full shadow-[0_0_4px_rgba(230,0,18,0.8)]"></span>
-                </div>
-                <span class="absolute bottom-4 text-xs font-bold text-mrBlue tracking-widest bg-white/80 backdrop-blur-sm px-1.5 py-0.5 rounded shadow-sm border border-gray-100 opacity-90">泰州</span>
-              </div>
-
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer" style="left: 55%; top: 53.33%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-6 h-6 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 0.8s"></span>
-                  <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full shadow-[0_0_4px_rgba(230,0,18,0.8)]"></span>
-                </div>
-                <span class="absolute top-4 text-xs font-bold text-mrBlue tracking-widest bg-white/80 backdrop-blur-sm px-1.5 py-0.5 rounded shadow-sm border border-gray-100 opacity-90">靖江</span>
-              </div>
-
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer" style="left: 65%; top: 46.66%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-6 h-6 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 1.2s"></span>
-                  <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full shadow-[0_0_4px_rgba(230,0,18,0.8)]"></span>
-                </div>
-                <span class="absolute bottom-4 text-xs font-bold text-mrBlue tracking-widest bg-white/80 backdrop-blur-sm px-1.5 py-0.5 rounded shadow-sm border border-gray-100 opacity-90">张家港</span>
-              </div>
-
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer" style="left: 80%; top: 75%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-8 h-8 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 1.6s"></span>
-                  <span class="relative w-2 h-2 bg-mrRed rounded-full shadow-[0_0_6px_rgba(230,0,18,0.8)]"></span>
-                </div>
-                <span class="absolute right-5 text-xs md:text-sm font-black text-mrBlue tracking-widest bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-100 opacity-100">南通</span>
-              </div>
-
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-30" style="left: 85%; top: 91.66%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-10 h-10 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 0.2s"></span>
-                  <span class="relative w-2.5 h-2.5 bg-mrRed rounded-full shadow-[0_0_8px_rgba(230,0,18,1)]"></span>
-                </div>
-                <span class="absolute left-6 text-sm md:text-base font-black text-mrBlue tracking-widest bg-white shadow-md border border-gray-100 px-3 py-1 rounded">上海</span>
-              </div>
-
-              <div class="absolute flex items-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer" style="left: 90%; top: 105%;">
-                <div class="relative flex items-center justify-center">
-                  <span class="absolute w-6 h-6 bg-mrRed rounded-full animate-ripple-subtle pointer-events-none" style="animation-delay: 1.8s"></span>
-                  <span class="relative w-1.5 h-1.5 bg-mrRed rounded-full shadow-[0_0_4px_rgba(230,0,18,0.8)]"></span>
-                </div>
-                <span class="absolute top-4 text-xs font-bold text-mrBlue tracking-widest bg-white/80 backdrop-blur-sm px-1.5 py-0.5 rounded shadow-sm border border-gray-100 opacity-90">舟山</span>
+              <div id="service-port-list" class="mt-4 grid gap-4" aria-live="polite"></div>
+              <p class="mt-auto pt-4 text-xs leading-5 text-slate-500" data-i18n="network_port_list_note">地图显示核心服务带；连云港作为江苏北部协同节点列示。</p>
+            </aside>
+            <div id="yangtze-delta-map-fallback" class="absolute inset-0 z-20 flex items-center justify-center bg-[#f8fafc]/95 px-6 text-center" role="status" aria-live="polite">
+              <div class="max-w-sm">
+                <svg class="mx-auto mb-3 h-8 w-8 text-mrBlue/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6.5 8.5 3 15 6l6 3.5v8L15.5 21 9 18l-6-3.5z"/><path d="m3 6.5 6 3.5 6.5-4 5.5 3.5M9 10v8"/></svg>
+                <p class="text-sm font-semibold leading-6 text-slate-600" data-i18n="network_map_fallback">区域地图暂未加载；服务港口清单仍可供参考。</p>
               </div>
             </div>
+            <div class="pointer-events-none absolute bottom-5 left-5 z-20 rounded-full border border-white/80 bg-white/80 px-3 py-1.5 text-[11px] font-bold tracking-[0.14em] text-mrBlue shadow-sm backdrop-blur" data-i18n="network_map_caption">YANGTZE RIVER DELTA · CORE SERVICE BELT</div>
           </div>
         </div>
 
@@ -1674,6 +1576,16 @@
       </main>
     </div>
 
+    <div id="business-scope-lightbox" class="business-lightbox hidden fixed inset-0 z-[100] bg-slate-950/90 p-4 sm:p-8 items-center justify-center" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="business-lightbox-title" onclick="handleBusinessLightboxBackdrop(event)">
+      <div class="relative flex max-h-full w-full flex-col items-center justify-center">
+        <button id="business-lightbox-close" type="button" class="business-lightbox-close absolute -top-1 right-0 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-900 shadow-xl hover:bg-red-50 hover:text-mrRed" aria-label="关闭大图" data-i18n-aria-label="scope_lightbox_close" onclick="closeBusinessLightbox()">
+          <svg aria-hidden="true" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"></path></svg>
+        </button>
+        <img id="business-lightbox-image" class="business-lightbox-image rounded-lg bg-white shadow-2xl" src="assets/business-scope/product-img01.webp" width="1012" height="1194" alt="" />
+        <h2 id="business-lightbox-title" class="mt-4 max-w-3xl text-center text-lg sm:text-xl font-bold text-white text-balance">发电机系统</h2>
+      </div>
+    </div>
+
     <footer class="relative bg-white overflow-hidden flex flex-col justify-between md:aspect-[16/9] z-20">
       <div class="absolute inset-0 z-0 pointer-events-none flex items-end">
         <img
@@ -1721,7 +1633,7 @@
               <h4 class="font-bold mb-3 text-white text-sm uppercase tracking-wider" data-i18n="footer_links">快速链接</h4>
               <ul class="space-y-2 text-xs text-blue-100">
                 <li><a href="#" onclick="navigate('home')" class="hover:text-white transition" data-i18n="nav_home">返回首页</a></li>
-                <li><a href="#" onclick="navigate('services', 'automation')" class="hover:text-white transition" data-i18n="nav_services">维修服务列表</a></li>
+                <li><a href="#" onclick="navigate('automation')" class="hover:text-white transition" data-i18n="nav_services">维修服务列表</a></li>
                 <li><a href="#" onclick="navigate('about')" class="hover:text-white transition" data-i18n="nav_about">了解公司</a></li>
                 <li><a href="#" onclick="navigate('contact')" class="hover:text-white transition" data-i18n="nav_contact">在线报修</a></li>
               </ul>
@@ -1735,7 +1647,7 @@
             <h4 class="font-bold mb-3 md:mb-4 text-white text-sm md:text-base uppercase tracking-wider" data-i18n="footer_links">快速链接</h4>
             <ul class="space-y-2 text-xs md:text-sm text-blue-100">
               <li><a href="#" onclick="navigate('home')" class="hover:text-white transition" data-i18n="nav_home">返回首页</a></li>
-              <li><a href="#" onclick="navigate('services', 'automation')" class="hover:text-white transition" data-i18n="nav_services">维修服务列表</a></li>
+              <li><a href="#" onclick="navigate('automation')" class="hover:text-white transition" data-i18n="nav_services">维修服务列表</a></li>
               <li><a href="#" onclick="navigate('about')" class="hover:text-white transition" data-i18n="nav_about">了解公司</a></li>
               <li><a href="#" onclick="navigate('contact')" class="hover:text-white transition" data-i18n="nav_contact">在线报修</a></li>
             </ul>
@@ -1812,10 +1724,7 @@
           en: 'Covering main-engine remote control, level monitoring, valve remote control, and power management, with fault isolation across power, I/O, communications, and control logic followed by repair verification.',
         },
         srv_parts: { zh: '备件核对与技术支持', en: 'Parts Verification & Support' },
-        srv_parts_p1: {
-          zh: '针对传感器、控制板卡及气动液压部件等需求，我们根据设备铭牌、技术参数与现场接口进行型号核对，并结合船期提供可行的供应与替代建议。',
-          en: 'For sensors, control boards, and pneumatic or hydraulic components, we verify models against nameplates, technical parameters, and site interfaces, then propose practical supply or replacement options around the vessel schedule.',
-        },
+        srv_parts_p1: { zh: '设备停机意味着高昂的航期损失。我们不仅提供备件，更提供“查件-匹配-技术核对”的一站式保障。技术团队根据设备铭牌、PLC程序版本或旧件图纸，精准匹配原厂备件或提供高可靠性的平替方案。', en: 'Equipment downtime means costly schedule delays. We offer one-stop support: "inspection, matching, and technical verification". Using nameplates, PLC program versions, or old part drawings, our team precisely matches original spares or highly reliable alternatives.' },
         home_parts_desc: {
           zh: '根据设备品牌、型号、铭牌和旧件照片协助核对电子元器件、传感器及控制板卡，并提供选型与替换建议。',
           en: 'We use equipment make, model, nameplate, and old-part photos to verify electronic components, sensors, and control boards, then provide selection or replacement guidance.',
@@ -1900,6 +1809,53 @@
         ship_5: { zh: '特殊用途船', en: 'Special Purpose Ships' },
         ship_6: { zh: '内河航运船', en: 'Inland Waterway Ships' },
 
+        scope_gallery_eyebrow: { zh: '业务实景', en: 'Field Portfolio' },
+        scope_gallery_title: { zh: '业务设备与现场实景', en: 'Equipment & Field Portfolio' },
+        scope_gallery_intro: {
+          zh: '以下图片来自既有业务资料，覆盖动力控制、报警监测、通信、检测仪表及环保辅助设备。点击图片可查看完整细节。',
+          en: 'These images come from our existing service portfolio, covering power control, alarm monitoring, communications, test instruments, and environmental auxiliaries. Select an image to inspect the full detail.',
+        },
+        scope_filter_label: { zh: '业务范围筛选', en: 'Filter business portfolio' },
+        scope_filter_all: { zh: '全部', en: 'All' },
+        scope_category_power: { zh: '动力与控制', en: 'Power & Control' },
+        scope_category_alarm: { zh: '报警监测', en: 'Alarm Monitoring' },
+        scope_category_comm: { zh: '通信设备', en: 'Communications' },
+        scope_category_testing: { zh: '检测仪表', en: 'Test Instruments' },
+        scope_category_environment: { zh: '环保与辅助设备', en: 'Environmental & Auxiliary' },
+        scope_item_01: { zh: '发电机系统', en: 'Generator System' },
+        scope_item_02: { zh: '货舱进水报警系统', en: 'Cargo Hold Water Ingress Alarm' },
+        scope_item_03: { zh: '焚烧炉', en: 'Incinerator' },
+        scope_item_04: { zh: '锅炉', en: 'Boiler' },
+        scope_item_05: { zh: '广播电话对讲', en: 'PA, Telephone & Intercom' },
+        scope_item_06: { zh: '主配开关检测', en: 'Main Switchboard Testing' },
+        scope_item_07: { zh: '仪表检测', en: 'Instrument Testing' },
+        scope_item_08: { zh: '分油机', en: 'Oil Separator' },
+        scope_item_09: { zh: '马达变频器', en: 'Motor Frequency Converter' },
+        scope_item_10: { zh: '主机油雾探测器', en: 'Main Engine Oil Mist Detector' },
+        scope_item_11: { zh: '15PPM 检测', en: '15PPM Monitoring' },
+        scope_item_12: { zh: '应急发电机', en: 'Emergency Generator' },
+        scope_item_13: { zh: '主机遥控系统', en: 'Main Engine Remote Control' },
+        scope_item_14: { zh: 'ICCP 检测', en: 'ICCP Testing' },
+        scope_item_15: { zh: '主机温控阀', en: 'Main Engine Thermostatic Valve' },
+        scope_item_16: { zh: '通用报警系统', en: 'General Alarm System' },
+        scope_view_01: { zh: '查看发电机系统大图', en: 'View generator system image' },
+        scope_view_02: { zh: '查看货舱进水报警系统大图', en: 'View cargo hold water ingress alarm image' },
+        scope_view_03: { zh: '查看焚烧炉大图', en: 'View incinerator image' },
+        scope_view_04: { zh: '查看锅炉大图', en: 'View boiler image' },
+        scope_view_05: { zh: '查看广播电话对讲大图', en: 'View PA, telephone, and intercom image' },
+        scope_view_06: { zh: '查看主配开关检测大图', en: 'View main switchboard testing image' },
+        scope_view_07: { zh: '查看仪表检测大图', en: 'View instrument testing image' },
+        scope_view_08: { zh: '查看分油机大图', en: 'View oil separator image' },
+        scope_view_09: { zh: '查看马达变频器大图', en: 'View motor frequency converter image' },
+        scope_view_10: { zh: '查看主机油雾探测器大图', en: 'View main engine oil mist detector image' },
+        scope_view_11: { zh: '查看 15PPM 检测大图', en: 'View 15PPM monitoring image' },
+        scope_view_12: { zh: '查看应急发电机大图', en: 'View emergency generator image' },
+        scope_view_13: { zh: '查看主机遥控系统大图', en: 'View main engine remote control image' },
+        scope_view_14: { zh: '查看 ICCP 检测大图', en: 'View ICCP testing image' },
+        scope_view_15: { zh: '查看主机温控阀大图', en: 'View main engine thermostatic valve image' },
+        scope_view_16: { zh: '查看通用报警系统大图', en: 'View general alarm system image' },
+        scope_lightbox_close: { zh: '关闭大图', en: 'Close image viewer' },
+
         srv_auto_sub1: { zh: '动力与控制系统', en: 'Power & Control Systems' },
         srv_auto_desc1: {
           zh: '针对动力控制与电力分配系统，检查供电质量、控制回路、输入输出信号与保护逻辑，并根据测量结果实施板卡维修、参数调整或部件更换。',
@@ -1944,20 +1900,11 @@
         auto_sub4_4: { zh: '救助艇抛落系统 / 防海生物系统', en: 'Rescue Boat Davit / MGPS Systems' },
         auto_sub4_5: { zh: '应急照明充放电板 / 雨刮器系统', en: 'Emergency Light Boards / Wiper Systems' },
 
-        srv_amp_p1: {
-          zh: '根据船舶负荷、电压等级、频率、接入方式与港口供电条件，提供低压或高压岸电方案，并完成船上设备安装、接线检查和并网调试。',
-          en: 'Based on vessel load, voltage, frequency, connection method, and port-side supply conditions, we develop LV or HV shore-power solutions and complete onboard installation, wiring checks, and synchronisation commissioning.',
-        },
-        amp_sub1: { zh: '低压岸电改造 (LV AMP)', en: 'Low Voltage AMP Retrofit' },
-        amp_desc1: {
-          zh: '主要适用于中小型港口设施。低压系统操作简单，建设与改造成本较低，提供高度灵活的基础停泊电力接入。系统集成智能并网、相序保护与负荷分配控制，确保船电网络平稳切换。',
-          en: 'Ideal for small/medium vessels. Simple operation and low cost. Integrates smart synchronization, phase sequence protection, and load sharing for smooth power transitions.',
-        },
-        amp_sub2: { zh: '高压岸电改造 (HV AMP)', en: 'High Voltage AMP Retrofit' },
-        amp_desc2: {
-          zh: '面向集装箱船、油轮及大型货轮等高功率需求场景，可提供 6.6kV/11kV 高压岸电方案。设计与调试重点覆盖受电容量、并网条件、硬件联锁和继电保护功能。',
-          en: 'For container ships, tankers, and large cargo vessels with high power demand, we can provide 6.6kV/11kV shore-power solutions focused on receiving capacity, synchronisation conditions, hardware interlocks, and relay-protection functions.',
-        },
+        srv_amp_p1: { zh: '岸电技术（Alternative Maritime Power）是实现绿色港口的关键。睦融电气根据船舶负荷、电压等级、接入方式与港口供电条件，提供从方案设计到并网调试的端到端交钥匙（Turn-Key）工程服务。', en: 'Alternative Maritime Power (AMP) is key to green ports. MURONG provides end-to-end Turn-Key engineering services from solution design to synchronisation commissioning, tailored to vessel load, voltage, connection method, and port power supply conditions.' },
+        amp_sub1: { zh: '低压岸电改造方案', en: 'Low Voltage AMP Solutions' },
+        amp_desc1: { zh: '适用于中小型散货船、客滚船及近海作业船舶。我们提供完整的低压岸电接入配电盘，集成智能相序检测、断相保护与无缝转移负荷功能。通过改造主配电板联动逻辑，实现船电与岸电的安全平滑切换，有效避免全船失电风险。', en: 'Ideal for small-to-medium bulk carriers, Ro-Ro ships, and offshore vessels. We supply complete LV AMP panels integrating smart phase-sequence detection, phase-loss protection, and seamless load transfer. By modifying MSB interlock logic, we ensure smooth ship-to-shore power transitions without blackout risks.' },
+        amp_sub2: { zh: '高压岸电改造方案', en: 'High Voltage AMP Solutions' },
+        amp_desc2: { zh: '面向大型集装箱船、邮轮及高功率需求船舶，提供符合 IEC/IEEE 80005-1 国际标准的 6.6kV/11kV 高压岸电方案。改造涵盖高压连接屏、电缆管理系统 (CMS) 以及真空断路器保护设定，确保大容量电力并网时的瞬态稳定与安全联锁。', en: 'For large container ships, cruise liners, and high-power vessels, we deliver 6.6kV/11kV HV AMP solutions compliant with IEC/IEEE 80005-1. Retrofits include HV connection boards, Cable Management Systems (CMS), and vacuum circuit breaker protection settings, ensuring transient stability and safe interlocks during high-capacity synchronisation.' },
         amp_sub3: { zh: '全生命周期交钥匙工程 (Turn-Key)', en: 'Full Lifecycle Turn-Key Solutions' },
         amp_desc3: {
           zh: '服务范围覆盖船上勘查、负荷与接口核对、系统设计、安装接线、并网调试和操作交底。关键测试数据与调试结果形成记录，便于船东和运营方后续维护。',
@@ -1968,31 +1915,16 @@
           en: 'Post-retrofit, clients significantly reduce fuel costs, wear & tear, and comply with IMO regulations. Our goal is to provide eco-friendly, economical, and safe power for moored vessels.',
         },
 
-        parts_sub1: { zh: '电子控制板卡 (PCB)', en: 'Electronic Control Boards (PCB)' },
-        parts_desc1: {
-          zh: '提供各类主机遥控控制主板、辅机电站PLC模块、扩展I/O板卡、稳压电源模块及通用继电器。支持老旧型号板卡的修复与平替方案。',
-          en: 'Supply main engine control boards, PMS PLC modules, I/O cards, power modules, and relays. We support repair and replacement of obsolete models.',
-        },
-        parts_sub2: { zh: '高精度传感器探头', en: 'High-Precision Sensors' },
-        parts_desc2: {
-          zh: '供应原装进口压力变送器、PT100温度传感器、液位雷达探头、转速传感器及曲轴箱油雾浓度探测器探头等精密测量仪器。',
-          en: 'Imported pressure transmitters, PT100 temperature sensors, radar level probes, speed sensors, and oil mist detectors.',
-        },
+        parts_sub1: { zh: 'PLC控制器与核心板卡 (PCB)', en: 'PLC Controllers & Core Boards (PCB)' },
+        parts_desc1: { zh: '涵盖各主流品牌的主机遥控主板、电站控制模块及马达变频器。擅长处理各品牌（如 Allen-Bradley、西门子等）工业级 PLC 控制器的底层通讯模块提取、板卡型号确认及老旧程序的迁移与核对。', en: 'Covering main engine control boards, PMS modules, and motor inverters. We specialise in extracting underlying comm modules, verifying board models, and migrating legacy programs for industrial PLCs (e.g., Allen-Bradley, Siemens).' },
+        parts_sub2: { zh: '高精度传感器与环保仪表', en: 'High-Precision Sensors & Eco Instruments' },
+        parts_desc2: { zh: '供应原装进口压力变送器、PT100温度传感器、液位雷达探头。针对船舶排污环保需求，提供 15PPM 舱底水报警装置及排油监控系统 (ODME) 测量单元的核心检测探头与校验支持。', en: 'Supplying imported pressure transmitters, PT100 sensors, and radar level probes. For marine environmental compliance, we provide core detection probes and calibration support for 15PPM bilge alarms and Oil Discharge Monitoring Equipment (ODME) measuring units.' },
         parts_sub3: { zh: '气动与液压执行机构', en: 'Pneumatic & Hydraulic Actuators' },
-        parts_desc3: {
-          zh: '涵盖阀门遥控系统专用的各类电磁阀、比例调节阀、气动控制阀、液压电磁换向阀及执行器专用保养密封套件。',
-          en: 'Covering solenoid valves, proportional valves, pneumatic control valves, hydraulic directional valves, and seal kits for valve remote control systems.',
-        },
-        parts_sub4: { zh: '安防与通讯模块', en: 'Security & Comm Modules' },
-        parts_desc4: {
-          zh: '提供火灾报警探测头（感烟/感温）、15PPM油污水检测仪灯管及主板、声力电话听筒组件及广播系统功放模块。',
-          en: 'Fire alarm detectors (smoke/heat), 15PPM OWS lamp tubes & boards, sound-powered phone components, and PA system amplifiers.',
-        },
+        parts_desc3: { zh: '涵盖阀门遥控系统专用的各类电磁阀、比例调节阀、主机温控阀及液压电磁换向阀。根据铭牌参数协助船东进行螺纹、法兰接口核对，并提供执行器专用的原厂保养密封套件。', en: 'Including solenoid, proportional, main engine thermostatic, and hydraulic directional valves for remote control systems. We assist in verifying thread and flange interfaces via nameplate data and supply original actuator seal kits.' },
+        parts_sub4: { zh: '安防通讯与报警模块', en: 'Security Comm & Alarm Modules' },
+        parts_desc4: { zh: '全船安全响应网络的神经末梢。提供驾驶台及机舱区域的感烟/感温探测头、通用报警警铃、对讲系统的主机功放模块及各类防爆等级的声力电话听筒与防水组件。', en: 'The nerve endings of the safety network. We provide bridge/engine room smoke and heat detectors, general alarm bells, PA system amplifier modules, and explosion-proof sound-powered phone components.' },
         parts_urgent_title: { zh: '需要加急寻找特定备件？', en: 'Need urgent specific spare parts?' },
-        parts_urgent_desc: {
-          zh: '如果您有明确的备件型号、铭牌照片或旧件图片，请直接联系我们的工程师，我们将为您快速匹配并提供报价。',
-          en: 'If you have specific part numbers, nameplate photos, or pictures of old parts, contact our engineers directly for a quick match and quote.',
-        },
+        parts_urgent_desc: { zh: '我们支持技术参数级的备件核对。如果您有明确的备件型号、铭牌照片、PLC原始程序包或旧件图片，请直接联系我们的工程师，我们将为您快速匹配并提供报价。', en: 'We support technical-level parameter verification. If you have part models, nameplate photos, original PLC program files, or old part images, contact our engineers for a quick match and quote.' },
         parts_btn: { zh: '获取备件报价', en: 'Get Parts Quote' },
 
         about_tag: { zh: '关于睦融', en: 'About Murong' },
@@ -2028,6 +1960,31 @@
         network_desc: { 
           zh: '团队立足南通，服务范围覆盖上海、舟山、靖江、南京、张家港、南通、泰州等长三角主要港口，可结合船期与泊位计划协调登轮支持。',
           en: 'Based in Nantong, our service coverage includes major Yangtze River Delta ports such as Shanghai, Zhoushan, Jingjiang, Nanjing, Zhangjiagang, Nantong, and Taizhou, with onboard attendance coordinated around vessel and berth schedules.'
+        },
+        network_map_aria: {
+          zh: '长三角核心服务带区域地图。主节点为南通、上海、宁波和舟山，次级港口以小点标示。',
+          en: 'Yangtze River Delta core service belt map. Nantong, Shanghai, Ningbo, and Zhoushan are primary nodes; other ports use small markers.'
+        },
+        network_map_fallback: {
+          zh: '区域地图暂未加载；服务港口清单仍可供参考。',
+          en: 'The regional map is temporarily unavailable; the service-port list remains available.'
+        },
+        network_map_caption: { zh: '长三角 · 核心服务带', en: 'YANGTZE RIVER DELTA · CORE SERVICE BELT' },
+        network_port_list_eyebrow: { zh: '服务港口', en: 'SERVICE PORTS' },
+        network_port_list_title: { zh: '覆盖节点', en: 'Coverage Nodes' },
+        network_port_list_count: { zh: '13 个节点', en: '13 nodes' },
+        network_port_list_note: { zh: '地图显示核心服务带；连云港作为江苏北部协同节点列示。', en: 'The map focuses on the core service belt; Lianyungang is listed as a northern Jiangsu coordination node.' },
+        network_locator_title: { zh: '区域定位', en: 'REGIONAL LOCATOR' },
+        network_locator_desc: { zh: '江浙沪服务区域示意', en: 'Jiangsu · Shanghai · Zhejiang' },
+        network_corridor_eyebrow: { zh: '服务走廊', en: 'SERVICE CORRIDORS' },
+        network_corridor_desc: { zh: '以主要港口为节点的协调服务网络', en: 'A coordinated service network anchored by major ports' },
+        network_legend_primary: { zh: '主要节点', en: 'Primary nodes' },
+        network_legend_secondary: { zh: '协同节点', en: 'Coordination nodes' },
+        network_coastal: { zh: '沿海协同网络', en: 'COASTAL SERVICE CORRIDOR' },
+        network_river: { zh: '长江沿线网络', en: 'YANGTZE RIVER SERVICE CORRIDOR' },
+        network_corridor_aria: {
+          zh: '长三角横向服务网络。沿海协同网络包括连云港、南通、上海、嘉兴、宁波和舟山；长江沿线网络包括南京、扬州、泰州、靖江、江阴、张家港和太仓。',
+          en: 'Horizontal Yangtze River Delta service network. The coastal corridor includes Lianyungang, Nantong, Shanghai, Jiaxing, Ningbo, and Zhoushan. The Yangtze River corridor includes Nanjing, Yangzhou, Taizhou, Jingjiang, Jiangyin, Zhangjiagang, and Taicang.'
         },
 
         values_title: { zh: '核心价值观', en: 'Core Values' },
@@ -2115,6 +2072,41 @@
       }
 
       let currentLang = localStorage.getItem('murong_lang') || 'zh'
+      let activeBusinessCategory = 'all'
+      let lastBusinessScopeTrigger = null
+      let yangtzeDeltaMap = null
+      let yangtzeDeltaMapResizeObserver = null
+
+      const yangtzeDeltaPorts = [
+        { name: '连云港', en: 'Lianyungang', coord: [119.45, 34.75], labelPosition: 'top' },
+        { name: '南京', en: 'Nanjing', coord: [118.7969, 32.0603], labelPosition: 'left' },
+        { name: '扬州', en: 'Yangzhou', coord: [119.41, 32.39], labelPosition: 'top' },
+        { name: '泰州', en: 'Taizhou', coord: [119.9231, 32.4558], labelPosition: 'top' },
+        { name: '靖江', en: 'Jingjiang', coord: [120.2769, 31.9823], labelPosition: 'bottom' },
+        { name: '江阴', en: 'Jiangyin', coord: [120.28, 31.91], labelPosition: 'bottom' },
+        { name: '张家港', en: 'Zhangjiagang', coord: [120.5434, 31.8657], labelPosition: 'top' },
+        { name: '太仓', en: 'Taicang', coord: [121.13, 31.65], labelPosition: 'bottom' },
+        { name: '南通', en: 'Nantong', coord: [120.8943, 31.9810], labelPosition: 'left', primary: true },
+        { name: '上海', en: 'Shanghai', coord: [121.4737, 31.2304], labelPosition: 'right', primary: true },
+        { name: '嘉兴', en: 'Jiaxing', coord: [121.12, 30.61], labelPosition: 'left' },
+        { name: '宁波', en: 'Ningbo', coord: [121.56, 29.86], labelPosition: 'left', primary: true },
+        { name: '舟山', en: 'Zhoushan', coord: [122.2072, 29.9853], labelPosition: 'right', primary: true },
+      ]
+
+      const servicePortGroups = [
+        {
+          title: { zh: '主要节点', en: 'Primary nodes' },
+          portNames: ['南通', '上海', '宁波', '舟山'],
+        },
+        {
+          title: { zh: '沿江协同', en: 'Yangtze coordination' },
+          portNames: ['南京', '扬州', '泰州', '靖江', '江阴', '张家港', '太仓'],
+        },
+        {
+          title: { zh: '沿海与北部', en: 'Coastal & northern' },
+          portNames: ['嘉兴', '连云港'],
+        },
+      ]
 
       function toggleLanguage() {
         currentLang = currentLang === 'zh' ? 'en' : 'zh'
@@ -2123,6 +2115,7 @@
       }
 
       function applyTranslations() {
+        document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en'
         const langDisplay = document.getElementById('current-lang-display')
         if (langDisplay) langDisplay.innerText = currentLang === 'zh' ? 'EN' : 'CN'
 
@@ -2147,6 +2140,26 @@
           }
         })
 
+        document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
+          const key = el.getAttribute('data-i18n-alt')
+          if (translations[key] && translations[key][currentLang]) {
+            const suffix = currentLang === 'zh' ? '实景' : 'field image'
+            el.alt = `${translations[key][currentLang]} — ${suffix}`
+          }
+        })
+
+        document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
+          const key = el.getAttribute('data-i18n-aria-label')
+          if (translations[key] && translations[key][currentLang]) {
+            el.setAttribute('aria-label', translations[key][currentLang])
+          }
+        })
+
+        updateBusinessScopeCount()
+        updateBusinessLightboxCopy()
+        renderYangtzeDeltaMap()
+        renderServicePortList()
+
         if (mapInitialized && bmapInstance && currentMapPoint) {
           var opts = {
             width: 240,
@@ -2158,6 +2171,189 @@
             opts,
           )
           bmapInstance.openInfoWindow(infoWindow, currentMapPoint)
+        }
+      }
+
+      function updateBusinessScopeCount() {
+        const count = document.querySelectorAll('[data-business-item]:not([hidden])').length
+        const countElement = document.getElementById('business-scope-count')
+        if (!countElement) return
+        countElement.innerText = currentLang === 'zh'
+          ? `共 ${count} 项业务实景`
+          : `${count} portfolio ${count === 1 ? 'item' : 'items'}`
+      }
+
+      function filterBusinessScope(category) {
+        const validCategories = ['all', 'power-control', 'alarm-monitoring', 'communications', 'testing-instruments', 'environmental-support']
+        activeBusinessCategory = validCategories.includes(category) ? category : 'all'
+
+        document.querySelectorAll('[data-business-item]').forEach((item) => {
+          item.hidden = activeBusinessCategory !== 'all' && item.getAttribute('data-business-category') !== activeBusinessCategory
+        })
+
+        document.querySelectorAll('[data-business-filter]').forEach((button) => {
+          const isActive = button.getAttribute('data-business-filter') === activeBusinessCategory
+          button.classList.toggle('is-active', isActive)
+          button.setAttribute('aria-pressed', String(isActive))
+        })
+
+        updateBusinessScopeCount()
+        const url = new URL(window.location.href)
+        if (activeBusinessCategory === 'all') url.searchParams.delete('scope')
+        else url.searchParams.set('scope', activeBusinessCategory)
+        window.history.replaceState({}, '', url)
+      }
+
+      function updateBusinessLightboxCopy() {
+        if (!lastBusinessScopeTrigger) return
+        const sourceImage = lastBusinessScopeTrigger.querySelector('img')
+        const titleKey = sourceImage ? sourceImage.getAttribute('data-i18n-alt') : null
+        const title = titleKey && translations[titleKey] ? translations[titleKey][currentLang] : ''
+        const lightboxTitle = document.getElementById('business-lightbox-title')
+        const lightboxImage = document.getElementById('business-lightbox-image')
+        if (lightboxTitle) lightboxTitle.innerText = title
+        if (lightboxImage) lightboxImage.alt = title
+      }
+
+      function openBusinessLightbox(trigger) {
+        const sourceImage = trigger.querySelector('img')
+        const lightbox = document.getElementById('business-scope-lightbox')
+        const lightboxImage = document.getElementById('business-lightbox-image')
+        const closeButton = document.getElementById('business-lightbox-close')
+        if (!sourceImage || !lightbox || !lightboxImage) return
+
+        lastBusinessScopeTrigger = trigger
+        lightboxImage.src = sourceImage.src
+        lightboxImage.width = Number(sourceImage.getAttribute('width')) || 1200
+        lightboxImage.height = Number(sourceImage.getAttribute('height')) || 900
+        updateBusinessLightboxCopy()
+        lightbox.classList.remove('hidden')
+        lightbox.classList.add('flex')
+        lightbox.setAttribute('aria-hidden', 'false')
+        document.body.classList.add('business-modal-open')
+        if (closeButton) closeButton.focus()
+      }
+
+      function closeBusinessLightbox() {
+        const lightbox = document.getElementById('business-scope-lightbox')
+        if (!lightbox || lightbox.classList.contains('hidden')) return
+        lightbox.classList.add('hidden')
+        lightbox.classList.remove('flex')
+        lightbox.setAttribute('aria-hidden', 'true')
+        document.body.classList.remove('business-modal-open')
+        if (lastBusinessScopeTrigger) lastBusinessScopeTrigger.focus()
+      }
+
+      function handleBusinessLightboxBackdrop(event) {
+        if (event.target === event.currentTarget) closeBusinessLightbox()
+      }
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeBusinessLightbox()
+      })
+
+      function showYangtzeDeltaMapFallback() {
+        const fallback = document.getElementById('yangtze-delta-map-fallback')
+        if (!fallback) return
+        fallback.classList.remove('hidden')
+        fallback.setAttribute('aria-hidden', 'false')
+      }
+
+      function renderYangtzeDeltaMap() {
+        if (!yangtzeDeltaMap) return
+        const portData = yangtzeDeltaPorts.map((port) => ({
+          name: currentLang === 'zh' ? port.name : port.en,
+          value: port.coord,
+          symbolSize: port.primary ? 7 : 4,
+          itemStyle: {
+            color: port.primary ? '#e60012' : '#7186aa',
+            borderColor: '#fff',
+            borderWidth: 1.5,
+          },
+        }))
+
+        yangtzeDeltaMap.setOption({
+          animation: false,
+          tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(15, 23, 42, 0.92)',
+            borderWidth: 0,
+            textStyle: { color: '#fff', fontSize: 12 },
+            formatter: (params) => params.data.name,
+          },
+          geo: {
+            map: 'yangtze-delta',
+            roam: false,
+            silent: true,
+            boundingCoords: [[118.55, 32.85], [122.65, 29.55]],
+            layoutCenter: ['39%', '50%'],
+            layoutSize: '94%',
+            itemStyle: {
+              areaColor: '#edf3fb',
+              borderColor: '#8aa0c3',
+              borderWidth: 1.2,
+              shadowColor: 'rgba(28, 58, 130, 0.1)',
+              shadowBlur: 16,
+            },
+            emphasis: { disabled: true },
+            select: { disabled: true },
+          },
+          series: [{
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            z: 4,
+            label: { show: false },
+            data: portData,
+          }],
+        }, { notMerge: true, lazyUpdate: false })
+      }
+
+      function renderServicePortList() {
+        const container = document.getElementById('service-port-list')
+        if (!container) return
+
+        const portByName = Object.fromEntries(yangtzeDeltaPorts.map((port) => [port.name, port]))
+        container.innerHTML = servicePortGroups.map((group) => {
+          const nodes = group.portNames.map((name) => {
+            const port = portByName[name]
+            const label = currentLang === 'zh' ? port.name : port.en
+            const dotClass = port.primary ? 'bg-mrRed' : 'bg-[#7186aa]'
+            const textClass = port.primary ? 'text-mrBlue font-bold' : 'text-slate-600 font-semibold'
+            return `<span class="inline-flex items-center gap-1.5 rounded-md border border-slate-100 bg-slate-50 px-2 py-1.5 text-xs ${textClass}"><i class="h-1.5 w-1.5 shrink-0 rounded-full ${dotClass}"></i>${label}</span>`
+          }).join('')
+          return `<section><p class="mb-2 text-[11px] font-black tracking-[0.13em] text-slate-400">${group.title[currentLang]}</p><div class="flex flex-wrap gap-1.5">${nodes}</div></section>`
+        }).join('')
+      }
+
+      function initYangtzeDeltaMap() {
+        const mapElement = document.getElementById('yangtze-delta-map')
+        const fallback = document.getElementById('yangtze-delta-map-fallback')
+        if (!mapElement || !fallback) return
+
+        if (yangtzeDeltaMap) {
+          renderYangtzeDeltaMap()
+          yangtzeDeltaMap.resize()
+          return
+        }
+
+        if (!window.echarts || !window.YANGTZE_DELTA_GEOJSON) {
+          showYangtzeDeltaMapFallback()
+          return
+        }
+
+        try {
+          window.echarts.registerMap('yangtze-delta', window.YANGTZE_DELTA_GEOJSON)
+          yangtzeDeltaMap = window.echarts.init(mapElement, null, { renderer: 'canvas' })
+          renderYangtzeDeltaMap()
+          fallback.classList.add('hidden')
+          fallback.setAttribute('aria-hidden', 'true')
+
+          yangtzeDeltaMapResizeObserver = new ResizeObserver(() => yangtzeDeltaMap.resize())
+          yangtzeDeltaMapResizeObserver.observe(mapElement)
+        } catch (error) {
+          console.warn('长三角服务地图未能初始化。', error)
+          yangtzeDeltaMap = null
+          showYangtzeDeltaMapFallback()
         }
       }
 
@@ -2205,93 +2401,27 @@
         }, 300)
       }
 
-      function navigate(pageId, subTabId = null) {
+      function navigate(pageId) {
         const pages = document.querySelectorAll('.page-section')
-        pages.forEach((page) => {
-          page.classList.remove('page-active')
-        })
-
+        pages.forEach((page) => page.classList.remove('page-active'))
         const mainContent = document.getElementById('main-content')
-        if (mainContent) {
-          mainContent.classList.toggle('home-background-active', pageId === 'home')
-        }
-
+        if (mainContent) mainContent.classList.toggle('home-background-active', pageId === 'home')
         const targetPage = document.getElementById('page-' + pageId)
-        if (targetPage) {
-          targetPage.classList.add('page-active')
-        }
-
+        if (targetPage) targetPage.classList.add('page-active')
         const navLinks = document.querySelectorAll('.nav-link')
-        navLinks.forEach((link) => {
-          link.classList.remove('nav-active')
-        })
-
+        navLinks.forEach((link) => link.classList.remove('nav-active'))
         const eventTarget = typeof event !== 'undefined' && event ? event.currentTarget : null
         if (eventTarget && eventTarget.classList && eventTarget.classList.contains('nav-link')) {
           eventTarget.classList.add('nav-active')
         } else {
           navLinks.forEach((link) => {
             const onclickAttr = link.getAttribute('onclick')
-            if (onclickAttr && onclickAttr.includes(`'${pageId}'`)) {
-              link.classList.add('nav-active')
-            } else if (
-              ['automation', 'amp', 'parts'].includes(pageId) &&
-              onclickAttr &&
-              onclickAttr.includes('services')
-            ) {
-              link.classList.add('nav-active')
-            }
+            if (onclickAttr && onclickAttr.includes(`'${pageId}'`)) link.classList.add('nav-active')
           })
         }
-
-        if (pageId === 'contact') {
-          setTimeout(() => {
-            if (!mapInitialized) {
-              initBaiduMap()
-              mapInitialized = true
-            }
-          }, 100)
-        }
-
-        if (pageId === 'services') {
-          if (subTabId) {
-            showServiceTab(subTabId)
-          } else {
-            showServiceTab('automation')
-          }
-        }
-
+        if (pageId === 'contact') setTimeout(() => { if (!mapInitialized) { initBaiduMap(); mapInitialized = true } }, 100)
+        if (pageId === 'about') setTimeout(initYangtzeDeltaMap, 100)
         window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-
-      function showServiceTab(tabId) {
-        document.querySelectorAll('.service-tab-content').forEach((el) => {
-          el.classList.add('hidden')
-          el.classList.remove('block')
-        })
-        const targetContent = document.getElementById('tab-' + tabId)
-        if (targetContent) {
-          targetContent.classList.remove('hidden')
-          targetContent.classList.add('block', 'animate-[fadeIn_0.5s_ease-out_forwards]')
-        }
-
-        // 彻底修复侧边栏交互 Bug：准确移除悬浮白字，恢复初始灰字
-        document.querySelectorAll('.service-tab-btn').forEach((btn) => {
-          btn.className = 'service-tab-btn flex-1 min-w-[30%] md:w-full text-center md:text-left px-2 py-2.5 md:px-6 md:py-4 rounded-lg md:rounded-none border md:border-0 border-gray-200 md:border-b md:border-gray-100 hover:bg-gray-50 transition text-xs sm:text-sm md:text-base font-bold text-gray-700 bg-white';
-        })
-
-        const activeBtn = document.getElementById('btn-' + tabId)
-        if (activeBtn) {
-          activeBtn.className = 'service-tab-btn flex-1 min-w-[30%] md:w-full text-center md:text-left px-2 py-2.5 md:px-6 md:py-4 rounded-lg md:rounded-none border md:border-0 border-transparent md:border-b md:border-gray-100 transition text-xs sm:text-sm md:text-base font-bold bg-mrBlue text-white shadow-md md:shadow-none md:border-l-4 md:border-mrRed';
-        }
-
-        const breadcrumbTitle = document.getElementById('breadcrumb-service-title')
-        if (breadcrumbTitle) {
-          if (tabId === 'automation') breadcrumbTitle.setAttribute('data-i18n', 'srv_auto')
-          if (tabId === 'amp') breadcrumbTitle.setAttribute('data-i18n', 'srv_amp')
-          if (tabId === 'parts') breadcrumbTitle.setAttribute('data-i18n', 'srv_parts')
-          applyTranslations()
-        }
       }
 
       function toggleVideoMute() {
@@ -2438,6 +2568,8 @@
 
       window.addEventListener('DOMContentLoaded', () => {
         applyTranslations()
+        filterBusinessScope(new URL(window.location.href).searchParams.get('scope') || 'all')
+        if (document.getElementById('page-about').classList.contains('page-active')) initYangtzeDeltaMap()
         initTechCanvas() // 初始化全站科技动画
       })
 

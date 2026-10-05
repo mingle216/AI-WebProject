@@ -60,6 +60,73 @@ def parse_page(path):
 
 
 class SiteContentTests(unittest.TestCase):
+    def test_business_scope_gallery_keeps_all_original_real_assets(self):
+        page = parse_page(HOME)
+        self.assertIn("business-scope-gallery", page.elements_by_id)
+        gallery = page.elements_by_id["business-scope-gallery"]
+        self.assertEqual("section", gallery["tag"])
+
+        source = HOME.read_text(encoding="utf-8")
+        gallery_source = source.split('id="business-scope-gallery"', 1)[1].split("</section>", 1)[0]
+        expected_images = [
+            f"assets/business-scope/product-img{index:02d}.webp"
+            for index in range(1, 17)
+        ]
+
+        for image in expected_images:
+            self.assertEqual(1, gallery_source.count(f'src="{image}"'), image)
+            self.assertTrue((PROJECT / image).is_file(), image)
+        self.assertNotIn("images.unsplash.com", gallery_source)
+
+    def test_business_scope_gallery_groups_assets_into_five_filterable_categories(self):
+        source = HOME.read_text(encoding="utf-8")
+        self.assertIn('id="business-scope-gallery"', source)
+        gallery = source.split('id="business-scope-gallery"', 1)[1].split("</section>", 1)[0]
+        categories = {
+            "power-control": 7,
+            "alarm-monitoring": 3,
+            "communications": 1,
+            "testing-instruments": 3,
+            "environmental-support": 2,
+        }
+
+        self.assertEqual(16, gallery.count("data-business-item"))
+        for category, expected_count in categories.items():
+            self.assertEqual(
+                expected_count,
+                gallery.count(f'data-business-category="{category}"'),
+                category,
+            )
+            self.assertIn(f'data-business-filter="{category}"', gallery)
+        self.assertIn('data-business-filter="all"', gallery)
+        self.assertIn('aria-live="polite"', gallery)
+
+    def test_business_scope_gallery_controls_are_accessible_and_localized(self):
+        source = HOME.read_text(encoding="utf-8")
+        self.assertIn('id="business-scope-gallery"', source)
+        gallery = source.split('id="business-scope-gallery"', 1)[1].split("</section>", 1)[0]
+
+        self.assertIn('role="group"', gallery)
+        self.assertIn('aria-label="业务范围筛选"', gallery)
+        self.assertIn('aria-pressed="true"', gallery)
+        self.assertEqual(16, gallery.count('data-business-lightbox-trigger'))
+        self.assertEqual(16, gallery.count('loading="lazy"'))
+        self.assertEqual(16, gallery.count('decoding="async"'))
+        self.assertEqual(16, gallery.count('data-i18n-alt="scope_item_'))
+        self.assertNotIn('onclick="openBusinessLightbox', gallery.split("<button", 1)[0])
+
+        page = parse_page(HOME)
+        self.assertIn("business-scope-lightbox", page.elements_by_id)
+        lightbox = page.elements_by_id["business-scope-lightbox"]
+        self.assertEqual("div", lightbox["tag"])
+        self.assertEqual("dialog", lightbox["attrs"].get("role"))
+        self.assertEqual("true", lightbox["attrs"].get("aria-modal"))
+        self.assertIn(
+            '\n    </div>\n\n    <div id="business-scope-lightbox"',
+            source,
+            "fixed lightbox must follow the main stacking context so it covers the sticky header",
+        )
+
     def test_home_page_leads_with_automation_repair_outcome_and_contact_path(self):
         source = HOME.read_text(encoding="utf-8")
         hero = source.split('<main id="page-home"', 1)[1].split("</section>", 1)[0]
@@ -165,6 +232,43 @@ class SiteContentTests(unittest.TestCase):
             "致力于为全球航线提供",
         ):
             self.assertNotIn(unsupported_claim, source)
+
+    def test_yangtze_delta_service_map_uses_local_vector_data_with_a_separate_port_list(self):
+        """Map labels must not crowd the geographic view; every port remains discoverable in the list."""
+        source = HOME.read_text(encoding="utf-8")
+        network = source.split('data-i18n="network_title"', 1)[1].split('<div class="site-surface-soft py-16', 1)[0]
+        map_asset = PROJECT / "assets/maps/yangtze-delta-geo.js"
+
+        self.assertTrue(map_asset.is_file())
+        self.assertIn('src="assets/maps/yangtze-delta-geo.js"', source)
+        self.assertIn('src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"', source)
+        self.assertIn('id="yangtze-delta-map"', network)
+        self.assertIn('id="yangtze-delta-map-fallback"', network)
+        self.assertIn('id="service-port-list"', network)
+        self.assertNotIn("map-bg-dots", network)
+
+        for port in ("南京", "泰州", "靖江", "张家港", "南通", "上海", "舟山"):
+            self.assertIn(port, source)
+        self.assertIn("boundingCoords", source)
+        self.assertIn("renderServicePortList", source)
+        self.assertIn("window.YANGTZE_DELTA_GEOJSON", map_asset.read_text(encoding="utf-8"))
+
+    def test_yangtze_delta_map_uses_small_hubs_without_geographic_labels(self):
+        """Dense Yangtze ports must use small points while their names live in the side list."""
+        source = HOME.read_text(encoding="utf-8")
+        ports_source = source.split("const yangtzeDeltaPorts = [", 1)[1].split("]\n\n      const yangtzeDeltaRoutes", 1)[0]
+
+        for port in (
+            "连云港", "南京", "扬州", "泰州", "靖江", "江阴", "张家港",
+            "太仓", "南通", "上海", "嘉兴", "宁波", "舟山",
+        ):
+            self.assertIn(f"name: '{port}'", ports_source)
+
+        self.assertEqual(13, ports_source.count("name: '"))
+        self.assertEqual(4, ports_source.count("primary: true"))
+        self.assertIn("symbolSize: port.primary ? 7 : 4", source)
+        self.assertIn("label: { show: false }", source)
+        self.assertNotIn("rippleEffect", source)
 
     def test_contact_form_does_not_report_a_fake_success(self):
         source = HOME.read_text(encoding="utf-8")
