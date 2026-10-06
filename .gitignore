@@ -1,6 +1,12 @@
 .DS_Store
 .superpowers/
 
+# opus-manager 工单作业 worktree（工单分支上的代码在各自 worktree 里，不进主检出）
+_worktrees/
+
+# 本机个人 Claude 设置（含工单脚本放行规则，不进仓库）
+.claude/settings.local.json
+
 # 私密环境变量：公网仓库只允许提交无真实值的 .env.example
 .env
 .env.*
